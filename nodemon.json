@@ -1,0 +1,17 @@
+{
+  "watch": [
+    "server.js",
+    "controllers",
+    "routes",
+    "views",
+    "public"
+  ],
+  "ignore": [
+    "database/*.json",
+    "node_modules"
+  ],
+  "ext": "js,ejs,json",
+  "env": {
+    "NODE_ENV": "development"
+  }
+}

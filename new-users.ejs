@@ -1,0 +1,1341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desa Wire - New Users</title>
+    <link rel="icon" type="image/png" href="/img/icon.png">
+    <script src="/js/chat-widget.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f6fa;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e1e5e9;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c5282;
+        }
+
+        .desa-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .logo-icon {
+            width: 32px;
+            height: 32px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 6px;
+            margin-right: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-item {
+            padding: 8px 0;
+            color: #666;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: #2c5282;
+            border-bottom-color: #3182ce;
+        }
+
+        .nav-item:hover {
+            color: #2c5282;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #666;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 1000;
+            margin-top: 5px;
+        }
+
+        .user-dropdown-content.show {
+            display: block;
+        }
+
+        .user-dropdown-header {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .user-full-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .user-email {
+            color: #718096;
+            font-size: 13px;
+        }
+
+        .user-plan {
+            color: #718096;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .user-dropdown-menu {
+            padding: 8px 0;
+        }
+
+        .user-dropdown-item {
+            padding: 8px 15px;
+            color: #4a5568;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s;
+        }
+
+        .user-dropdown-item:hover {
+            background: #f7fafc;
+        }
+
+        .notification-icon {
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .notification-icon:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .glass-accent {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .main-content {
+            padding: 30px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .page-header {
+            margin-bottom: 30px;
+        }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .page-subtitle {
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+            gap: 20px;
+            padding: 20px 0;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .left-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .right-controls {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .back-btn {
+            background: white;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            text-decoration: none;
+        }
+
+        .back-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .actions-btn {
+            background: white;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .actions-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .actions-badge {
+            background: linear-gradient(135deg, #3182ce 0%, #2c5282 100%);
+            color: white;
+            border-radius: 12px;
+            padding: 4px 10px;
+            font-size: 12px;
+            font-weight: 700;
+            margin-left: 8px;
+            min-width: 20px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(49, 130, 206, 0.3);
+        }
+
+        .actions-dropdown {
+            display: none;
+            position: absolute;
+            top: 100%;
+            left: 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 1000;
+            margin-top: 5px;
+        }
+
+        .actions-dropdown.show {
+            display: block;
+        }
+
+        .actions-dropdown-item {
+            padding: 12px 16px;
+            color: #4a5568;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+        }
+
+        .actions-dropdown-item:hover {
+            background: #f7fafc;
+        }
+
+        .filter-btn {
+            background: white;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .filter-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .search-box {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            width: 320px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .search-box:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1), 0 2px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .search-box::placeholder {
+            color: #a0aec0;
+            font-weight: 500;
+        }
+
+        .export-btn {
+            background: white;
+            color: #4a5568;
+            border: 1px solid #e2e8f0;
+            padding: 14px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        }
+
+        .export-btn:hover {
+            background: #f8fafc;
+            border-color: #cbd5e0;
+            box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+            transform: translateY(-1px);
+        }
+
+        .people-table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.05), 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        th {
+            padding: 18px 24px;
+            text-align: left;
+            font-weight: 700;
+            color: #2d3748;
+            font-size: 13px;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            position: relative;
+            cursor: pointer;
+            user-select: none;
+            transition: all 0.2s ease;
+        }
+
+        th:hover {
+            background: linear-gradient(135deg, #edf2f7 0%, #e2e8f0 100%);
+            color: #1a202c;
+        }
+
+        .sort-indicator {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 11px;
+            color: #a0aec0;
+            font-weight: 600;
+        }
+
+        .sort-indicator.active {
+            color: #3182ce;
+        }
+
+        td {
+            padding: 18px 24px;
+            border-bottom: 1px solid #f1f5f9;
+            color: #4a5568;
+            font-size: 14px;
+            transition: all 0.2s ease;
+        }
+
+        tbody tr {
+            transition: all 0.2s ease;
+        }
+
+        tbody tr:hover {
+            background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .checkbox-cell {
+            width: 50px;
+            text-align: center;
+        }
+
+        .checkbox {
+            width: 16px;
+            height: 16px;
+            cursor: pointer;
+        }
+
+        .name-cell {
+            font-weight: 500;
+            color: #2d3748;
+        }
+
+        .email-cell {
+            color: #3182ce;
+            text-decoration: none;
+        }
+
+        .email-cell:hover {
+            text-decoration: underline;
+        }
+
+        .company-cell {
+            color: #4a5568;
+        }
+
+        .phone-cell {
+            color: #4a5568;
+        }
+
+        .projects-cell {
+            color: #4a5568;
+            text-align: center;
+        }
+
+        .role-cell {
+            color: #4a5568;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-new {
+            background: #bee3f8;
+            color: #2c5282;
+        }
+
+        .empty-state {
+            padding: 60px 20px;
+            text-align: center;
+            color: #718096;
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        .empty-state-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 10px;
+        }
+
+        .empty-state-text {
+            font-size: 14px;
+            color: #718096;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        @media (max-width: 768px) {
+            .controls {
+                flex-direction: column;
+                gap: 15px;
+                align-items: stretch;
+            }
+
+            .search-box {
+                width: 100%;
+            }
+
+            .people-table {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/img/img.webp" alt="Desa Logo" class="desa-logo">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 18px; font-weight: 600; color: #2c5282;">DESA</div>
+                <div style="width: 1px; height: 30px; background: #e1e5e9;"></div>
+                <span class="glass-accent">DESA WIRE</span>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="/" class="nav-item">Projects</a>
+            <a href="/people" class="nav-item active">People</a>
+            <a href="/account" class="nav-item">Account</a>
+        </nav>
+        <div class="user-section">
+            <span class="notification-icon">🔔</span>
+            <span class="notification-icon">❓</span>
+            <div class="user-dropdown" id="userDropdownToggle">
+                <span><%= user ? user.username : 'Guest' %></span>
+                <span>▼</span>
+                <div class="user-dropdown-content" id="userDropdown">
+                    <div class="user-dropdown-header">
+                        <div class="user-full-name"><%= user ? user.username : 'Guest' %></div>
+                        <div class="user-email"><%= user ? user.email : 'guest@example.com' %></div>
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <a href="#" class="user-dropdown-item" id="editProfileLink">Edit profile</a>
+                        <a href="/account" class="user-dropdown-item">View account</a>
+                        <a href="#" class="user-dropdown-item" onclick="signOut()">Sign out</a>
+                    </div>
+                </div>
+            </div>
+            <span>🇨🇦</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="page-header">
+            <h1 class="page-title">New Users</h1>
+            <p class="page-subtitle">Recently added users to the system</p>
+        </div>
+
+        <div class="controls">
+            <div class="left-controls">
+                <a href="/people" class="back-btn">
+                    <span>←</span>
+                    Back to all users
+                </a>
+                <div class="actions-btn" id="actionsBtn">
+                    Actions
+                    <span class="actions-badge" id="actionsBadge">0</span>
+                    <span>▼</span>
+                    <div class="actions-dropdown" id="actionsDropdown">
+                        <button class="actions-dropdown-item" id="inviteToProject">Invite to project</button>
+                    </div>
+                </div>
+            </div>
+            <div class="right-controls">
+                <button class="filter-btn" id="filterBtn">
+                    <span>🔽</span>
+                    New users (<span id="totalUsersCount"><%= newUsers.length %></span>)
+                </button>
+                <input type="text" class="search-box" id="searchBox" placeholder="Search new users">
+                <button class="export-btn" id="exportBtn">
+                    <span>✉️</span>
+                    Export user list
+                </button>
+            </div>
+        </div>
+
+        <div class="people-table">
+            <% if (newUsers && newUsers.length > 0) { %>
+            <table>
+                <thead>
+                    <tr>
+                        <th class="checkbox-cell">
+                            <input type="checkbox" id="selectAll" class="checkbox">
+                        </th>
+                        <th onclick="sortTable('name')">
+                            Name
+                            <span class="sort-indicator" id="sort-name">▲</span>
+                        </th>
+                        <th onclick="sortTable('email')">
+                            Email
+                            <span class="sort-indicator" id="sort-email">▲</span>
+                        </th>
+                        <th onclick="sortTable('company')">
+                            Company
+                            <span class="sort-indicator" id="sort-company">▲</span>
+                        </th>
+                        <th onclick="sortTable('phone')">
+                            Phone
+                            <span class="sort-indicator" id="sort-phone">▲</span>
+                        </th>
+                        <th onclick="sortTable('projects')">
+                            Projects
+                            <span class="sort-indicator" id="sort-projects">▲</span>
+                        </th>
+                        <th onclick="sortTable('role')">
+                            Account Role
+                            <span class="sort-indicator active" id="sort-role">▲</span>
+                        </th>
+                        <th>
+                            Status
+                        </th>
+                    </tr>
+                </thead>
+                <tbody id="peopleTableBody">
+                    <% newUsers.forEach((user, index) => { %>
+                    <tr>
+                        <td class="checkbox-cell">
+                            <input type="checkbox" class="checkbox row-checkbox" data-id="<%= user.id %>">
+                        </td>
+                        <td class="name-cell"><%= user.name %></td>
+                        <td class="email-cell">
+                            <a href="mailto:<%= user.email %>"><%= user.email %></a>
+                        </td>
+                        <td class="company-cell"><%= user.company || 'N/A' %></td>
+                        <td class="phone-cell"><%= user.phone || 'N/A' %></td>
+                        <td class="projects-cell"><span class="project-count"><%= user.projects || 0 %></span></td>
+                        <td class="role-cell"><%= user.role %></td>
+                        <td><span class="status-badge status-new">New</span></td>
+                    </tr>
+                    <% }) %>
+                </tbody>
+            </table>
+            <% } else { %>
+            <div class="empty-state">
+                <div class="empty-state-icon">👥</div>
+                <div class="empty-state-title">No new users</div>
+                <div class="empty-state-text">There are currently no new users in the system.</div>
+            </div>
+            <% } %>
+        </div>
+    </main>
+
+    <script>
+        let selectedCount = 0;
+        let currentSortColumn = 'role';
+        let sortDirection = 'asc';
+
+        // Update total users count
+        function updateTotalUsersCount() {
+            const visibleRows = document.querySelectorAll('#peopleTableBody tr:not([style*="display: none"])');
+            document.getElementById('totalUsersCount').textContent = visibleRows.length;
+        }
+
+        // Search functionality
+        document.getElementById('searchBox').addEventListener('input', function(e) {
+            e.stopPropagation();
+            const searchTerm = e.target.value.toLowerCase();
+            const rows = document.querySelectorAll('#peopleTableBody tr');
+
+            rows.forEach(row => {
+                const text = row.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    row.style.display = '';
+                } else {
+                    row.style.display = 'none';
+                }
+            });
+
+            updateTotalUsersCount();
+        });
+
+        // Select all functionality
+        const selectAllCheckbox = document.getElementById('selectAll');
+        if (selectAllCheckbox) {
+            selectAllCheckbox.addEventListener('change', function(e) {
+                const checkboxes = document.querySelectorAll('.row-checkbox');
+                checkboxes.forEach(checkbox => {
+                    checkbox.checked = e.target.checked;
+                });
+                updateSelectedCount();
+            });
+        }
+
+        // Individual checkbox functionality
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('row-checkbox')) {
+                updateSelectedCount();
+                updateSelectAllState();
+            }
+        });
+
+        function updateSelectedCount() {
+            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+            selectedCount = checkedBoxes.length;
+            document.getElementById('actionsBadge').textContent = selectedCount;
+        }
+
+        function updateSelectAllState() {
+            const allCheckboxes = document.querySelectorAll('.row-checkbox');
+            const checkedBoxes = document.querySelectorAll('.row-checkbox:checked');
+            const selectAllCheckbox = document.getElementById('selectAll');
+
+            if (selectAllCheckbox) {
+                if (checkedBoxes.length === 0) {
+                    selectAllCheckbox.indeterminate = false;
+                    selectAllCheckbox.checked = false;
+                } else if (checkedBoxes.length === allCheckboxes.length) {
+                    selectAllCheckbox.indeterminate = false;
+                    selectAllCheckbox.checked = true;
+                } else {
+                    selectAllCheckbox.indeterminate = true;
+                }
+            }
+        }
+
+        // Actions dropdown functionality
+        function toggleActionsDropdown() {
+            const dropdown = document.getElementById('actionsDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        document.getElementById('actionsBtn').addEventListener('click', function(e) {
+            e.stopPropagation();
+            toggleActionsDropdown();
+        });
+
+        // Close dropdowns when clicking outside
+        document.addEventListener('click', function(event) {
+            const actionsDropdown = document.getElementById('actionsDropdown');
+            const actionsBtn = document.getElementById('actionsBtn');
+            const userDropdown = document.getElementById('userDropdown');
+            const userDropdownToggle = document.getElementById('userDropdownToggle');
+
+            if (actionsBtn && !actionsBtn.contains(event.target)) {
+                actionsDropdown.classList.remove('show');
+            }
+
+            if (userDropdownToggle && !userDropdownToggle.contains(event.target)) {
+                userDropdown.classList.remove('show');
+            }
+        });
+
+        // Table sorting functionality
+        function sortTable(column) {
+            const table = document.querySelector('table');
+            if (!table) return;
+
+            const tbody = table.querySelector('tbody');
+            const rows = Array.from(tbody.querySelectorAll('tr'));
+
+            document.querySelectorAll('.sort-indicator').forEach(indicator => {
+                indicator.classList.remove('active');
+            });
+
+            const currentIndicator = document.getElementById(`sort-${column}`);
+            currentIndicator.classList.add('active');
+
+            if (currentSortColumn === column) {
+                sortDirection = sortDirection === 'asc' ? 'desc' : 'asc';
+            } else {
+                sortDirection = 'asc';
+                currentSortColumn = column;
+            }
+
+            currentIndicator.textContent = sortDirection === 'asc' ? '▲' : '▼';
+
+            rows.sort((a, b) => {
+                let aValue, bValue;
+
+                switch(column) {
+                    case 'name':
+                        aValue = a.cells[1].textContent.trim();
+                        bValue = b.cells[1].textContent.trim();
+                        break;
+                    case 'email':
+                        aValue = a.cells[2].textContent.trim();
+                        bValue = b.cells[2].textContent.trim();
+                        break;
+                    case 'company':
+                        aValue = a.cells[3].textContent.trim();
+                        bValue = b.cells[3].textContent.trim();
+                        break;
+                    case 'phone':
+                        aValue = a.cells[4].textContent.trim();
+                        bValue = b.cells[4].textContent.trim();
+                        break;
+                    case 'projects':
+                        aValue = parseInt(a.cells[5].textContent.trim());
+                        bValue = parseInt(b.cells[5].textContent.trim());
+                        break;
+                    case 'role':
+                        aValue = a.cells[6].textContent.trim();
+                        bValue = b.cells[6].textContent.trim();
+                        break;
+                }
+
+                if (typeof aValue === 'string') {
+                    return sortDirection === 'asc' ?
+                        aValue.localeCompare(bValue) :
+                        bValue.localeCompare(aValue);
+                } else {
+                    return sortDirection === 'asc' ? aValue - bValue : bValue - aValue;
+                }
+            });
+
+            rows.forEach(row => tbody.appendChild(row));
+        }
+
+        // Export functionality
+        document.getElementById('exportBtn').addEventListener('click', function() {
+            alert('Export functionality would be implemented here to export new users list');
+        });
+
+        // Toggle user dropdown
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        const userDropdownToggle = document.getElementById('userDropdownToggle');
+        if (userDropdownToggle) {
+            userDropdownToggle.addEventListener('click', toggleUserDropdown);
+        }
+
+        // Edit profile link
+        const editProfileLink = document.getElementById('editProfileLink');
+        if (editProfileLink) {
+            editProfileLink.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('Edit profile functionality would open here');
+            });
+        }
+
+        // Sign out functionality
+        async function signOut() {
+            try {
+                const signOutBtn = document.querySelector('a[onclick="signOut()"]');
+                const originalText = signOutBtn.textContent;
+                signOutBtn.textContent = 'Signing out...';
+                signOutBtn.style.pointerEvents = 'none';
+
+                const response = await fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #48bb78;
+                        color: white;
+                        padding: 16px 24px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+                        z-index: 10000;
+                        font-weight: 600;
+                    `;
+                    notification.textContent = 'Signed out successfully. Redirecting...';
+                    document.body.appendChild(notification);
+
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 1500);
+                } else {
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #f56565;
+                        color: white;
+                        padding: 16px 24px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+                        z-index: 10000;
+                        font-weight: 600;
+                    `;
+                    notification.textContent = 'Sign out failed. Please try again.';
+                    document.body.appendChild(notification);
+
+                    signOutBtn.textContent = originalText;
+                    signOutBtn.style.pointerEvents = 'auto';
+
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                }
+            } catch (error) {
+                console.error('Sign out error:', error);
+
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #f56565;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+                    z-index: 10000;
+                    font-weight: 600;
+                `;
+                notification.textContent = 'Connection error. Please try again.';
+                document.body.appendChild(notification);
+
+                const signOutBtn = document.querySelector('a[onclick="signOut()"]');
+                signOutBtn.textContent = 'Sign out';
+                signOutBtn.style.pointerEvents = 'auto';
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+
+        // Invite to project functionality
+        const inviteBtn = document.getElementById('inviteToProject');
+        if (inviteBtn) {
+            inviteBtn.addEventListener('click', function() {
+                if (selectedCount === 0) {
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #f56565;
+                        color: white;
+                        padding: 16px 24px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+                        z-index: 10000;
+                        font-weight: 600;
+                    `;
+                    notification.textContent = 'Please select at least one user to invite to a project';
+                    document.body.appendChild(notification);
+
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                    return;
+                }
+
+                // Show invite to project modal
+                showInviteToProjectModal();
+            });
+        }
+
+        // Show invite to project modal
+        function showInviteToProjectModal() {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed !important;
+                top: 0 !important;
+                left: 0 !important;
+                width: 100% !important;
+                height: 100% !important;
+                background: rgba(0, 0, 0, 0.5) !important;
+                display: flex !important;
+                align-items: center !important;
+                justify-content: center !important;
+                z-index: 2147483647 !important;
+                backdrop-filter: blur(4px);
+            `;
+
+            modal.innerHTML = `
+                <div style="
+                    background: white;
+                    border-radius: 12px;
+                    box-shadow: 0 25px 50px rgba(0, 0, 0, 0.25);
+                    max-width: 500px;
+                    width: 90%;
+                    max-height: 90vh;
+                    overflow: hidden;
+                    position: relative;
+                    z-index: 2147483647;
+                ">
+                    <!-- Modal Header -->
+                    <div style="
+                        display: flex;
+                        justify-content: space-between;
+                        align-items: center;
+                        padding: 24px 24px 0 24px;
+                        border-bottom: 1px solid #f1f5f9;
+                        margin-bottom: 24px;
+                    ">
+                        <h3 style="
+                            margin: 0;
+                            color: #1a202c;
+                            font-size: 20px;
+                            font-weight: 700;
+                            line-height: 1.2;
+                        ">Invite users to project</h3>
+                        <button id="closeInviteModal" style="
+                            background: none;
+                            border: none;
+                            font-size: 24px;
+                            color: #a0aec0;
+                            cursor: pointer;
+                            padding: 4px;
+                            line-height: 1;
+                            transition: color 0.2s;
+                        ">×</button>
+                    </div>
+
+                    <!-- Modal Body -->
+                    <div style="padding: 0 24px 24px 24px;">
+                        <!-- Select Projects Section -->
+                        <div style="margin-bottom: 24px;">
+                            <label style="
+                                display: block;
+                                margin-bottom: 8px;
+                                font-weight: 600;
+                                color: #2d3748;
+                                font-size: 14px;
+                            ">Select projects</label>
+                            <div style="position: relative;">
+                                <input type="text" id="projectSearch" placeholder="Search projects" style="
+                                    width: 100%;
+                                    padding: 12px 16px;
+                                    border: 1px solid #e2e8f0;
+                                    border-radius: 8px;
+                                    font-size: 14px;
+                                    background: #fafafa;
+                                    transition: all 0.2s;
+                                    box-sizing: border-box;
+                                " onfocus="this.style.borderColor='#3182ce'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(49, 130, 206, 0.1)'"
+                                   onblur="this.style.borderColor='#e2e8f0'; this.style.background='#fafafa'; this.style.boxShadow='none'">
+                                <div id="projectDropdown" style="
+                                    position: absolute;
+                                    top: 100%;
+                                    left: 0;
+                                    right: 0;
+                                    background: white;
+                                    border: 1px solid #e2e8f0;
+                                    border-top: none;
+                                    border-radius: 0 0 8px 8px;
+                                    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+                                    z-index: 2147483647;
+                                    display: none;
+                                ">
+                                    <div class="project-option" data-project="alpha" style="padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: background 0.2s;">Project Alpha</div>
+                                    <div class="project-option" data-project="beta" style="padding: 12px 16px; cursor: pointer; border-bottom: 1px solid #f1f5f9; transition: background 0.2s;">Project Beta</div>
+                                    <div class="project-option" data-project="gamma" style="padding: 12px 16px; cursor: pointer; transition: background 0.2s;">Project Gamma</div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Add Users Section -->
+                        <div style="margin-bottom: 32px;">
+                            <label style="
+                                display: block;
+                                margin-bottom: 8px;
+                                font-weight: 600;
+                                color: #2d3748;
+                                font-size: 14px;
+                            ">Add users (separate user emails with commas)</label>
+                            <input type="text" id="inviteEmails" placeholder="Enter user email" style="
+                                width: 100%;
+                                padding: 12px 16px;
+                                border: 1px solid #e2e8f0;
+                                border-radius: 8px;
+                                font-size: 14px;
+                                background: #fafafa;
+                                transition: all 0.2s;
+                                box-sizing: border-box;
+                            " onfocus="this.style.borderColor='#3182ce'; this.style.background='white'; this.style.boxShadow='0 0 0 3px rgba(49, 130, 206, 0.1)'"
+                               onblur="this.style.borderColor='#e2e8f0'; this.style.background='#fafafa'; this.style.boxShadow='none'">
+                        </div>
+
+                        <!-- Action Buttons -->
+                        <div style="
+                            display: flex;
+                            justify-content: flex-end;
+                            gap: 12px;
+                        ">
+                            <button id="importContacts" style="
+                                background: white;
+                                color: #4a5568;
+                                border: 1px solid #e2e8f0;
+                                padding: 10px 20px;
+                                border-radius: 8px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                font-size: 14px;
+                                transition: all 0.2s;
+                            ">Import contacts</button>
+                            <button id="sendInvite" style="
+                                background: #3182ce;
+                                color: white;
+                                border: none;
+                                padding: 10px 20px;
+                                border-radius: 8px;
+                                cursor: pointer;
+                                font-weight: 600;
+                                font-size: 14px;
+                                transition: all 0.2s;
+                            ">Invite users</button>
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+
+            // Add hover effects
+            const importBtn = modal.querySelector('#importContacts');
+            const sendBtn = modal.querySelector('#sendInvite');
+            const closeBtn = modal.querySelector('#closeInviteModal');
+
+            importBtn.addEventListener('mouseenter', function() {
+                this.style.background = '#f7fafc';
+                this.style.borderColor = '#cbd5e0';
+            });
+            importBtn.addEventListener('mouseleave', function() {
+                this.style.background = 'white';
+                this.style.borderColor = '#e2e8f0';
+            });
+
+            sendBtn.addEventListener('mouseenter', function() {
+                this.style.background = '#2c5282';
+                this.style.transform = 'translateY(-1px)';
+                this.style.boxShadow = '0 4px 12px rgba(49, 130, 206, 0.3)';
+            });
+            sendBtn.addEventListener('mouseleave', function() {
+                this.style.background = '#3182ce';
+                this.style.transform = 'translateY(0)';
+                this.style.boxShadow = 'none';
+            });
+
+            closeBtn.addEventListener('mouseenter', function() {
+                this.style.color = '#4a5568';
+            });
+            closeBtn.addEventListener('mouseleave', function() {
+                this.style.color = '#a0aec0';
+            });
+
+            // Project search functionality
+            const projectSearch = modal.querySelector('#projectSearch');
+            const projectDropdown = modal.querySelector('#projectDropdown');
+            const projectOptions = modal.querySelectorAll('.project-option');
+
+            projectSearch.addEventListener('focus', function() {
+                projectDropdown.style.display = 'block';
+            });
+
+            projectSearch.addEventListener('blur', function() {
+                setTimeout(() => {
+                    projectDropdown.style.display = 'none';
+                }, 200);
+            });
+
+            projectOptions.forEach(option => {
+                option.addEventListener('mouseenter', function() {
+                    this.style.background = '#f7fafc';
+                });
+                option.addEventListener('mouseleave', function() {
+                    this.style.background = 'white';
+                });
+                option.addEventListener('click', function() {
+                    projectSearch.value = this.textContent;
+                    projectDropdown.style.display = 'none';
+                });
+            });
+
+            // Event listeners
+            closeBtn.addEventListener('click', function() {
+                modal.remove();
+            });
+
+            importBtn.addEventListener('click', function() {
+                // Simulate import contacts functionality
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #3182ce;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+                    z-index: 100002;
+                    font-weight: 600;
+                `;
+                notification.textContent = 'Import contacts functionality would open here';
+                document.body.appendChild(notification);
+
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            });
+
+            sendBtn.addEventListener('click', function() {
+                const emails = document.getElementById('inviteEmails').value.trim();
+                const project = projectSearch.value.trim();
+
+                if (!emails) {
+                    alert('Please enter at least one email address');
+                    return;
+                }
+
+                if (!project) {
+                    alert('Please select a project');
+                    return;
+                }
+
+                // Process invitation
+                processInvitation(emails, project);
+                modal.remove();
+            });
+
+            // Close on backdrop click
+            modal.addEventListener('click', function(e) {
+                if (e.target === modal) {
+                    modal.remove();
+                }
+            });
+        }
+
+        // Process invitation
+        function processInvitation(emails, project) {
+            // Show loading notification
+            const loadingNotification = document.createElement('div');
+            loadingNotification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #3182ce;
+                color: white;
+                padding: 16px 24px;
+                border-radius: 8px;
+                box-shadow: 0 4px 12px rgba(49, 130, 206, 0.3);
+                z-index: 10000;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 10px;
+            `;
+            loadingNotification.innerHTML = `
+                <div style="
+                    width: 20px;
+                    height: 20px;
+                    border: 2px solid rgba(255,255,255,0.3);
+                    border-top: 2px solid white;
+                    border-radius: 50%;
+                    animation: spin 1s linear infinite;
+                "></div>
+                Sending invitations...
+            `;
+
+            document.body.appendChild(loadingNotification);
+
+            // Simulate API call
+            setTimeout(() => {
+                loadingNotification.remove();
+
+                // Show success notification
+                const successNotification = document.createElement('div');
+                successNotification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #48bb78;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+                    z-index: 10000;
+                    font-weight: 600;
+                `;
+                successNotification.textContent = `Invitations sent to ${emails.split(',').length} user(s) for project: ${project}`;
+                document.body.appendChild(successNotification);
+
+                setTimeout(() => {
+                    successNotification.remove();
+                }, 3000);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>

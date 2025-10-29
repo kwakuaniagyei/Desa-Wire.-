@@ -1,0 +1,9 @@
+{
+  "files.associations": {
+    "*.ejs": "ejs"
+  },
+  "javascript.validate.enable": false,
+  "[ejs]": {
+    "editor.suggest.showWords": false
+  }
+}

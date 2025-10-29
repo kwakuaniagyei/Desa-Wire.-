@@ -1,0 +1,50 @@
+[
+  {
+    "id": "1761533246945m0wdg3dz7",
+    "name": "All Plans",
+    "projectId": "3",
+    "color": "#3b82f6",
+    "icon": "folder",
+    "createdAt": "2025-10-27T02:47:26.945Z"
+  },
+  {
+    "id": "1761767475090azjpqeuwa",
+    "name": "good",
+    "projectId": "2",
+    "color": "#3b82f6",
+    "icon": "folder",
+    "createdAt": "2025-10-29T19:51:15.090Z"
+  },
+  {
+    "id": "1761768692001cw41iovqg",
+    "name": "All Plans",
+    "projectId": "2",
+    "color": "#3b82f6",
+    "icon": "folder",
+    "createdAt": "2025-10-29T20:11:32.001Z"
+  },
+  {
+    "id": "1761767124567floorplans",
+    "name": "Floor Plans",
+    "projectId": "1",
+    "color": "#3b82f6",
+    "icon": "folder",
+    "createdAt": "2025-10-29T19:45:00.000Z"
+  },
+  {
+    "id": "17617706167215th8u11kn",
+    "name": "Glazing",
+    "projectId": "1",
+    "color": "#3b82f6",
+    "icon": "folder",
+    "createdAt": "2025-10-29T20:43:36.721Z"
+  },
+  {
+    "id": "1761773035641yqgb82mtn",
+    "name": "All Plans",
+    "projectId": "1",
+    "color": "#3b82f6",
+    "icon": "folder",
+    "createdAt": "2025-10-29T21:23:55.641Z"
+  }
+]

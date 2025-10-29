@@ -1,0 +1,54 @@
+[
+  {
+    "userId": 3,
+    "projectId": "1"
+  },
+  {
+    "userId": 3,
+    "projectId": "2"
+  },
+  {
+    "userId": 1006,
+    "projectId": "2"
+  },
+  {
+    "userId": 1007,
+    "projectId": "3"
+  },
+  {
+    "userId": 1007,
+    "projectId": "1"
+  },
+  {
+    "userId": 1007,
+    "projectId": "2"
+  },
+  {
+    "userId": 1006,
+    "projectId": "1"
+  },
+  {
+    "userId": 1006,
+    "projectId": "3"
+  },
+  {
+    "userId": 1007,
+    "projectId": "1759873624669"
+  },
+  {
+    "userId": 1007,
+    "projectId": "1760111289462"
+  },
+  {
+    "userId": 1,
+    "projectId": "1760715934494"
+  },
+  {
+    "userId": 1,
+    "projectId": "1761574229854"
+  },
+  {
+    "userId": 1007,
+    "projectId": "1761574229854"
+  }
+]

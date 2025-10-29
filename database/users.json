@@ -1,0 +1,26 @@
+[
+  {
+    "id": 1,
+    "email": "it@desa.ca",
+    "password": "desa123",
+    "username": "IT Admin",
+    "role": "admin",
+    "status": "active"
+  },
+  {
+    "id": 2,
+    "email": "admin@desa.ca",
+    "password": "admin123",
+    "username": "Administrator",
+    "role": "admin",
+    "status": "active"
+  },
+  {
+    "id": 3,
+    "email": "user@desa.ca",
+    "password": "user123",
+    "username": "Regular User",
+    "role": "user",
+    "status": "active"
+  }
+]

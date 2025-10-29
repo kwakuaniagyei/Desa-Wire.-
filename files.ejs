@@ -1,0 +1,848 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Files - Project Management</title>
+    <link rel="icon" type="image/png" href="/img/icon.png">
+    <link rel="shortcut icon" type="image/png" href="/img/icon.png">
+    <script src="/js/notifications.js"></script>
+    <script src="/js/chat-widget.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Century Gothic', 'CenturyGothic', AppleGothic, sans-serif;
+            background-color: #F5F7FA;
+            height: 100vh;
+            overflow: hidden;
+            font-size: 17px;
+        }
+
+        /* Header */
+        .header {
+            background-color: #282C34;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .hamburger-menu {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 18px;
+            cursor: pointer;
+            padding: 8px;
+            border-radius: 4px;
+            transition: background-color 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-width: 40px;
+            height: 40px;
+        }
+
+        .hamburger-menu:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .desa-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+        }
+
+        .logo {
+            color: white;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .header-center {
+            flex: 1;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 12px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .search-bar {
+            background-color: #F5F7FA;
+            border: none;
+            border-radius: 6px;
+            padding: 8px 40px 8px 12px;
+            width: 100%;
+            font-size: 14px;
+            color: #333;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .header-icon {
+            color: white;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 60px;
+            width: 250px;
+            height: calc(100vh - 60px);
+            background-color: #2D3748;
+            color: white;
+            overflow-y: auto;
+            transition: width 0.3s ease;
+            z-index: 999;
+        }
+
+        .sidebar.collapsed {
+            width: 60px;
+        }
+
+        .section-title {
+            padding: 20px 20px 10px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #A0AEC0;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            color: #E2E8F0;
+            text-decoration: none;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+        }
+
+        .nav-item:hover {
+            background-color: #3C4043;
+        }
+
+        .nav-item.active {
+            background-color: #3F80EA;
+            color: white;
+            border-left-color: #60A5FA;
+        }
+
+        .nav-item i {
+            width: 22px;
+            font-size: 20px;
+            margin-right: 12px;
+            text-align: center;
+        }
+
+        .nav-label {
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 250px;
+            margin-top: 60px;
+            height: calc(100vh - 60px);
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .main-content.sidebar-collapsed {
+            margin-left: 60px;
+        }
+
+        .action-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding: 16px 0;
+        }
+
+        .action-left {
+            display: flex;
+            gap: 12px;
+        }
+
+        .btn {
+            padding: 10px 16px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .btn-primary {
+            background-color: #3F80EA;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background-color: #2563EB;
+        }
+
+        .btn-secondary {
+            background-color: #E2E8F0;
+            color: #4A5568;
+        }
+
+        .btn-secondary:hover {
+            background-color: #CBD5E0;
+        }
+
+        /* File Browser */
+        .file-browser {
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .file-toolbar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 16px 20px;
+            border-bottom: 1px solid #E2E8F0;
+            background: #F8FAFC;
+        }
+
+        .file-path {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #4A5568;
+        }
+
+        .path-separator {
+            color: #A0AEC0;
+        }
+
+        .view-controls {
+            display: flex;
+            gap: 8px;
+        }
+
+        .view-btn {
+            padding: 6px 12px;
+            border: 1px solid #E2E8F0;
+            background: white;
+            border-radius: 4px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .view-btn.active {
+            background-color: #3F80EA;
+            color: white;
+            border-color: #3F80EA;
+        }
+
+        .view-btn:hover {
+            border-color: #3F80EA;
+            color: #3F80EA;
+        }
+
+        /* File List */
+        .file-list {
+            padding: 0;
+        }
+
+        .file-item {
+            display: flex;
+            align-items: center;
+            padding: 12px 20px;
+            border-bottom: 1px solid #F1F5F9;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-item:hover {
+            background-color: #F8FAFC;
+        }
+
+        .file-item.selected {
+            background-color: #EBF8FF;
+        }
+
+        .file-checkbox {
+            margin-right: 12px;
+        }
+
+        .file-icon {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 12px;
+            border-radius: 4px;
+        }
+
+        .file-icon.folder {
+            background-color: #FEF5E7;
+            color: #DD6B20;
+        }
+
+        .file-icon.pdf {
+            background-color: #FED7D7;
+            color: #C53030;
+        }
+
+        .file-icon.doc {
+            background-color: #E6FFFA;
+            color: #319795;
+        }
+
+        .file-icon.image {
+            background-color: #F0FFF4;
+            color: #38A169;
+        }
+
+        .file-icon.excel {
+            background-color: #E6F3FF;
+            color: #3182CE;
+        }
+
+        .file-info {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2D3748;
+            min-width: 200px;
+        }
+
+        .file-size {
+            font-size: 12px;
+            color: #718096;
+            min-width: 80px;
+        }
+
+        .file-modified {
+            font-size: 12px;
+            color: #718096;
+            min-width: 120px;
+        }
+
+        .file-actions {
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .file-item:hover .file-actions {
+            opacity: 1;
+        }
+
+        .file-action-btn {
+            padding: 4px 8px;
+            border: none;
+            background: none;
+            color: #718096;
+            cursor: pointer;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .file-action-btn:hover {
+            background-color: #E2E8F0;
+            color: #4A5568;
+        }
+
+        /* File Grid View */
+        .file-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 16px;
+            padding: 20px;
+        }
+
+        .file-card {
+            background: white;
+            border: 1px solid #E2E8F0;
+            border-radius: 8px;
+            padding: 16px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .file-card:hover {
+            border-color: #3F80EA;
+            box-shadow: 0 2px 8px rgba(63, 128, 234, 0.1);
+        }
+
+        .file-card-icon {
+            width: 48px;
+            height: 48px;
+            margin: 0 auto 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 8px;
+            font-size: 24px;
+        }
+
+        .file-card-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #2D3748;
+            margin-bottom: 4px;
+            word-break: break-word;
+        }
+
+        .file-card-meta {
+            font-size: 12px;
+            color: #718096;
+        }
+
+        /* Empty State */
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 60vh;
+            text-align: center;
+        }
+
+        .empty-state-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .empty-state-icon i {
+            font-size: 32px;
+            color: white;
+        }
+
+        .empty-state h3 {
+            font-size: 20px;
+            color: #2D3748;
+            margin-bottom: 8px;
+        }
+
+        .empty-state p {
+            color: #718096;
+            font-size: 14px;
+            margin-bottom: 20px;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .file-grid {
+                grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-left">
+            <button class="hamburger-menu" id="hamburgerMenu">
+                <i class="fas fa-bars"></i>
+            </button>
+            <img src="/img/icon.png" alt="Desa Wire" class="desa-logo">
+            <span class="logo">Desa Wire</span>
+        </div>
+        
+        <div class="header-center">
+            <input type="text" class="search-bar" placeholder="Search files...">
+        </div>
+        
+        <div class="header-right">
+            <i class="fas fa-bell header-icon"></i>
+            <i class="fas fa-cog header-icon"></i>
+            <div class="user-avatar">
+                <img src="/img/icon.png" alt="User" style="width: 32px; height: 32px; border-radius: 50%;">
+            </div>
+        </div>
+    </header>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="nav-section">
+            <div class="section-title">Field Management</div>
+            <% if (typeof project !== 'undefined' && project) { %>
+                <a href="/project/<%= project.id %>?name=<%= encodeURIComponent(project.name) %>" class="nav-item">
+                    <i class="fas fa-drafting-compass"></i>
+                    <span class="nav-label">Plans</span>
+                </a>
+                <a href="/project/<%= project.id %>/specifications?name=<%= encodeURIComponent(project.name) %>" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span class="nav-label">Specifications</span>
+                </a>
+                <a href="/project/<%= project.id %>/tasks?name=<%= encodeURIComponent(project.name) %>" class="nav-item">
+                    <i class="fas fa-tasks"></i>
+                    <span class="nav-label">Tasks</span>
+                </a>
+                <a href="/project/<%= project.id %>/photos?name=<%= encodeURIComponent(project.name) %>" class="nav-item">
+                    <i class="fas fa-camera"></i>
+                    <span class="nav-label">Photos</span>
+                </a>
+                <a href="/project/<%= project.id %>/forms?name=<%= encodeURIComponent(project.name) %>" class="nav-item">
+                    <i class="fas fa-file-signature"></i>
+                    <span class="nav-label">Forms</span>
+                </a>
+                <a href="/project/<%= project.id %>/files?name=<%= encodeURIComponent(project.name) %>" class="nav-item active">
+                    <i class="fas fa-paperclip"></i>
+                    <span class="nav-label">Files</span>
+                </a>
+            <% } else { %>
+                <a href="/plans" class="nav-item">
+                    <i class="fas fa-drafting-compass"></i>
+                    <span class="nav-label">Plans</span>
+                </a>
+                <a href="/specifications" class="nav-item">
+                    <i class="fas fa-clipboard-list"></i>
+                    <span class="nav-label">Specifications</span>
+                </a>
+                <a href="/tasks" class="nav-item">
+                    <i class="fas fa-tasks"></i>
+                    <span class="nav-label">Tasks</span>
+                </a>
+                <a href="/photos" class="nav-item">
+                    <i class="fas fa-camera"></i>
+                    <span class="nav-label">Photos</span>
+                </a>
+                <a href="/forms" class="nav-item">
+                    <i class="fas fa-file-signature"></i>
+                    <span class="nav-label">Forms</span>
+                </a>
+                <a href="/files" class="nav-item active">
+                    <i class="fas fa-paperclip"></i>
+                    <span class="nav-label">Files</span>
+                </a>
+            <% } %>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content" id="mainContent">
+        <div class="action-bar">
+            <div class="action-left">
+                <button class="btn btn-primary">
+                    <i class="fas fa-upload"></i>
+                    Upload Files
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-folder-plus"></i>
+                    New Folder
+                </button>
+            </div>
+            <div class="action-right">
+                <button class="btn btn-secondary">
+                    <i class="fas fa-download"></i>
+                    Download
+                </button>
+                <button class="btn btn-secondary">
+                    <i class="fas fa-share"></i>
+                    Share
+                </button>
+            </div>
+        </div>
+
+        <!-- File Browser -->
+        <div class="file-browser">
+            <div class="file-toolbar">
+                <div class="file-path">
+                    <i class="fas fa-home"></i>
+                    <span>Project Files</span>
+                    <span class="path-separator">/</span>
+                    <span>Documents</span>
+                </div>
+                <div class="view-controls">
+                    <button class="view-btn active" data-view="list">
+                        <i class="fas fa-list"></i>
+                    </button>
+                    <button class="view-btn" data-view="grid">
+                        <i class="fas fa-th"></i>
+                    </button>
+                </div>
+            </div>
+
+            <!-- File List View -->
+            <div class="file-list" id="fileListView">
+                <div class="file-item">
+                    <input type="checkbox" class="file-checkbox">
+                    <div class="file-icon folder">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">Project Plans</div>
+                        <div class="file-size">-</div>
+                        <div class="file-modified">Dec 10, 2024</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="file-action-btn">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="file-item">
+                    <input type="checkbox" class="file-checkbox">
+                    <div class="file-icon pdf">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">Building Specifications.pdf</div>
+                        <div class="file-size">2.4 MB</div>
+                        <div class="file-modified">Dec 9, 2024</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="file-action-btn">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="file-item">
+                    <input type="checkbox" class="file-checkbox">
+                    <div class="file-icon doc">
+                        <i class="fas fa-file-word"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">Safety Procedures.docx</div>
+                        <div class="file-size">1.8 MB</div>
+                        <div class="file-modified">Dec 8, 2024</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="file-action-btn">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="file-item">
+                    <input type="checkbox" class="file-checkbox">
+                    <div class="file-icon excel">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">Budget Tracking.xlsx</div>
+                        <div class="file-size">856 KB</div>
+                        <div class="file-modified">Dec 7, 2024</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="file-action-btn">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="file-item">
+                    <input type="checkbox" class="file-checkbox">
+                    <div class="file-icon image">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <div class="file-info">
+                        <div class="file-name">Site Photos.zip</div>
+                        <div class="file-size">15.2 MB</div>
+                        <div class="file-modified">Dec 6, 2024</div>
+                    </div>
+                    <div class="file-actions">
+                        <button class="file-action-btn">
+                            <i class="fas fa-download"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-share"></i>
+                        </button>
+                        <button class="file-action-btn">
+                            <i class="fas fa-ellipsis-v"></i>
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- File Grid View (hidden by default) -->
+            <div class="file-grid" id="fileGridView" style="display: none;">
+                <div class="file-card">
+                    <div class="file-card-icon folder">
+                        <i class="fas fa-folder"></i>
+                    </div>
+                    <div class="file-card-name">Project Plans</div>
+                    <div class="file-card-meta">Dec 10, 2024</div>
+                </div>
+
+                <div class="file-card">
+                    <div class="file-card-icon pdf">
+                        <i class="fas fa-file-pdf"></i>
+                    </div>
+                    <div class="file-card-name">Building Specifications.pdf</div>
+                    <div class="file-card-meta">2.4 MB • Dec 9, 2024</div>
+                </div>
+
+                <div class="file-card">
+                    <div class="file-card-icon doc">
+                        <i class="fas fa-file-word"></i>
+                    </div>
+                    <div class="file-card-name">Safety Procedures.docx</div>
+                    <div class="file-card-meta">1.8 MB • Dec 8, 2024</div>
+                </div>
+
+                <div class="file-card">
+                    <div class="file-card-icon excel">
+                        <i class="fas fa-file-excel"></i>
+                    </div>
+                    <div class="file-card-name">Budget Tracking.xlsx</div>
+                    <div class="file-card-meta">856 KB • Dec 7, 2024</div>
+                </div>
+
+                <div class="file-card">
+                    <div class="file-card-icon image">
+                        <i class="fas fa-file-image"></i>
+                    </div>
+                    <div class="file-card-name">Site Photos.zip</div>
+                    <div class="file-card-meta">15.2 MB • Dec 6, 2024</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Empty State (hidden by default) -->
+        <div class="empty-state" id="emptyState" style="display: none;">
+            <div class="empty-state-icon">
+                <i class="fas fa-paperclip"></i>
+            </div>
+            <h3>No Files Yet</h3>
+            <p>Upload your first file to start organizing your project documents.</p>
+            <button class="btn btn-primary">
+                <i class="fas fa-upload"></i>
+                Upload Files
+            </button>
+        </div>
+    </main>
+
+    <!-- Chat Widget -->
+    <div id="chatWidget" class="chat-widget">
+        <button class="chat-toggle">
+            <i class="fas fa-comments"></i>
+            <span>Chat with Desa Wire AI Assistant</span>
+        </button>
+    </div>
+
+    <script>
+        // Sidebar toggle functionality
+        document.addEventListener('DOMContentLoaded', function() {
+            const hamburgerMenu = document.getElementById('hamburgerMenu');
+            const sidebar = document.getElementById('sidebar');
+            const mainContent = document.getElementById('mainContent');
+
+            hamburgerMenu.addEventListener('click', function() {
+                sidebar.classList.toggle('collapsed');
+                mainContent.classList.toggle('sidebar-collapsed');
+            });
+
+            // View toggle functionality
+            const viewBtns = document.querySelectorAll('.view-btn');
+            const fileListView = document.getElementById('fileListView');
+            const fileGridView = document.getElementById('fileGridView');
+
+            viewBtns.forEach(btn => {
+                btn.addEventListener('click', function() {
+                    viewBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.add('active');
+
+                    const view = this.dataset.view;
+                    if (view === 'list') {
+                        fileListView.style.display = 'block';
+                        fileGridView.style.display = 'none';
+                    } else {
+                        fileListView.style.display = 'none';
+                        fileGridView.style.display = 'grid';
+                    }
+                });
+            });
+
+            // Update page title
+            document.title = 'Files - <%= projectName || "Project Management" %>';
+        });
+    </script>
+</body>
+</html>

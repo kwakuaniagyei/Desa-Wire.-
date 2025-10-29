@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Field Management</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f5f5;
+            height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 190px;
+            background: #2c2c2c;
+            color: #fff;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #3c3c3c;
+        }
+
+        .profile {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .profile-icon {
+            width: 24px;
+            height: 24px;
+            background: #ff9500;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .profile-name {
+            font-size: 14px;
+        }
+
+        .dropdown-icon {
+            color: #999;
+            cursor: pointer;
+        }
+
+        .section-title {
+            padding: 15px;
+            font-size: 11px;
+            color: #999;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            background: #3c3c3c;
+        }
+
+        .nav-item.active {
+            background: #4a7dc7;
+        }
+
+        .nav-icon {
+            width: 18px;
+            text-align: center;
+        }
+
+        .tasks-section {
+            margin-top: auto;
+            border-top: 1px solid #3c3c3c;
+        }
+
+        .task-item {
+            padding: 10px 15px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .task-item:hover {
+            background: #3c3c3c;
+        }
+
+        .task-item.active {
+            background: #4a7dc7;
+        }
+
+        .task-count {
+            background: #4a4a4a;
+            padding: 2px 8px;
+            border-radius: 10px;
+            font-size: 12px;
+        }
+
+        .sidebar-footer {
+            padding: 15px;
+            display: flex;
+            gap: 15px;
+            border-top: 1px solid #3c3c3c;
+        }
+
+        .footer-icon {
+            cursor: pointer;
+            opacity: 0.7;
+        }
+
+        .footer-icon:hover {
+            opacity: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: #fff;
+            padding: 12px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .search-container {
+            flex: 1;
+            max-width: 400px;
+            position: relative;
+        }
+
+        .search-input {
+            width: 100%;
+            padding: 8px 35px 8px 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            font-size: 14px;
+        }
+
+        .search-icon {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #999;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .notification-icon {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #ff3b30;
+            color: #fff;
+            width: 18px;
+            height: 18px;
+            border-radius: 50%;
+            font-size: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 14px;
+        }
+
+        .toolbar {
+            background: #fff;
+            padding: 15px 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .toolbar-left {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn {
+            padding: 8px 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-primary {
+            background: #4a7dc7;
+            color: #fff;
+            border: none;
+        }
+
+        .btn-primary:hover {
+            background: #3d6ab0;
+        }
+
+        .btn:hover {
+            background: #f5f5f5;
+        }
+
+        .toolbar-right {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .view-toggle {
+            display: flex;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+
+        .view-btn {
+            padding: 8px 12px;
+            background: #fff;
+            border: none;
+            cursor: pointer;
+            border-right: 1px solid #e0e0e0;
+        }
+
+        .view-btn:last-child {
+            border-right: none;
+        }
+
+        .view-btn.active {
+            background: #4a7dc7;
+            color: #fff;
+        }
+
+        .content-area {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .plans-filter {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+        .dropdown-btn {
+            padding: 6px 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            background: #fff;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(160px, 1fr));
+            gap: 20px;
+        }
+
+        .plan-card {
+            background: #fff;
+            border: 1px solid #e0e0e0;
+            border-radius: 4px;
+            padding: 10px;
+            cursor: pointer;
+            transition: box-shadow 0.2s;
+        }
+
+        .plan-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .plan-thumbnail {
+            width: 100%;
+            height: 120px;
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            border-radius: 2px;
+            margin-bottom: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+
+        .plan-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .plan-name {
+            font-size: 13px;
+            color: #333;
+        }
+
+        .new-plan-card {
+            border: 2px dashed #ccc;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 160px;
+            color: #999;
+            font-size: 14px;
+        }
+
+        .new-plan-card:hover {
+            border-color: #4a7dc7;
+            color: #4a7dc7;
+        }
+
+        .footer-bar {
+            background: #fff;
+            padding: 10px 20px;
+            border-top: 1px solid #e0e0e0;
+            font-size: 13px;
+            color: #666;
+        }
+
+        .folder-section {
+            margin-top: 30px;
+        }
+
+        .folder-header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 15px;
+            font-size: 14px;
+            color: #333;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="profile">
+                    <div class="profile-icon">⚡</div>
+                    <span class="profile-name">good</span>
+                </div>
+                <span class="dropdown-icon">▼</span>
+            </div>
+
+            <div class="section-title">Field Management</div>
+            <div class="nav-item active">
+                <span class="nav-icon">📋</span>
+                <span>Plans</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📄</span>
+                <span>Specifications</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">✓</span>
+                <span>Tasks</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📷</span>
+                <span>Photos</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📝</span>
+                <span>Forms</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📁</span>
+                <span>Files</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🔲</span>
+                <span>3D Models</span>
+            </div>
+
+            <div class="section-title">Project Management</div>
+            <div class="nav-item">
+                <span class="nav-icon">📊</span>
+                <span>RFIs</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">📤</span>
+                <span>Submittals</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">🔄</span>
+                <span>Change Orders</span>
+            </div>
+            <div class="nav-item">
+                <span class="nav-icon">💰</span>
+                <span>Budget</span>
+            </div>
+
+            <div class="tasks-section">
+                <div class="section-title">Tasks</div>
+                <div class="task-item active">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span>⭐</span>
+                        <span>My tasks</span>
+                    </div>
+                    <span class="task-count">1</span>
+                </div>
+                <div class="task-item">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span>👁</span>
+                        <span>Watched tasks</span>
+                    </div>
+                    <span class="task-count">1</span>
+                </div>
+                <div class="task-item">
+                    <div style="display: flex; align-items: center; gap: 10px;">
+                        <span>☰</span>
+                        <span>All tasks</span>
+                    </div>
+                    <span class="task-count">1</span>
+                </div>
+                <div class="nav-item">
+                    <span class="nav-icon">+</span>
+                    <span>New category</span>
+                </div>
+            </div>
+
+            <div class="sidebar-footer">
+                <span class="footer-icon">👥</span>
+                <span class="footer-icon">⚙️</span>
+                <span class="footer-icon">🗑️</span>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="header">
+                <div style="width: 40px;"></div>
+                <div class="search-container">
+                    <input type="text" class="search-input" placeholder="Search">
+                    <span class="search-icon">🔍</span>
+                </div>
+                <div class="header-right">
+                    <div class="notification-icon">
+                        🔔
+                        <span class="notification-badge">1</span>
+                    </div>
+                    <span>❓</span>
+                    <div class="user-info">
+                        <span>Business Plus Plan</span>
+                        <span>Stephen ▼</span>
+                        <span>🇺🇸</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="toolbar">
+                <div class="toolbar-left">
+                    <button class="btn btn-primary">+ New plan</button>
+                    <button class="btn">+ New folder</button>
+                    <button class="btn">Actions ▼</button>
+                </div>
+                <div class="toolbar-right">
+                    <button class="btn">🔍 Filter plans</button>
+                    <button class="btn">Version control</button>
+                    <div class="view-toggle">
+                        <button class="view-btn active">⊞</button>
+                        <button class="view-btn">☰</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="content-area">
+                <div class="plans-filter">
+                    <button class="dropdown-btn">
+                        📁 All plans (1 plans) ▼
+                    </button>
+                </div>
+
+                <div class="plans-grid">
+                    <div class="plan-card new-plan-card">
+                        <span style="font-size: 24px; margin-bottom: 5px;">+</span>
+                        <span>New plan</span>
+                    </div>
+                </div>
+
+                <div class="folder-section">
+                    <div class="folder-header">
+                        <button class="dropdown-btn">
+                            📁 good ▼
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="footer-bar">
+                1 plans
+            </div>
+        </div>
+    </div>
+</body>
+</html>

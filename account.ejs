@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desa Wire - Account</title>
+    <link rel="icon" type="image/png" href="/img/icon.png">
+    <script src="/js/notifications.js"></script>
+    <script src="/js/chat-widget.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background-color: #f5f6fa;
+            color: #333;
+        }
+
+        .header {
+            background: white;
+            border-bottom: 1px solid #e1e5e9;
+            padding: 0 20px;
+            height: 60px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            font-size: 18px;
+            font-weight: 600;
+            color: #2c5282;
+        }
+
+        .desa-logo {
+            width: 32px;
+            height: 32px;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+
+        .nav {
+            display: flex;
+            gap: 30px;
+        }
+
+        .nav-item {
+            padding: 8px 0;
+            color: #666;
+            text-decoration: none;
+            border-bottom: 2px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .nav-item.active {
+            color: #2c5282;
+            border-bottom-color: #3182ce;
+        }
+
+        .nav-item:hover {
+            color: #2c5282;
+        }
+
+        .user-section {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            color: #666;
+            font-size: 14px;
+            position: relative;
+        }
+
+        .user-dropdown {
+            position: relative;
+            cursor: pointer;
+        }
+
+        .user-dropdown-content {
+            display: none;
+            position: absolute;
+            right: 0;
+            top: 100%;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            min-width: 200px;
+            z-index: 1000;
+            margin-top: 5px;
+        }
+
+        .user-dropdown-content.show {
+            display: block;
+        }
+
+        .user-dropdown-header {
+            padding: 15px;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        .user-full-name {
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 5px;
+        }
+
+        .user-email {
+            color: #718096;
+            font-size: 13px;
+        }
+
+        .user-plan {
+            color: #718096;
+            font-size: 12px;
+            margin-top: 5px;
+        }
+
+        .user-dropdown-menu {
+            padding: 8px 0;
+        }
+
+        .user-dropdown-item {
+            padding: 8px 15px;
+            color: #4a5568;
+            text-decoration: none;
+            display: block;
+            transition: background 0.2s;
+        }
+
+        .user-dropdown-item:hover {
+            background: #f7fafc;
+        }
+
+        .notification-icon {
+            cursor: pointer;
+            padding: 4px;
+            border-radius: 4px;
+            transition: background 0.2s;
+            color: #666;
+            font-size: 16px;
+        }
+
+        .notification-icon:hover {
+            background: rgba(0,0,0,0.1);
+        }
+
+        .main-content {
+            padding: 30px 20px;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .content-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .back-btn {
+            background: white;
+            border: 1px solid #e2e8f0;
+            padding: 10px 16px;
+            border-radius: 6px;
+            font-size: 14px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+            text-decoration: none;
+            color: inherit;
+        }
+
+        .back-btn:hover {
+            border-color: #cbd5e0;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+
+        .section-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 30px;
+        }
+
+        .account-section {
+            background: white;
+            border-radius: 8px;
+            border: 1px solid #e2e8f0;
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+
+        .section-header {
+            font-size: 18px;
+            font-weight: 600;
+            color: #2d3748;
+            margin-bottom: 20px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 500;
+            color: #4a5568;
+            margin-bottom: 8px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border-color 0.2s;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3182ce;
+            box-shadow: 0 0 0 3px rgba(49, 130, 206, 0.1);
+        }
+
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            font-size: 14px;
+            background: white;
+            cursor: pointer;
+        }
+
+        .form-checkbox {
+            margin-right: 8px;
+        }
+
+        .save-btn {
+            background: #3182ce;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .save-btn:hover {
+            background: #2c5282;
+        }
+
+        .glass-accent {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+
+        @media (max-width: 768px) {
+            .nav {
+                display: none;
+            }
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="logo">
+            <img src="/img/img.webp" alt="Desa Logo" class="desa-logo">
+            <div style="display: flex; align-items: center; gap: 15px;">
+                <div style="font-size: 18px; font-weight: 600; color: #2c5282;">DESA</div>
+                <div style="width: 1px; height: 30px; background: #e1e5e9;"></div>
+                <span class="glass-accent">DESA WIRE</span>
+            </div>
+        </div>
+        <nav class="nav">
+            <a href="/" class="nav-item">Projects</a>
+            <a href="/people" class="nav-item">People</a>
+            <a href="/account" class="nav-item active">Account</a>
+        </nav>
+        <div class="user-section">
+            <span class="notification-icon">🔔</span>
+            <span class="notification-icon">❓</span>
+            <div class="user-dropdown" id="userDropdownToggle">
+                <span><%= user ? user.username : 'Guest' %></span>
+                <span>▼</span>
+                <div class="user-dropdown-content" id="userDropdown">
+                    <div class="user-dropdown-header">
+                        <div class="user-full-name"><%= user ? user.username : 'Guest' %></div>
+                        <div class="user-email"><%= user ? user.email : 'guest@example.com' %></div>
+                    </div>
+                    <div class="user-dropdown-menu">
+                        <a href="#" class="user-dropdown-item" id="editProfileLink">Edit profile</a>
+                        <a href="/account" class="user-dropdown-item">View account</a>
+                        <a href="#" class="user-dropdown-item" onclick="signOut()">Sign out</a>
+                    </div>
+                </div>
+            </div>
+            <span>🇨🇦</span>
+        </div>
+    </header>
+
+    <main class="main-content">
+        <div class="content-header">
+            <a href="/" class="back-btn">
+                <span>←</span>
+                Back to Projects
+            </a>
+        </div>
+
+        <div class="section-title">Account Settings</div>
+
+        <div class="account-section">
+            <div class="section-header">Profile Information</div>
+            <form id="profileForm">
+                <div class="form-group">
+                    <label class="form-label">Username</label>
+                    <input type="text" class="form-input" id="username" value="<%= user ? user.username : 'Guest' %>" readonly>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Email</label>
+                    <input type="email" class="form-input" id="email" value="<%= user ? user.email : 'guest@example.com' %>">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Role</label>
+                    <input type="text" class="form-input" id="role" value="Project Manager">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Plan</label>
+                    <input type="text" class="form-input" id="plan" value="Business Plus" readonly>
+                </div>
+                <button type="submit" class="save-btn" id="saveProfileBtn">Save Changes</button>
+            </form>
+        </div>
+
+        <div class="account-section">
+            <div class="section-header">Preferences</div>
+            <form id="preferencesForm">
+                <div class="form-group">
+                    <label class="form-label">Timezone</label>
+                    <select class="form-select" id="timezone">
+                        <option value="America/Toronto">America/Toronto (EST)</option>
+                        <option value="America/Vancouver">America/Vancouver (PST)</option>
+                        <option value="America/Edmonton">America/Edmonton (MST)</option>
+                        <option value="America/Halifax">America/Halifax (AST)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Language</label>
+                    <select class="form-select" id="language">
+                        <option value="English">English</option>
+                        <option value="French">French</option>
+                        <option value="Spanish">Spanish</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" class="form-checkbox" id="notifications" checked>
+                        Enable email notifications
+                    </label>
+                </div>
+                <div class="form-group">
+                    <label>
+                        <input type="checkbox" class="form-checkbox" id="updates">
+                        Receive product updates
+                    </label>
+                </div>
+                <button type="submit" class="save-btn" id="savePreferencesBtn">Save Preferences</button>
+            </form>
+        </div>
+
+        <div class="account-section">
+            <div class="section-header">Account Status</div>
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <div class="status-badge status-active">Active</div>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Member Since</label>
+                <input type="text" class="form-input" value="January 2024" readonly>
+            </div>
+            <div class="form-group">
+                <label class="form-label">Last Login</label>
+                <input type="text" class="form-input" value="Today at 2:30 PM" readonly>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        let accountData = {};
+
+        // Load notifications from server
+        async function loadNotifications() {
+            try {
+                const response = await fetch('/notifications/api/notifications');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    updateNotificationBadge(result.unreadCount);
+                }
+            } catch (error) {
+                console.error('Error loading notifications:', error);
+            }
+        }
+
+        // Update notification badge
+        function updateNotificationBadge(count) {
+            // Account page doesn't have a notification badge, but we can add one if needed
+            console.log('Notification count:', count);
+        }
+
+        // Load account data
+        async function loadAccountData() {
+            try {
+                const response = await fetch('/api/account');
+                const result = await response.json();
+                
+                if (result.status === 'success') {
+                    accountData = result.data;
+                    populateForm();
+                }
+            } catch (error) {
+                console.error('Error loading account data:', error);
+            }
+        }
+
+        // Populate form with account data
+        function populateForm() {
+            document.getElementById('email').value = accountData.email || '';
+            document.getElementById('role').value = accountData.role || 'Project Manager';
+            document.getElementById('plan').value = accountData.plan || 'Business Plus';
+            document.getElementById('timezone').value = accountData.timezone || 'America/Toronto';
+            document.getElementById('language').value = accountData.language || 'English';
+            document.getElementById('notifications').checked = accountData.notifications || false;
+        }
+
+        // Handle profile form submission
+        const profileForm = document.getElementById('profileForm');
+        if (profileForm) {
+            profileForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    username: document.getElementById('username').value,
+                    email: document.getElementById('email').value,
+                    role: document.getElementById('role').value,
+                    plan: document.getElementById('plan').value
+                };
+                
+                // In a real app, this would send to server
+                console.log('Profile updated:', formData);
+                alert('Profile updated successfully!');
+            });
+        }
+
+        // Handle preferences form submission
+        const preferencesForm = document.getElementById('preferencesForm');
+        if (preferencesForm) {
+            preferencesForm.addEventListener('submit', function(e) {
+                e.preventDefault();
+                
+                const formData = {
+                    timezone: document.getElementById('timezone').value,
+                    language: document.getElementById('language').value,
+                    notifications: document.getElementById('notifications').checked,
+                    updates: document.getElementById('updates').checked
+                };
+                
+                // In a real app, this would send to server
+                console.log('Preferences updated:', formData);
+                alert('Preferences updated successfully!');
+            });
+        }
+
+        // Toggle user dropdown
+        function toggleUserDropdown() {
+            const dropdown = document.getElementById('userDropdown');
+            dropdown.classList.toggle('show');
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(event) {
+            const dropdown = document.getElementById('userDropdown');
+            const userDropdown = document.querySelector('.user-dropdown');
+            
+            if (!userDropdown.contains(event.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // Edit profile function
+        function editProfile() {
+            alert('Edit profile functionality would open here');
+        }
+
+        // Initialize page
+        document.addEventListener('DOMContentLoaded', function() {
+            loadAccountData();
+            loadNotifications();
+            
+            // Add event listeners
+            const userDropdownToggle = document.getElementById('userDropdownToggle');
+            const editProfileLink = document.getElementById('editProfileLink');
+            
+            if (userDropdownToggle) {
+                userDropdownToggle.addEventListener('click', toggleUserDropdown);
+            }
+            if (editProfileLink) {
+                editProfileLink.addEventListener('click', editProfile);
+            }
+        });
+
+        // Sign out functionality
+        async function signOut() {
+            try {
+                // Show loading state
+                const signOutBtn = document.querySelector('a[onclick="signOut()"]');
+                const originalText = signOutBtn.textContent;
+                signOutBtn.textContent = 'Signing out...';
+                signOutBtn.style.pointerEvents = 'none';
+
+                // Call logout API
+                const response = await fetch('/auth/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    // Show success message
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #48bb78;
+                        color: white;
+                        padding: 16px 24px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(72, 187, 120, 0.3);
+                        z-index: 10000;
+                        font-weight: 600;
+                    `;
+                    notification.textContent = 'Signed out successfully. Redirecting...';
+                    document.body.appendChild(notification);
+
+                    // Redirect to login page after a short delay
+                    setTimeout(() => {
+                        window.location.href = '/login';
+                    }, 1500);
+
+                } else {
+                    // Show error message
+                    const notification = document.createElement('div');
+                    notification.style.cssText = `
+                        position: fixed;
+                        top: 20px;
+                        right: 20px;
+                        background: #f56565;
+                        color: white;
+                        padding: 16px 24px;
+                        border-radius: 8px;
+                        box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+                        z-index: 10000;
+                        font-weight: 600;
+                    `;
+                    notification.textContent = 'Sign out failed. Please try again.';
+                    document.body.appendChild(notification);
+
+                    // Reset button
+                    signOutBtn.textContent = originalText;
+                    signOutBtn.style.pointerEvents = 'auto';
+
+                    // Remove notification after 3 seconds
+                    setTimeout(() => {
+                        notification.remove();
+                    }, 3000);
+                }
+
+            } catch (error) {
+                console.error('Sign out error:', error);
+                
+                // Show error message
+                const notification = document.createElement('div');
+                notification.style.cssText = `
+                    position: fixed;
+                    top: 20px;
+                    right: 20px;
+                    background: #f56565;
+                    color: white;
+                    padding: 16px 24px;
+                    border-radius: 8px;
+                    box-shadow: 0 4px 12px rgba(245, 101, 101, 0.3);
+                    z-index: 10000;
+                    font-weight: 600;
+                `;
+                notification.textContent = 'Connection error. Please try again.';
+                document.body.appendChild(notification);
+
+                // Reset button
+                const signOutBtn = document.querySelector('a[onclick="signOut()"]');
+                signOutBtn.textContent = 'Sign out';
+                signOutBtn.style.pointerEvents = 'auto';
+
+                // Remove notification after 3 seconds
+                setTimeout(() => {
+                    notification.remove();
+                }, 3000);
+            }
+        }
+    </script>
+</body>
+</html> 

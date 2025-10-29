@@ -1,0 +1,906 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Finder Browser Demo - Desa Wire</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Century Gothic', 'CenturyGothic', AppleGothic, sans-serif;
+            background-color: #F5F7FA;
+            padding: 20px;
+        }
+
+        .demo-container {
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .demo-header {
+            background: white;
+            padding: 20px 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        }
+
+        .demo-header h1 {
+            font-size: 24px;
+            color: #1f2937;
+            margin-bottom: 8px;
+        }
+
+        .demo-header p {
+            color: #6b7280;
+            font-size: 14px;
+        }
+
+        .demo-actions {
+            margin-bottom: 20px;
+            display: flex;
+            gap: 12px;
+        }
+
+        .demo-btn {
+            padding: 10px 20px;
+            background: #3F80EA;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .demo-btn:hover {
+            background: #2563EB;
+        }
+
+        .demo-btn.secondary {
+            background: #e5e7eb;
+            color: #374151;
+        }
+
+        .demo-btn.secondary:hover {
+            background: #d1d5db;
+        }
+
+        .browser-container {
+            height: calc(100vh - 220px);
+            min-height: 600px;
+        }
+
+/* ============================================
+   macOS Finder-Style Browser Component
+   ============================================ */
+
+/* Main Container */
+.finder-browser {
+    background: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+/* Toolbar */
+.finder-toolbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 20px;
+    border-bottom: 1px solid #e5e7eb;
+    background: #f9fafb;
+    min-height: 52px;
+}
+
+.finder-toolbar-left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.finder-toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.finder-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 13px;
+    color: #6b7280;
+}
+
+.finder-breadcrumb-item {
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.finder-breadcrumb-item:hover {
+    color: #3F80EA;
+}
+
+.finder-breadcrumb-separator {
+    color: #d1d5db;
+    font-size: 12px;
+}
+
+/* View Toggle Buttons */
+.finder-view-toggle {
+    display: flex;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 6px;
+    overflow: hidden;
+}
+
+.finder-view-btn {
+    padding: 6px 12px;
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 14px;
+    color: #6b7280;
+    transition: all 0.2s;
+    border-right: 1px solid #e5e7eb;
+}
+
+.finder-view-btn:last-child {
+    border-right: none;
+}
+
+.finder-view-btn:hover {
+    background: #f3f4f6;
+}
+
+.finder-view-btn.active {
+    background: #3F80EA;
+    color: white;
+}
+
+/* Content Area */
+.finder-content {
+    flex: 1;
+    overflow-y: auto;
+    padding: 16px;
+    background: #ffffff;
+}
+
+/* Grid View */
+.finder-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+    gap: 16px;
+    padding: 8px;
+}
+
+/* Grid Item (Folder/File Card) */
+.finder-item {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 12px 8px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.2s;
+    user-select: none;
+}
+
+.finder-item:hover {
+    background: #f3f4f6;
+}
+
+.finder-item.selected {
+    background: #dbeafe;
+}
+
+/* Checkbox (appears on hover) */
+.finder-item-checkbox {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    border: 1.5px solid #d1d5db;
+    background: white;
+    opacity: 0;
+    transition: opacity 0.2s;
+    cursor: pointer;
+    z-index: 10;
+}
+
+.finder-item:hover .finder-item-checkbox,
+.finder-item.selected .finder-item-checkbox {
+    opacity: 1;
+}
+
+.finder-item.selected .finder-item-checkbox {
+    background: #3F80EA;
+    border-color: #3F80EA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.finder-item.selected .finder-item-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+}
+
+/* Item Icon Container */
+.finder-item-icon-wrapper {
+    position: relative;
+    width: 72px;
+    height: 72px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 8px;
+}
+
+/* Folder Icon */
+.finder-folder-icon {
+    width: 64px;
+    height: 52px;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+    border-radius: 6px 6px 8px 8px;
+    position: relative;
+    box-shadow: 0 2px 8px rgba(59, 130, 246, 0.3);
+}
+
+.finder-folder-icon::before {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: 0;
+    width: 28px;
+    height: 8px;
+    background: linear-gradient(180deg, #60a5fa 0%, #3b82f6 100%);
+    border-radius: 4px 4px 0 0;
+}
+
+/* File Icon (Generic) */
+.finder-file-icon {
+    width: 56px;
+    height: 64px;
+    background: white;
+    border: 2px solid #e5e7eb;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 28px;
+    position: relative;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.finder-file-icon::before {
+    content: '';
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    width: 0;
+    height: 0;
+    border-style: solid;
+    border-width: 0 12px 12px 0;
+    border-color: transparent #e5e7eb transparent transparent;
+}
+
+/* PDF Icon Specific */
+.finder-file-icon.pdf {
+    background: linear-gradient(180deg, #fee2e2 0%, #fecaca 100%);
+    border-color: #ef4444;
+    color: #dc2626;
+}
+
+/* PDF Preview Thumbnail */
+.finder-pdf-preview {
+    width: 56px;
+    height: 64px;
+    border-radius: 6px;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    background: white;
+    border: 1px solid #e5e7eb;
+}
+
+.finder-pdf-preview img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Image Icon */
+.finder-file-icon.image {
+    background: linear-gradient(180deg, #dfe8fe 0%, #bfdbfe 100%);
+    border-color: #3b82f6;
+    color: #2563eb;
+}
+
+/* Document Icon */
+.finder-file-icon.doc {
+    background: linear-gradient(180deg, #dbeafe 0%, #bfdbfe 100%);
+    border-color: #2563eb;
+    color: #1e40af;
+}
+
+/* Excel Icon */
+.finder-file-icon.excel {
+    background: linear-gradient(180deg, #d1fae5 0%, #a7f3d0 100%);
+    border-color: #10b981;
+    color: #059669;
+}
+
+/* Item Name */
+.finder-item-name {
+    font-size: 12px;
+    color: #1f2937;
+    text-align: center;
+    word-break: break-word;
+    line-height: 1.3;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+}
+
+/* Item Metadata (size, date) */
+.finder-item-meta {
+    font-size: 10px;
+    color: #9ca3af;
+    margin-top: 2px;
+    text-align: center;
+}
+
+/* Context Menu */
+.finder-context-menu {
+    position: fixed;
+    background: white;
+    border: 1px solid #e5e7eb;
+    border-radius: 8px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+    padding: 4px 0;
+    min-width: 180px;
+    z-index: 10000;
+    display: none;
+}
+
+.finder-context-menu.show {
+    display: block;
+}
+
+.finder-context-menu-item {
+    padding: 8px 16px;
+    font-size: 13px;
+    color: #374151;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    transition: background 0.2s;
+}
+
+.finder-context-menu-item:hover {
+    background: #f3f4f6;
+}
+
+.finder-context-menu-item i {
+    width: 16px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+.finder-context-menu-divider {
+    height: 1px;
+    background: #e5e7eb;
+    margin: 4px 0;
+}
+
+.finder-context-menu-item.danger {
+    color: #dc2626;
+}
+
+.finder-context-menu-item.danger i {
+    color: #dc2626;
+}
+
+/* List View */
+.finder-list {
+    display: flex;
+    flex-direction: column;
+}
+
+.finder-list-header {
+    display: grid;
+    grid-template-columns: 40px 1fr 120px 140px 120px;
+    gap: 12px;
+    padding: 10px 16px;
+    background: #f9fafb;
+    border-bottom: 1px solid #e5e7eb;
+    font-size: 12px;
+    font-weight: 600;
+    color: #6b7280;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.finder-list-item {
+    display: grid;
+    grid-template-columns: 40px 1fr 120px 140px 120px;
+    gap: 12px;
+    padding: 10px 16px;
+    border-bottom: 1px solid #f3f4f6;
+    cursor: pointer;
+    transition: background 0.2s;
+    align-items: center;
+}
+
+.finder-list-item:hover {
+    background: #f9fafb;
+}
+
+.finder-list-item.selected {
+    background: #dbeafe;
+}
+
+.finder-list-item-checkbox {
+    width: 18px;
+    height: 18px;
+    border-radius: 4px;
+    border: 1.5px solid #d1d5db;
+    background: white;
+    cursor: pointer;
+    transition: all 0.2s;
+}
+
+.finder-list-item.selected .finder-list-item-checkbox {
+    background: #3F80EA;
+    border-color: #3F80EA;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.finder-list-item.selected .finder-list-item-checkbox::after {
+    content: '✓';
+    color: white;
+    font-size: 11px;
+    font-weight: bold;
+}
+
+.finder-list-item-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.finder-list-item-icon {
+    width: 32px;
+    height: 32px;
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+}
+
+.finder-list-item-name {
+    font-size: 13px;
+    color: #1f2937;
+    font-weight: 500;
+}
+
+.finder-list-item-size,
+.finder-list-item-modified,
+.finder-list-item-kind {
+    font-size: 12px;
+    color: #6b7280;
+}
+
+/* Selection Counter */
+.finder-selection-bar {
+    display: none;
+    padding: 12px 20px;
+    background: #3F80EA;
+    color: white;
+    align-items: center;
+    justify-content: space-between;
+    font-size: 13px;
+    font-weight: 500;
+}
+
+.finder-selection-bar.show {
+    display: flex;
+}
+
+.finder-selection-actions {
+    display: flex;
+    gap: 12px;
+}
+
+.finder-selection-btn {
+    padding: 6px 12px;
+    background: rgba(255, 255, 255, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.3);
+    border-radius: 6px;
+    color: white;
+    cursor: pointer;
+    font-size: 12px;
+    transition: all 0.2s;
+}
+
+.finder-selection-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+@media (max-width: 768px) {
+    .finder-grid {
+        grid-template-columns: repeat(auto-fill, minmax(90px, 1fr));
+        gap: 12px;
+    }
+}
+    </style>
+</head>
+<body>
+    <div class="demo-container">
+        <!-- Demo Header -->
+        <div class="demo-header">
+            <h1>macOS Finder-Style File Browser</h1>
+            <p>A professional, minimal file browser for Desa Wire - featuring grid/list views, selection, and context menus</p>
+        </div>
+
+        <!-- Demo Actions -->
+        <div class="demo-actions">
+            <button class="demo-btn" onclick="alert('Upload functionality - integrate with your backend')">
+                <i class="fas fa-upload"></i> Upload Files
+            </button>
+            <button class="demo-btn secondary" onclick="alert('Create folder functionality')">
+                <i class="fas fa-folder-plus"></i> New Folder
+            </button>
+            <button class="demo-btn secondary" onclick="location.reload()">
+                <i class="fas fa-sync"></i> Refresh
+            </button>
+        </div>
+
+        <!-- Finder Browser -->
+        <div class="browser-container">
+            <div class="finder-browser">
+                <!-- Toolbar -->
+                <div class="finder-toolbar">
+                    <div class="finder-toolbar-left">
+                        <div class="finder-breadcrumb">
+                            <i class="fas fa-home" style="font-size: 14px;"></i>
+                            <span class="finder-breadcrumb-separator">›</span>
+                            <span class="finder-breadcrumb-item">Project Plans</span>
+                        </div>
+                    </div>
+
+                    <div class="finder-toolbar-right">
+                        <div class="finder-view-toggle">
+                            <button class="finder-view-btn active" data-view="grid">
+                                <i class="fas fa-th"></i>
+                            </button>
+                            <button class="finder-view-btn" data-view="list">
+                                <i class="fas fa-list"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Selection Bar -->
+                <div class="finder-selection-bar" id="finderSelectionBar">
+                    <span id="finderSelectionCount">0 items selected</span>
+                    <div class="finder-selection-actions">
+                        <button class="finder-selection-btn">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button class="finder-selection-btn">
+                            <i class="fas fa-trash"></i> Delete
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Content Area -->
+                <div class="finder-content">
+                    <!-- Grid View -->
+                    <div class="finder-grid" id="finderGridView">
+                        <!-- Demo Folders -->
+                        <div class="finder-item" data-type="folder" data-id="folder-1">
+                            <div class="finder-item-checkbox"></div>
+                            <div class="finder-item-icon-wrapper">
+                                <div class="finder-folder-icon"></div>
+                            </div>
+                            <div class="finder-item-name">Floor Plans</div>
+                            <div class="finder-item-meta">12 items</div>
+                        </div>
+
+                        <div class="finder-item" data-type="folder" data-id="folder-2">
+                            <div class="finder-item-checkbox"></div>
+                            <div class="finder-item-icon-wrapper">
+                                <div class="finder-folder-icon" style="background: linear-gradient(180deg, #10b981 0%, #059669 100%);"></div>
+                            </div>
+                            <div class="finder-item-name">Elevations</div>
+                            <div class="finder-item-meta">8 items</div>
+                        </div>
+
+                        <div class="finder-item" data-type="folder" data-id="folder-3">
+                            <div class="finder-item-checkbox"></div>
+                            <div class="finder-item-icon-wrapper">
+                                <div class="finder-folder-icon" style="background: linear-gradient(180deg, #f59e0b 0%, #d97706 100%);"></div>
+                            </div>
+                            <div class="finder-item-name">Sections</div>
+                            <div class="finder-item-meta">6 items</div>
+                        </div>
+
+                        <!-- Demo PDF Files -->
+                        <div class="finder-item" data-type="file" data-id="file-1" data-filetype="pdf">
+                            <div class="finder-item-checkbox"></div>
+                            <div class="finder-item-icon-wrapper">
+                                <div class="finder-file-icon pdf">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                            </div>
+                            <div class="finder-item-name">Blueprint_A1.pdf</div>
+                            <div class="finder-item-meta">2.4 MB</div>
+                        </div>
+
+                        <div class="finder-item" data-type="file" data-id="file-2" data-filetype="pdf">
+                            <div class="finder-item-checkbox"></div>
+                            <div class="finder-item-icon-wrapper">
+                                <div class="finder-file-icon pdf">
+                                    <i class="fas fa-file-pdf"></i>
+                                </div>
+                            </div>
+                            <div class="finder-item-name">Site_Plan.pdf</div>
+                            <div class="finder-item-meta">3.1 MB</div>
+                        </div>
+
+                        <!-- Demo Documents -->
+                        <div class="finder-item" data-type="file" data-id="file-3" data-filetype="doc">
+                            <div class="finder-item-checkbox"></div>
+                            <div class="finder-item-icon-wrapper">
+                                <div class="finder-file-icon doc">
+                                    <i class="fas fa-file-word"></i>
+                                </div>
+                            </div>
+                            <div class="finder-item-name">Specifications.docx</div>
+                            <div class="finder-item-meta">1.2 MB</div>
+                        </div>
+
+                        <!-- Demo Excel -->
+                        <div class="finder-item" data-type="file" data-id="file-4" data-filetype="excel">
+                            <div class="finder-item-checkbox"></div>
+                            <div class="finder-item-icon-wrapper">
+                                <div class="finder-file-icon excel">
+                                    <i class="fas fa-file-excel"></i>
+                                </div>
+                            </div>
+                            <div class="finder-item-name">Budget.xlsx</div>
+                            <div class="finder-item-meta">856 KB</div>
+                        </div>
+
+                        <!-- Demo Images -->
+                        <div class="finder-item" data-type="file" data-id="file-5" data-filetype="image">
+                            <div class="finder-item-checkbox"></div>
+                            <div class="finder-item-icon-wrapper">
+                                <div class="finder-file-icon image">
+                                    <i class="fas fa-file-image"></i>
+                                </div>
+                            </div>
+                            <div class="finder-item-name">site_photo.jpg</div>
+                            <div class="finder-item-meta">3.8 MB</div>
+                        </div>
+                    </div>
+
+                    <!-- List View -->
+                    <div class="finder-list" id="finderListView" style="display: none;">
+                        <div class="finder-list-header">
+                            <div></div>
+                            <div>Name</div>
+                            <div>Kind</div>
+                            <div>Date Modified</div>
+                            <div>Size</div>
+                        </div>
+
+                        <div class="finder-list-item" data-type="folder" data-id="folder-1">
+                            <div class="finder-list-item-checkbox"></div>
+                            <div class="finder-list-item-info">
+                                <div class="finder-list-item-icon">
+                                    <i class="fas fa-folder" style="color: #3b82f6;"></i>
+                                </div>
+                                <div class="finder-list-item-name">Floor Plans</div>
+                            </div>
+                            <div class="finder-list-item-kind">Folder</div>
+                            <div class="finder-list-item-modified">Dec 10, 2024</div>
+                            <div class="finder-list-item-size">--</div>
+                        </div>
+
+                        <div class="finder-list-item" data-type="file" data-id="file-1">
+                            <div class="finder-list-item-checkbox"></div>
+                            <div class="finder-list-item-info">
+                                <div class="finder-list-item-icon">
+                                    <i class="fas fa-file-pdf" style="color: #dc2626;"></i>
+                                </div>
+                                <div class="finder-list-item-name">Blueprint_A1.pdf</div>
+                            </div>
+                            <div class="finder-list-item-kind">PDF Document</div>
+                            <div class="finder-list-item-modified">Dec 9, 2024</div>
+                            <div class="finder-list-item-size">2.4 MB</div>
+                        </div>
+
+                        <div class="finder-list-item" data-type="file" data-id="file-3">
+                            <div class="finder-list-item-checkbox"></div>
+                            <div class="finder-list-item-info">
+                                <div class="finder-list-item-icon">
+                                    <i class="fas fa-file-word" style="color: #2563eb;"></i>
+                                </div>
+                                <div class="finder-list-item-name">Specifications.docx</div>
+                            </div>
+                            <div class="finder-list-item-kind">Word Document</div>
+                            <div class="finder-list-item-modified">Dec 8, 2024</div>
+                            <div class="finder-list-item-size">1.2 MB</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Context Menu -->
+    <div class="finder-context-menu" id="finderContextMenu">
+        <div class="finder-context-menu-item" onclick="demoOpen()">
+            <i class="fas fa-folder-open"></i>
+            <span>Open</span>
+        </div>
+        <div class="finder-context-menu-divider"></div>
+        <div class="finder-context-menu-item" onclick="demoDownload()">
+            <i class="fas fa-download"></i>
+            <span>Download</span>
+        </div>
+        <div class="finder-context-menu-item" onclick="demoShare()">
+            <i class="fas fa-share"></i>
+            <span>Share</span>
+        </div>
+        <div class="finder-context-menu-item" onclick="demoRename()">
+            <i class="fas fa-edit"></i>
+            <span>Rename</span>
+        </div>
+        <div class="finder-context-menu-divider"></div>
+        <div class="finder-context-menu-item danger" onclick="demoDelete()">
+            <i class="fas fa-trash"></i>
+            <span>Delete</span>
+        </div>
+    </div>
+
+    <script>
+        // Demo JavaScript
+        let selectedItems = new Set();
+
+        // View Toggle
+        document.querySelectorAll('.finder-view-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.finder-view-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+
+                const view = this.dataset.view;
+                const gridView = document.getElementById('finderGridView');
+                const listView = document.getElementById('finderListView');
+
+                if (view === 'grid') {
+                    gridView.style.display = 'grid';
+                    listView.style.display = 'none';
+                } else {
+                    gridView.style.display = 'none';
+                    listView.style.display = 'flex';
+                }
+            });
+        });
+
+        // Item Selection
+        document.querySelectorAll('.finder-item, .finder-list-item').forEach(item => {
+            item.addEventListener('click', function(e) {
+                if (e.target.closest('.finder-item-checkbox, .finder-list-item-checkbox') || e.metaKey || e.ctrlKey) {
+                    toggleSelection(this);
+                } else {
+                    console.log('Opening:', this.dataset.id);
+                }
+            });
+
+            // Context menu
+            item.addEventListener('contextmenu', function(e) {
+                e.preventDefault();
+                showContextMenu(e.pageX, e.pageY);
+            });
+        });
+
+        function toggleSelection(item) {
+            const itemId = item.dataset.id;
+
+            if (selectedItems.has(itemId)) {
+                selectedItems.delete(itemId);
+                item.classList.remove('selected');
+            } else {
+                selectedItems.add(itemId);
+                item.classList.add('selected');
+            }
+
+            updateSelectionBar();
+        }
+
+        function updateSelectionBar() {
+            const bar = document.getElementById('finderSelectionBar');
+            const count = document.getElementById('finderSelectionCount');
+
+            if (selectedItems.size > 0) {
+                bar.classList.add('show');
+                count.textContent = `${selectedItems.size} item${selectedItems.size > 1 ? 's' : ''} selected`;
+            } else {
+                bar.classList.remove('show');
+            }
+        }
+
+        // Context Menu
+        function showContextMenu(x, y) {
+            const menu = document.getElementById('finderContextMenu');
+            menu.style.left = x + 'px';
+            menu.style.top = y + 'px';
+            menu.classList.add('show');
+        }
+
+        function hideContextMenu() {
+            document.getElementById('finderContextMenu').classList.remove('show');
+        }
+
+        document.addEventListener('click', hideContextMenu);
+
+        // Demo Actions
+        function demoOpen() { alert('Open item'); hideContextMenu(); }
+        function demoDownload() { alert('Download item'); hideContextMenu(); }
+        function demoShare() { alert('Share item'); hideContextMenu(); }
+        function demoRename() { alert('Rename item'); hideContextMenu(); }
+        function demoDelete() { if (confirm('Delete this item?')) { alert('Item deleted'); } hideContextMenu(); }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if ((e.metaKey || e.ctrlKey) && e.key === 'a') {
+                e.preventDefault();
+                document.querySelectorAll('.finder-item, .finder-list-item').forEach(item => {
+                    selectedItems.add(item.dataset.id);
+                    item.classList.add('selected');
+                });
+                updateSelectionBar();
+            }
+
+            if (e.key === 'Escape') {
+                selectedItems.clear();
+                document.querySelectorAll('.finder-item, .finder-list-item').forEach(item => {
+                    item.classList.remove('selected');
+                });
+                updateSelectionBar();
+            }
+        });
+    </script>
+</body>
+</html>

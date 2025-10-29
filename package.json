@@ -1,0 +1,33 @@
+{
+  "name": "fieldware-app",
+  "version": "1.0.0",
+  "description": "Fieldwire Application with EJS Templates",
+  "main": "server.js",
+  "scripts": {
+    "dev": "nodemon server.js",
+    "start": "node server.js"
+  },
+  "keywords": [
+    "fieldwire",
+    "ejs",
+    "express",
+    "project-management"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "@anthropic-ai/sdk": "^0.65.0",
+    "@google/generative-ai": "^0.24.1",
+    "@sendgrid/mail": "^8.1.6",
+    "dotenv": "^17.2.3",
+    "ejs": "^3.1.9",
+    "express": "^4.18.2",
+    "express-session": "^1.18.2",
+    "multer": "^2.0.2",
+    "nodemailer": "^7.0.6",
+    "twilio": "^5.10.2"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.1"
+  }
+}

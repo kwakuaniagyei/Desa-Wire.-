@@ -1,0 +1,226 @@
+[
+  {
+    "id": "spec-1761533225434ftplpjhgo",
+    "name": "Building Specifications",
+    "status": "approved",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:47:05.434Z",
+    "updatedAt": "2025-10-27T02:47:05.434Z"
+  },
+  {
+    "id": "spec-1761533225454t1ns5wbvt",
+    "name": "Material Requirements",
+    "status": "review",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:47:05.454Z",
+    "updatedAt": "2025-10-27T02:47:05.454Z"
+  },
+  {
+    "id": "spec-1761533225559kj693stom",
+    "name": "Safety Standards",
+    "status": "draft",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:47:05.559Z",
+    "updatedAt": "2025-10-27T02:47:05.559Z"
+  },
+  {
+    "id": "spec-1761533225597cjcir30bv",
+    "name": "Technical Drawings",
+    "status": "approved",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:47:05.597Z",
+    "updatedAt": "2025-10-27T02:47:05.597Z"
+  },
+  {
+    "id": "spec-1761533238499i1wmog6ev",
+    "name": "Building Specifications",
+    "status": "approved",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:47:18.499Z",
+    "updatedAt": "2025-10-27T02:47:18.499Z"
+  },
+  {
+    "id": "spec-1761533238594i4eodoj4u",
+    "name": "Material Requirements",
+    "status": "review",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:47:18.594Z",
+    "updatedAt": "2025-10-27T02:47:18.594Z"
+  },
+  {
+    "id": "spec-1761533238607qp01vcxh8",
+    "name": "Safety Standards",
+    "status": "draft",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:47:18.607Z",
+    "updatedAt": "2025-10-27T02:47:18.607Z"
+  },
+  {
+    "id": "spec-1761533238639x17io3278",
+    "name": "Technical Drawings",
+    "status": "approved",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:47:18.639Z",
+    "updatedAt": "2025-10-27T02:47:18.639Z"
+  },
+  {
+    "id": "spec-17615332468525nju19x1b",
+    "name": "Building Specifications",
+    "status": "approved",
+    "projectId": "3",
+    "createdAt": "2025-10-27T02:47:26.852Z",
+    "updatedAt": "2025-10-27T02:47:26.852Z"
+  },
+  {
+    "id": "spec-1761533246870kt6kd4hud",
+    "name": "Material Requirements",
+    "status": "review",
+    "projectId": "3",
+    "createdAt": "2025-10-27T02:47:26.870Z",
+    "updatedAt": "2025-10-27T02:47:26.870Z"
+  },
+  {
+    "id": "spec-17615332469317yc7upgmi",
+    "name": "Safety Standards",
+    "status": "draft",
+    "projectId": "3",
+    "createdAt": "2025-10-27T02:47:26.931Z",
+    "updatedAt": "2025-10-27T02:47:26.931Z"
+  },
+  {
+    "id": "spec-1761533246947pfazqocbj",
+    "name": "Technical Drawings",
+    "status": "approved",
+    "projectId": "3",
+    "createdAt": "2025-10-27T02:47:26.947Z",
+    "updatedAt": "2025-10-27T02:47:26.947Z"
+  },
+  {
+    "id": "spec-1761533261518x9s96u3x9",
+    "name": "Building Specifications",
+    "status": "approved",
+    "projectId": "3",
+    "createdAt": "2025-10-27T02:47:41.518Z",
+    "updatedAt": "2025-10-27T02:47:41.518Z"
+  },
+  {
+    "id": "spec-1761533261531jmmlgo9gc",
+    "name": "Material Requirements",
+    "status": "review",
+    "projectId": "3",
+    "createdAt": "2025-10-27T02:47:41.531Z",
+    "updatedAt": "2025-10-27T02:47:41.531Z"
+  },
+  {
+    "id": "spec-1761533261570u3xacay7j",
+    "name": "Safety Standards",
+    "status": "draft",
+    "projectId": "3",
+    "createdAt": "2025-10-27T02:47:41.570Z",
+    "updatedAt": "2025-10-27T02:47:41.570Z"
+  },
+  {
+    "id": "spec-1761533261581h9ijx0wgj",
+    "name": "Technical Drawings",
+    "status": "approved",
+    "projectId": "3",
+    "createdAt": "2025-10-27T02:47:41.581Z",
+    "updatedAt": "2025-10-27T02:47:41.581Z"
+  },
+  {
+    "id": "spec-1761533281135d48b285ve",
+    "name": "Building Specifications",
+    "status": "approved",
+    "projectId": "2",
+    "createdAt": "2025-10-27T02:48:01.135Z",
+    "updatedAt": "2025-10-27T02:48:01.135Z"
+  },
+  {
+    "id": "spec-1761533281157eqqxve0kx",
+    "name": "Material Requirements",
+    "status": "review",
+    "projectId": "2",
+    "createdAt": "2025-10-27T02:48:01.157Z",
+    "updatedAt": "2025-10-27T02:48:01.157Z"
+  },
+  {
+    "id": "spec-1761533281225e3as74i3i",
+    "name": "Safety Standards",
+    "status": "draft",
+    "projectId": "2",
+    "createdAt": "2025-10-27T02:48:01.225Z",
+    "updatedAt": "2025-10-27T02:48:01.225Z"
+  },
+  {
+    "id": "spec-1761533281239hsa666e9g",
+    "name": "Technical Drawings",
+    "status": "approved",
+    "projectId": "2",
+    "createdAt": "2025-10-27T02:48:01.239Z",
+    "updatedAt": "2025-10-27T02:48:01.239Z"
+  },
+  {
+    "id": "spec-1761533297759ofjorlxsm",
+    "name": "Building Specifications",
+    "status": "approved",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:48:17.759Z",
+    "updatedAt": "2025-10-27T02:48:17.759Z"
+  },
+  {
+    "id": "spec-1761533297812m0dp3umnd",
+    "name": "Material Requirements",
+    "status": "review",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:48:17.812Z",
+    "updatedAt": "2025-10-27T02:48:17.812Z"
+  },
+  {
+    "id": "spec-1761533297955u5y9qx8ej",
+    "name": "Safety Standards",
+    "status": "draft",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:48:17.955Z",
+    "updatedAt": "2025-10-27T02:48:17.955Z"
+  },
+  {
+    "id": "spec-1761533297999e5k29qz0r",
+    "name": "Technical Drawings",
+    "status": "approved",
+    "projectId": "1",
+    "createdAt": "2025-10-27T02:48:17.999Z",
+    "updatedAt": "2025-10-27T02:48:17.999Z"
+  },
+  {
+    "id": "spec-1761533433110a7wss590n",
+    "name": "Building Specifications",
+    "status": "approved",
+    "projectId": "2",
+    "createdAt": "2025-10-27T02:50:33.110Z",
+    "updatedAt": "2025-10-27T02:50:33.110Z"
+  },
+  {
+    "id": "spec-1761533433129hp239pppk",
+    "name": "Material Requirements",
+    "status": "review",
+    "projectId": "2",
+    "createdAt": "2025-10-27T02:50:33.129Z",
+    "updatedAt": "2025-10-27T02:50:33.129Z"
+  },
+  {
+    "id": "spec-1761533433188f4axp59fw",
+    "name": "Safety Standards",
+    "status": "draft",
+    "projectId": "2",
+    "createdAt": "2025-10-27T02:50:33.188Z",
+    "updatedAt": "2025-10-27T02:50:33.188Z"
+  },
+  {
+    "id": "spec-1761533433198uq3irv8yu",
+    "name": "Technical Drawings",
+    "status": "approved",
+    "projectId": "2",
+    "createdAt": "2025-10-27T02:50:33.198Z",
+    "updatedAt": "2025-10-27T02:50:33.198Z"
+  }
+]

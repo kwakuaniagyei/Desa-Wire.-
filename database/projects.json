@@ -1,0 +1,92 @@
+[
+  {
+    "id": "1",
+    "name": "good",
+    "type": "Construction",
+    "members": 12,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "2",
+    "name": "AMFUL",
+    "type": "CANA",
+    "members": 11,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "3",
+    "name": "Sample project - MPE",
+    "type": "",
+    "members": 7,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "1759871748921",
+    "name": "good",
+    "type": "",
+    "members": 0,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "1759873624669",
+    "name": "Place 800",
+    "type": "",
+    "members": 0,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "1760021087702",
+    "name": "We Wai Kai",
+    "type": "",
+    "members": 0,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "1760021157578",
+    "name": "We waikAI",
+    "type": "",
+    "members": 0,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "1760111289462",
+    "name": "We Wai Kai",
+    "type": "",
+    "members": 1,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "1760715934494",
+    "name": "104 Avenue",
+    "type": "",
+    "members": 1,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  },
+  {
+    "id": "1761574229854",
+    "name": "bbb",
+    "type": "",
+    "members": 1,
+    "status": "active",
+    "isFavorite": false,
+    "isStarred": false
+  }
+]
