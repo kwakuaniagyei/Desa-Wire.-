@@ -468,6 +468,24 @@
             background-color: #dbeafe;
         }
 
+        /* Drag and drop visual feedback */
+        .folder-section.drag-over {
+            background-color: #dbeafe;
+            border-color: #3b82f6;
+            border: 2px dashed #3b82f6;
+            transition: all 0.2s ease;
+        }
+
+        .folder-section.drag-over .folder-plans-grid {
+            background-color: #eff6ff;
+        }
+
+        .plan-card.dragging {
+            opacity: 0.5;
+            transform: scale(0.95);
+            cursor: grabbing;
+        }
+
         .upload-icon-wrapper {
             margin: 0 auto 20px;
             width: 80px;
