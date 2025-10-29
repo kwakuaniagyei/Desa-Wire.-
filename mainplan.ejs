@@ -3004,9 +3004,12 @@
             card.ondragend = (e) => handlePlanDragEnd(e);
             card.onclick = () => viewPlan(index);
 
+            // Use plan ID for unique thumbnail identifier to avoid conflicts in folders
+            const thumbnailId = `thumbnail-${plan.id || index}`;
+
             const thumbnail = document.createElement('div');
             thumbnail.className = 'plan-thumbnail';
-            thumbnail.id = `thumbnail-${index}`;
+            thumbnail.id = thumbnailId;
 
             const info = document.createElement('div');
             info.className = 'plan-info';
@@ -3019,7 +3022,7 @@
             if (plan.preview) {
                 // Extract base64 data from data URL
                 const base64Data = plan.preview.split(',')[1] || plan.preview;
-                generatePDFPreview(base64Data, `thumbnail-${index}`);
+                generatePDFPreview(base64Data, thumbnailId);
             }
 
             return card;
