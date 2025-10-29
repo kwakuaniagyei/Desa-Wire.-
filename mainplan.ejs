@@ -2942,6 +2942,21 @@
                 plansView.style.display = 'block';
                 allPlansSection.style.display = 'block';
 
+                // Setup drag and drop for All Plans section
+                allPlansSection.ondragover = (e) => {
+                    e.preventDefault();
+                    e.dataTransfer.dropEffect = 'move';
+                    allPlansSection.classList.add('drag-over');
+                };
+                allPlansSection.ondragenter = (e) => {
+                    e.preventDefault();
+                    allPlansSection.classList.add('drag-over');
+                };
+                allPlansSection.ondragleave = (e) => {
+                    allPlansSection.classList.remove('drag-over');
+                };
+                allPlansSection.ondrop = (e) => handleAllPlansDrop(e);
+
                 // Update All plans folder
                 const allPlansName = document.getElementById('allPlansName');
                 allPlansName.textContent = `All plans (${plans.length} ${plans.length === 1 ? 'plan' : 'plans'})`;
@@ -3154,7 +3169,10 @@
         // Handle drop on "All plans" section
         function handleAllPlansDrop(e) {
             e.preventDefault();
-            document.getElementById('allPlansContainer').classList.remove('drag-over');
+            const allPlansSection = document.getElementById('allPlansSection');
+            if (allPlansSection) {
+                allPlansSection.classList.remove('drag-over');
+            }
 
             const planIndex = parseInt(e.dataTransfer.getData('planIndex'));
             // Move plan back to All Plans (null folderId)
