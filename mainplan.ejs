@@ -274,6 +274,17 @@
             padding: 0 12px;
         }
 
+        .folder-plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 24px;
+            padding: 12px 12px;
+            background: #fafbfc;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+            min-height: 50px;
+        }
+
         .plan-card {
             background: white;
             border: 1px solid #e5e7eb;
@@ -3037,8 +3048,9 @@
                 folderSection.ondragleave = (e) => handleFolderDragLeave(e, index);
                 folderSection.ondrop = (e) => handleFolderDrop(e, index);
 
-                // Count plans in this folder
-                const planCount = plans.filter(p => p.folderId === folder.id || p.folder === folder.name).length;
+                // Get plans in this folder
+                const folderPlans = plans.filter(p => p.folderId === folder.id || p.folder === folder.name);
+                const planCount = folderPlans.length;
 
                 folderSection.innerHTML = `
                     <div class="folder-header">
@@ -3056,8 +3068,18 @@
                             </div>
                         </div>
                     </div>
+                    <div class="folder-plans-grid" id="folder-${index}-plans">
+                        <!-- Plans will be rendered here -->
+                    </div>
                 `;
                 container.appendChild(folderSection);
+
+                // Render plans inside this folder
+                const plansGrid = folderSection.querySelector(`#folder-${index}-plans`);
+                folderPlans.forEach((plan, planIndex) => {
+                    const card = createPlanCard(plan, plans.indexOf(plan));
+                    plansGrid.appendChild(card);
+                });
             });
         }
 
