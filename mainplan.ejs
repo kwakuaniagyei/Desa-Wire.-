@@ -3972,7 +3972,7 @@
             const folderName = input.value.trim();
 
             if (!folderName) {
-                alert('Please enter a folder name');
+                showNotification('Please enter a folder name', 'error');
                 return;
             }
 
@@ -3994,21 +3994,21 @@
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('Server error:', errorText);
-                    alert(`Error creating folder: ${response.status} ${response.statusText}`);
+                    showNotification(`Error creating folder: ${response.status} ${response.statusText}`, 'error');
                     return;
                 }
 
                 const result = await response.json();
                 if (result.success || result.folderId) {
-                    alert('Folder created successfully!');
+                    showNotification(`✅ Folder "${folderName}" created successfully!`, 'success');
                     closeCreateFolderModal();
                     await loadPlans();
                 } else {
-                    alert(`Error creating folder: ${result.error || 'Unknown error'}`);
+                    showNotification(`Error creating folder: ${result.error || 'Unknown error'}`, 'error');
                 }
             } catch (error) {
                 console.error('Error creating folder:', error);
-                alert(`Error creating folder: ${error.message}`);
+                showNotification(`Error creating folder: ${error.message}`, 'error');
             }
         }
 
