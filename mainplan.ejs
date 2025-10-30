@@ -2920,6 +2920,8 @@
         let plans = [];
         let folders = [];
         let selectedFiles = [];
+        let uploadFolderId = null; // Track which folder to upload to (null = All Plans)
+        let uploadFolderName = null; // Track folder name for display
         let projects = <% if (projects) { %><%- JSON.stringify(projects) %><% } else { %>[]<% } %>;
         let notifications = [];
         let currentFilter = 'all';
@@ -3533,15 +3535,29 @@
         // ========== END DRAG AND DROP ==========
 
         // Modal functions
-        function openUploadModal() {
+        function openUploadModal(folderId = null, folderName = null) {
             const projectId = getCurrentProjectId();
             if (!projectId) {
                 alert('Please select a project first');
                 return;
             }
+            // Set the upload destination folder
+            uploadFolderId = folderId; // null = All Plans
+            uploadFolderName = folderName;
+
             document.getElementById('uploadModal').classList.add('show');
             selectedFiles = [];
             updateUploadFileList();
+
+            // Update modal title to show destination
+            const modalTitle = document.querySelector('.upload-modal-title');
+            if (modalTitle) {
+                if (folderName) {
+                    modalTitle.textContent = `Upload to ${folderName} Folder`;
+                } else {
+                    modalTitle.textContent = 'Upload Plans';
+                }
+            }
         }
 
         function closeUploadModal() {
@@ -3699,6 +3715,14 @@
             const formData = new FormData();
             formData.append('projectId', projectId);
 
+            // Add folder context if uploading to specific folder
+            if (uploadFolderId) {
+                formData.append('folderId', uploadFolderId);
+            }
+            if (uploadFolderName) {
+                formData.append('folder', uploadFolderName);
+            }
+
             // Add all files to FormData
             for (const file of selectedFiles) {
                 formData.append('plans', file);
@@ -3811,7 +3835,16 @@
 
         // Folder actions
         function createNewPlanInFolder(folderName) {
-            alert(`Create new plan in ${folderName} folder`);
+            // Find the folder ID
+            let folderId = null;
+            if (folderName && folderName !== 'all') {
+                const folder = folders.find(f => f.name === folderName);
+                if (folder) {
+                    folderId = folder.id;
+                }
+            }
+            // Open upload modal with folder context
+            openUploadModal(folderId, folderName === 'all' ? null : folderName);
             toggleFolderDropdown('');
         }
 
