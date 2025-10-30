@@ -3256,15 +3256,23 @@
                 allPlansSection.ondrop = (e) => handleAllPlansDrop(e);
 
                 // Update All plans folder
-                // Count only unassigned plans (no folder)
-                const unassignedPlans = plans.filter(p => !p.folderId && !p.folder);
-                const unassignedCount = unassignedPlans.length;
+                // Find the "All Plans" folder and count plans in it
+                const allPlansFolder = folders.find(f => f.name && f.name.toLowerCase() === 'all plans');
+                let allPlansCount = 0;
+
+                if (allPlansFolder) {
+                    // Count plans assigned to the All Plans folder
+                    allPlansCount = plans.filter(p => p.folderId === allPlansFolder.id || (p.folder === 'All Plans')).length;
+                } else {
+                    // Fallback: count unassigned plans if no All Plans folder exists
+                    allPlansCount = plans.filter(p => !p.folderId && !p.folder).length;
+                }
 
                 const allPlansName = document.getElementById('allPlansName');
-                allPlansName.textContent = `All plans (${unassignedCount} ${unassignedCount === 1 ? 'plan' : 'plans'})`;
+                allPlansName.textContent = `All plans (${allPlansCount} ${allPlansCount === 1 ? 'plan' : 'plans'})`;
 
                 // Update All Plans folder icon based on content
-                const allPlansIcon = unassignedCount > 0 ? 'fa-folder-open' : 'fa-folder';
+                const allPlansIcon = allPlansCount > 0 ? 'fa-folder-open' : 'fa-folder';
                 const allPlansFolderIcon = document.querySelector('#allPlansSection .folder-icon');
                 if (allPlansFolderIcon) {
                     allPlansFolderIcon.className = `fas ${allPlansIcon} folder-icon`;
@@ -3285,10 +3293,16 @@
             const grid = document.getElementById('allPlansGrid');
             grid.innerHTML = '';
 
-            // Add only plans without a folder (unassigned plans)
+            // Find the "All Plans" folder
+            const allPlansFolder = folders.find(f => f.name && f.name.toLowerCase() === 'all plans');
+
+            // Add plans that are in the All Plans folder
             plans.forEach((plan, index) => {
-                // Only show plans that don't have a folder or have empty folder
-                if (!plan.folderId && !plan.folder) {
+                // Show plans in the All Plans folder OR unassigned plans (for backward compatibility)
+                const isInAllPlans = allPlansFolder && (plan.folderId === allPlansFolder.id || plan.folder === 'All Plans');
+                const isUnassigned = !plan.folderId && !plan.folder;
+
+                if (isInAllPlans || isUnassigned) {
                     const card = createPlanCard(plan, index);
                     grid.appendChild(card);
                 }
