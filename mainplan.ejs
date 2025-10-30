@@ -3362,22 +3362,27 @@
 
         // Move plan to folder with optimistic updates
         async function movePlanToFolder(planIndex, targetFolderName) {
-            if (!plans[planIndex]) {
-                console.error('Plan not found');
+            console.log('movePlanToFolder called:', { planIndex, targetFolderName, totalPlans: plans.length });
+
+            if (planIndex === undefined || planIndex === null || !plans[planIndex]) {
+                console.error('Plan not found at index:', planIndex);
                 return;
             }
 
             const plan = plans[planIndex];
+            console.log('Plan to move:', plan.name, 'Current folder:', plan.folder);
+
             let newFolderId = null;
             let newFolderName = targetFolderName;
 
             // Find the target folder's ID
             if (targetFolderName) {
                 const targetFolder = folders.find(f => f.name === targetFolderName);
+                console.log('Target folder:', targetFolder);
                 if (targetFolder) {
                     newFolderId = targetFolder.id;
                 } else {
-                    console.error('Target folder not found');
+                    console.error('Target folder not found:', targetFolderName);
                     return;
                 }
             }
@@ -3385,9 +3390,10 @@
             // OPTIMISTIC UPDATE: Update UI immediately
             plan.folder = newFolderName;
             plan.folderId = newFolderId;
+            console.log('Plan updated locally. New folder:', newFolderName);
 
             // Re-render the plans to reflect changes
-            await loadPlans();
+            updateView();
 
             // Save changes to backend in background (fire-and-forget)
             try {
@@ -3399,6 +3405,7 @@
                         folder: newFolderName
                     })
                 });
+                console.log('Backend response status:', response.status);
                 // Fire-and-forget, no waiting for response
                 if (!response.ok) {
                     console.error('Failed to save plan move to backend');
