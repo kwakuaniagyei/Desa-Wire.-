@@ -302,6 +302,9 @@ router.post('/api/plans/reorder', requireAuth, (req, res) => {
             return res.status(400).json({ error: 'Invalid plan IDs array' });
         }
 
+        const fs = require('fs');
+        const path = require('path');
+
         // Get all current plans
         const allPlans = plansDB.getAll();
 
@@ -323,13 +326,10 @@ router.post('/api/plans/reorder', requireAuth, (req, res) => {
         const finalPlans = [...reorderedPlans, ...missingPlans];
 
         // Write the reordered plans back to the database
-        const { writeJSON } = require('../database/db');
-        const fs = require('fs');
-        const path = require('path');
         const dbPath = path.join(__dirname, '../database/plans.json');
-        fs.writeFileSync(dbPath, JSON.stringify(finalPlans, null, 2));
+        fs.writeFileSync(dbPath, JSON.stringify(finalPlans, null, 2), 'utf8');
 
-        console.log('Plans reordered successfully:', planIds);
+        console.log('Plans reordered successfully. New order:', planIds);
         res.json({
             success: true,
             message: 'Plans reordered successfully',
