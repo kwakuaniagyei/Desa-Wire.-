@@ -368,53 +368,6 @@
             font-weight: 500;
         }
 
-        /* Trash zone for removing files from folders */
-        .trash-zone {
-            margin-top: 20px;
-            padding: 24px;
-            border: 2px dashed #ef4444;
-            border-radius: 8px;
-            background: #fef2f2;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            min-height: 120px;
-            cursor: grab;
-            transition: all 0.3s ease;
-        }
-
-        .trash-zone.drag-over {
-            background: #fee2e2;
-            border-color: #dc2626;
-            box-shadow: 0 0 16px rgba(239, 68, 68, 0.2);
-            transform: scale(1.02);
-        }
-
-        .trash-zone-content {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 12px;
-            text-align: center;
-        }
-
-        .trash-icon {
-            font-size: 32px;
-            color: #ef4444;
-            transition: all 0.3s ease;
-        }
-
-        .trash-zone.drag-over .trash-icon {
-            color: #dc2626;
-            transform: scale(1.2);
-        }
-
-        .trash-text {
-            font-size: 14px;
-            font-weight: 500;
-            color: #7f1d1d;
-        }
-
         /* Upload Modal */
         .upload-modal {
             position: fixed;
@@ -3054,14 +3007,6 @@
 
                     <!-- Custom folders -->
                     <div id="customFoldersContainer"></div>
-
-                    <!-- Trash zone for removing files from folders -->
-                    <div id="trashZone" class="trash-zone" style="display: none;">
-                        <div class="trash-zone-content">
-                            <i class="fas fa-trash trash-icon"></i>
-                            <span class="trash-text">Drop here to move to All Plans</span>
-                        </div>
-                    </div>
                 </div>
             </div>
 
@@ -3382,28 +3327,6 @@
                     allPlansSection.classList.remove('drag-over');
                 };
                 allPlansSection.ondrop = (e) => handleAllPlansDrop(e);
-
-                // Setup trash zone drag and drop handlers
-                const trashZone = document.getElementById('trashZone');
-                if (trashZone) {
-                    trashZone.style.display = 'flex'; // Show trash zone when there are folders
-                    trashZone.ondragover = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        trashZone.classList.add('drag-over');
-                    };
-                    trashZone.ondragenter = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        trashZone.classList.add('drag-over');
-                    };
-                    trashZone.ondragleave = (e) => {
-                        e.preventDefault();
-                        e.stopPropagation();
-                        trashZone.classList.remove('drag-over');
-                    };
-                    trashZone.ondrop = (e) => handleTrashZoneDrop(e);
-                }
 
                 // Update All plans folder
                 // Find the "All Plans" folder and count plans in it
@@ -3794,23 +3717,6 @@
 
             const planIndex = parseInt(e.dataTransfer.getData('planIndex'));
             // Move plan back to All Plans (null folderId)
-            if (plans[planIndex]) {
-                movePlanToFolder(planIndex, null);
-            }
-        }
-
-        // Handle drop on trash zone (move to All Plans)
-        function handleTrashZoneDrop(e) {
-            e.preventDefault();
-            e.stopPropagation();
-
-            const trashZone = document.getElementById('trashZone');
-            if (trashZone) {
-                trashZone.classList.remove('drag-over');
-            }
-
-            const planIndex = parseInt(e.dataTransfer.getData('planIndex'));
-            // Move plan back to All Plans (same as trash functionality)
             if (plans[planIndex]) {
                 movePlanToFolder(planIndex, null);
             }
