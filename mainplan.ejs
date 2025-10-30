@@ -486,6 +486,11 @@
             cursor: grabbing;
         }
 
+        .plan-card.drag-over {
+            border: 2px dashed #3b82f6;
+            background-color: #eff6ff;
+        }
+
         .upload-icon-wrapper {
             margin: 0 auto 20px;
             width: 80px;
@@ -3147,8 +3152,14 @@
             const card = document.createElement('div');
             card.className = 'plan-card';
             card.draggable = true;
+            card.id = `plan-card-${index}`;
+            card.dataset.planIndex = index;
             card.ondragstart = (e) => handlePlanDragStart(e, index);
             card.ondragend = (e) => handlePlanDragEnd(e);
+            card.ondragover = (e) => handlePlanCardDragOver(e);
+            card.ondrop = (e) => handlePlanCardDrop(e, index);
+            card.ondragenter = (e) => handlePlanCardDragEnter(e);
+            card.ondragleave = (e) => handlePlanCardDragLeave(e);
             card.onclick = () => viewPlan(index);
 
             // Use plan ID and timestamp for truly unique thumbnail identifier
@@ -3290,10 +3301,114 @@
         function handlePlanDragEnd(e) {
             document.querySelectorAll('.plan-card').forEach(card => {
                 card.classList.remove('dragging');
+                card.classList.remove('drag-over');
             });
             document.querySelectorAll('.folder-section').forEach(folder => {
                 folder.classList.remove('drag-over');
             });
+        }
+
+        // Handle plan card drag over (for reordering within folder)
+        function handlePlanCardDragOver(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            e.dataTransfer.dropEffect = 'move';
+        }
+
+        // Handle plan card drag enter (for reordering within folder)
+        function handlePlanCardDragEnter(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = e.target.closest('.plan-card');
+            if (card && !card.classList.contains('dragging')) {
+                card.classList.add('drag-over');
+            }
+        }
+
+        // Handle plan card drag leave (for reordering within folder)
+        function handlePlanCardDragLeave(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            const card = e.target.closest('.plan-card');
+            if (card) {
+                card.classList.remove('drag-over');
+            }
+        }
+
+        // Handle plan card drop (for reordering within folder)
+        function handlePlanCardDrop(e, targetIndex) {
+            e.preventDefault();
+            e.stopPropagation();
+
+            const card = e.target.closest('.plan-card');
+            if (card) {
+                card.classList.remove('drag-over');
+            }
+
+            const draggedPlanIndex = parseInt(e.dataTransfer.getData('planIndex'));
+            console.log('Plan drop detected:', { draggedPlanIndex, targetIndex });
+
+            // Only reorder if within the same folder (same grid container)
+            const draggedCard = document.getElementById(`plan-card-${draggedPlanIndex}`);
+            const targetCard = document.getElementById(`plan-card-${targetIndex}`);
+
+            if (draggedCard && targetCard) {
+                const draggedGrid = draggedCard.closest('.folder-plans-grid, #allPlansGrid');
+                const targetGrid = targetCard.closest('.folder-plans-grid, #allPlansGrid');
+
+                // Check if both cards are in the same grid (same folder)
+                if (draggedGrid && draggedGrid === targetGrid && draggedPlanIndex !== targetIndex) {
+                    console.log('Reordering plans in same folder');
+                    reorderPlansInFolder(draggedPlanIndex, targetIndex);
+                }
+            }
+        }
+
+        // Reorder plans within a folder
+        function reorderPlansInFolder(fromIndex, toIndex) {
+            if (fromIndex === toIndex) return;
+
+            // Get the plan being moved
+            const movedPlan = plans[fromIndex];
+
+            // Remove from old position
+            plans.splice(fromIndex, 1);
+
+            // Adjust toIndex if needed (if we removed from before toIndex)
+            let adjustedToIndex = toIndex;
+            if (fromIndex < toIndex) {
+                adjustedToIndex = toIndex - 1;
+            }
+
+            // Insert at new position
+            plans.splice(adjustedToIndex, 0, movedPlan);
+
+            console.log('Plans reordered. New order:', plans.map(p => p.name));
+
+            // Re-render to show new order
+            updateView();
+
+            // Save to backend
+            savePlansOrder();
+        }
+
+        // Save the new plans order to backend
+        async function savePlansOrder() {
+            try {
+                const response = await fetch('/api/plans/reorder', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        planIds: plans.map(p => p.id)
+                    })
+                });
+
+                if (!response.ok) {
+                    console.error('Failed to save plans order');
+                }
+            } catch (error) {
+                console.error('Error saving plans order:', error);
+            }
         }
 
         // Handle folder drag over
