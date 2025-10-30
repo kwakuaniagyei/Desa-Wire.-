@@ -711,6 +711,131 @@
             cursor: not-allowed;
         }
 
+        /* Upload Progress Bar */
+        .upload-progress-container {
+            width: 100%;
+            margin: 24px 0;
+            padding: 20px;
+            background: #f9fafb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .upload-progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+        }
+
+        .upload-progress-text {
+            font-size: 14px;
+            font-weight: 500;
+            color: #374151;
+        }
+
+        .upload-progress-percent {
+            font-size: 14px;
+            font-weight: 600;
+            color: #3b82f6;
+        }
+
+        .upload-progress-bar-wrapper {
+            width: 100%;
+            height: 8px;
+            background: #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 12px;
+        }
+
+        .upload-progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
+            border-radius: 4px;
+            width: 0%;
+            transition: width 0.3s ease;
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+        }
+
+        .upload-progress-status {
+            font-size: 12px;
+            color: #6b7280;
+            text-align: center;
+        }
+
+        /* Upload Success Message */
+        .upload-success-container {
+            width: 100%;
+            padding: 40px 20px;
+            text-align: center;
+            animation: slideIn 0.4s ease;
+        }
+
+        .upload-success-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .upload-success-checkmark {
+            width: 80px;
+            height: 80px;
+            background: #10b981;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 40px;
+            color: white;
+            animation: scaleIn 0.5s ease cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .upload-success-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .upload-success-message {
+            font-size: 14px;
+            color: #6b7280;
+            margin: 0;
+        }
+
+        .upload-success-btn {
+            padding: 10px 24px;
+            background: #10b981;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 12px;
+        }
+
+        .upload-success-btn:hover {
+            background: #059669;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+        }
+
+        /* Animations */
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
         /* Create Folder Modal */
         .create-folder-modal {
             position: fixed;
@@ -2885,6 +3010,32 @@
                     </button>
                 </div>
 
+                <!-- Upload Progress Bar -->
+                <div id="uploadProgressContainer" class="upload-progress-container" style="display: none;">
+                    <div class="upload-progress-header">
+                        <span class="upload-progress-text">Uploading files...</span>
+                        <span class="upload-progress-percent" id="progressPercent">0%</span>
+                    </div>
+                    <div class="upload-progress-bar-wrapper">
+                        <div class="upload-progress-bar" id="uploadProgressBar">
+                            <div class="upload-progress-fill" id="uploadProgressFill"></div>
+                        </div>
+                    </div>
+                    <div class="upload-progress-status" id="uploadProgressStatus"></div>
+                </div>
+
+                <!-- Upload Success Message -->
+                <div id="uploadSuccessContainer" class="upload-success-container" style="display: none;">
+                    <div class="upload-success-content">
+                        <div class="upload-success-checkmark">
+                            <i class="fas fa-check"></i>
+                        </div>
+                        <h3 class="upload-success-title">Upload Successful!</h3>
+                        <p class="upload-success-message" id="uploadSuccessMessage">Your files have been uploaded successfully</p>
+                        <button class="upload-success-btn" onclick="closeUploadModal()">Done</button>
+                    </div>
+                </div>
+
                 <button class="upload-files-btn" id="uploadBtn" onclick="uploadFiles()" disabled>
                     <i class="fas fa-cloud-upload-alt"></i>
                     <span>Upload files</span>
@@ -3699,12 +3850,9 @@
             return (bytes / (1024 * 1024)).toFixed(1) + ' MB';
         }
 
-        // Upload files
+        // Upload files with progress bar
         async function uploadFiles() {
             if (selectedFiles.length === 0) return;
-
-            const loadingOverlay = document.getElementById('loadingOverlay');
-            loadingOverlay.classList.add('show');
 
             const projectId = getCurrentProjectId();
             const maxFileSize = 10 * 1024 * 1024; // 10MB limit
@@ -3713,10 +3861,24 @@
             for (const file of selectedFiles) {
                 if (file.size > maxFileSize) {
                     alert(`File "${file.name}" is too large. Maximum size is 10MB.`);
-                    loadingOverlay.classList.remove('show');
                     return;
                 }
             }
+
+            // Hide upload button and show progress bar
+            document.getElementById('uploadBtn').style.display = 'none';
+            document.getElementById('uploadProgressContainer').style.display = 'block';
+            document.getElementById('uploadSuccessContainer').style.display = 'none';
+
+            // Animate progress from 0 to 90% while uploading
+            let progress = 0;
+            const progressInterval = setInterval(() => {
+                if (progress < 90) {
+                    progress += Math.random() * 30;
+                    if (progress > 90) progress = 90;
+                    updateProgressBar(progress);
+                }
+            }, 200);
 
             // Process and upload files
             const formData = new FormData();
@@ -3742,31 +3904,66 @@
                     body: formData
                 });
 
+                clearInterval(progressInterval);
+
                 if (!response.ok) {
                     const errorText = await response.text();
                     console.error('Server error:', errorText);
+                    updateProgressBar(0);
+                    document.getElementById('uploadProgressContainer').style.display = 'none';
+                    document.getElementById('uploadBtn').style.display = 'flex';
                     alert(`Error uploading files: ${response.status} ${response.statusText}`);
-                    loadingOverlay.classList.remove('show');
                     return;
                 }
 
                 const result = await response.json();
                 if (result.success || result.status === 'success') {
-                    alert('Files uploaded successfully!');
+                    // Complete the progress bar to 100%
+                    updateProgressBar(100);
+
+                    // Wait a moment then show success
+                    await new Promise(resolve => setTimeout(resolve, 500));
+
+                    // Hide progress bar and show success message
+                    document.getElementById('uploadProgressContainer').style.display = 'none';
+                    document.getElementById('uploadSuccessContainer').style.display = 'block';
+                    document.getElementById('uploadSuccessMessage').textContent = `Successfully uploaded ${selectedFiles.length} file${selectedFiles.length === 1 ? '' : 's'}`;
+
+                    // Wait for user to see success message
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+
                 } else {
+                    clearInterval(progressInterval);
+                    updateProgressBar(0);
+                    document.getElementById('uploadProgressContainer').style.display = 'none';
+                    document.getElementById('uploadBtn').style.display = 'flex';
                     alert(`Error uploading files: ${result.message || 'Unknown error'}`);
+                    return;
                 }
             } catch (error) {
+                clearInterval(progressInterval);
                 console.error('Error uploading files:', error);
+                updateProgressBar(0);
+                document.getElementById('uploadProgressContainer').style.display = 'none';
+                document.getElementById('uploadBtn').style.display = 'flex';
                 alert(`Error uploading files: ${error.message}`);
+                return;
             }
 
-            // Wait for all files to be processed
-            await new Promise(resolve => setTimeout(resolve, 2000));
-
-            loadingOverlay.classList.remove('show');
+            // Close modal and reload plans
+            await new Promise(resolve => setTimeout(resolve, 1500));
             closeUploadModal();
+            updateProgressBar(0);
+            document.getElementById('uploadBtn').style.display = 'flex';
             await loadPlans();
+        }
+
+        // Helper function to update progress bar
+        function updateProgressBar(percent) {
+            const fill = document.getElementById('uploadProgressFill');
+            const percentDisplay = document.getElementById('progressPercent');
+            fill.style.width = percent + '%';
+            percentDisplay.textContent = Math.round(percent) + '%';
         }
 
         // Create folder
