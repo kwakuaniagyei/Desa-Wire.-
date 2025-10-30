@@ -3101,6 +3101,13 @@
                 const allPlansName = document.getElementById('allPlansName');
                 allPlansName.textContent = `All plans (${plans.length} ${plans.length === 1 ? 'plan' : 'plans'})`;
 
+                // Update All Plans folder icon based on content
+                const allPlansIcon = plans.length > 0 ? 'fa-folder-open' : 'fa-folder';
+                const allPlansFolderIcon = document.querySelector('#allPlansSection .folder-icon');
+                if (allPlansFolderIcon) {
+                    allPlansFolderIcon.className = `fas ${allPlansIcon} folder-icon`;
+                }
+
                 // Render plans
                 renderPlans();
 
@@ -3233,10 +3240,13 @@
                 const folderPlans = plans.filter(p => p.folderId === folder.id || p.folder === folder.name);
                 const planCount = folderPlans.length;
 
+                // Determine if folder is open (has files) or closed (empty)
+                const folderIcon = planCount > 0 ? 'fa-folder-open' : 'fa-folder';
+
                 folderSection.innerHTML = `
                     <div class="folder-header">
                         <input type="checkbox" class="folder-checkbox">
-                        <i class="fas fa-folder folder-icon"></i>
+                        <i class="fas ${folderIcon} folder-icon"></i>
                         <span class="folder-name">${folder.name} (${planCount})</span>
                         <div class="folder-dropdown">
                             <button class="folder-dropdown-btn" onclick="toggleFolderDropdown('folder-${index}-dropdown')">
