@@ -293,6 +293,54 @@ router.post('/api/plans/delete-multiple', requireAuth, (req, res) => {
     }
 });
 
+// Reorder plans
+router.post('/api/plans/reorder', requireAuth, (req, res) => {
+    try {
+        const { planIds } = req.body;
+
+        if (!planIds || !Array.isArray(planIds)) {
+            return res.status(400).json({ error: 'Invalid plan IDs array' });
+        }
+
+        // Get all current plans
+        const allPlans = plansDB.getAll();
+
+        // Create a map of plan ID to plan for quick lookup
+        const planMap = {};
+        allPlans.forEach(plan => {
+            planMap[plan.id] = plan;
+        });
+
+        // Reorder plans based on the provided planIds order
+        const reorderedPlans = planIds
+            .map(id => planMap[id])
+            .filter(plan => plan !== undefined); // Filter out any IDs that don't exist
+
+        // If we have missing plans (IDs not in the provided array), add them at the end
+        const reorderedIds = new Set(reorderedPlans.map(p => p.id));
+        const missingPlans = allPlans.filter(plan => !reorderedIds.has(plan.id));
+
+        const finalPlans = [...reorderedPlans, ...missingPlans];
+
+        // Write the reordered plans back to the database
+        const { writeJSON } = require('../database/db');
+        const fs = require('fs');
+        const path = require('path');
+        const dbPath = path.join(__dirname, '../database/plans.json');
+        fs.writeFileSync(dbPath, JSON.stringify(finalPlans, null, 2));
+
+        console.log('Plans reordered successfully:', planIds);
+        res.json({
+            success: true,
+            message: 'Plans reordered successfully',
+            count: finalPlans.length
+        });
+    } catch (error) {
+        console.error('Error reordering plans:', error);
+        res.status(500).json({ error: 'Failed to reorder plans', details: error.message });
+    }
+});
+
 // Create a folder
 router.post('/api/folders', requireAuth, (req, res) => {
     try {
