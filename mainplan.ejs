@@ -4081,13 +4081,14 @@
                     const result = await response.json();
                     if (result.success) {
                         folder.name = newName.trim();
+                        showNotification(`✅ Folder renamed to "${newName.trim()}"`, 'success');
                         updateView();
                     } else {
-                        alert('Error renaming folder');
+                        showNotification('Error renaming folder', 'error');
                     }
                 } catch (error) {
                     console.error('Error renaming folder:', error);
-                    alert('Error renaming folder');
+                    showNotification('Error renaming folder', 'error');
                 }
             }
             toggleFolderDropdown('');
@@ -4096,6 +4097,7 @@
         async function deleteFolder(index) {
             if (confirm(`Are you sure you want to delete the folder "${folders[index].name}"?`)) {
                 const folder = folders[index];
+                const folderName = folder.name;
                 try {
                     // Delete from database
                     const response = await fetch(`/api/folders/${folder.id}`, {
@@ -4108,13 +4110,14 @@
                     const result = await response.json();
                     if (result.success) {
                         folders.splice(index, 1);
+                        showNotification(`✅ Folder "${folderName}" deleted successfully`, 'success');
                         updateView();
                     } else {
-                        alert('Error deleting folder');
+                        showNotification('Error deleting folder', 'error');
                     }
                 } catch (error) {
                     console.error('Error deleting folder:', error);
-                    alert('Error deleting folder');
+                    showNotification('Error deleting folder', 'error');
                 }
             }
             toggleFolderDropdown('');
