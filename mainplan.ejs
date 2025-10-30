@@ -3105,11 +3105,15 @@
                 allPlansSection.ondrop = (e) => handleAllPlansDrop(e);
 
                 // Update All plans folder
+                // Count only unassigned plans (no folder)
+                const unassignedPlans = plans.filter(p => !p.folderId && !p.folder);
+                const unassignedCount = unassignedPlans.length;
+
                 const allPlansName = document.getElementById('allPlansName');
-                allPlansName.textContent = `All plans (${plans.length} ${plans.length === 1 ? 'plan' : 'plans'})`;
+                allPlansName.textContent = `All plans (${unassignedCount} ${unassignedCount === 1 ? 'plan' : 'plans'})`;
 
                 // Update All Plans folder icon based on content
-                const allPlansIcon = plans.length > 0 ? 'fa-folder-open' : 'fa-folder';
+                const allPlansIcon = unassignedCount > 0 ? 'fa-folder-open' : 'fa-folder';
                 const allPlansFolderIcon = document.querySelector('#allPlansSection .folder-icon');
                 if (allPlansFolderIcon) {
                     allPlansFolderIcon.className = `fas ${allPlansIcon} folder-icon`;
@@ -3130,10 +3134,13 @@
             const grid = document.getElementById('allPlansGrid');
             grid.innerHTML = '';
 
-            // Add existing plans
+            // Add only plans without a folder (unassigned plans)
             plans.forEach((plan, index) => {
-                const card = createPlanCard(plan, index);
-                grid.appendChild(card);
+                // Only show plans that don't have a folder or have empty folder
+                if (!plan.folderId && !plan.folder) {
+                    const card = createPlanCard(plan, index);
+                    grid.appendChild(card);
+                }
             });
 
             // Add "New plan" card
