@@ -3231,10 +3231,13 @@
                 const folderSection = document.createElement('div');
                 folderSection.className = 'folder-section';
                 folderSection.draggable = false;
-                folderSection.ondragover = (e) => handleFolderDragOver(e, index);
-                folderSection.ondragenter = (e) => handleFolderDragEnter(e, index);
-                folderSection.ondragleave = (e) => handleFolderDragLeave(e, index);
-                folderSection.ondrop = (e) => handleFolderDrop(e, index);
+                folderSection.id = `folder-section-${index}`;
+
+                // Set drag handlers using addEventListener for better reliability
+                folderSection.addEventListener('dragover', (e) => handleFolderDragOver(e, index));
+                folderSection.addEventListener('dragenter', (e) => handleFolderDragEnter(e, index));
+                folderSection.addEventListener('dragleave', (e) => handleFolderDragLeave(e, index));
+                folderSection.addEventListener('drop', (e) => handleFolderDrop(e, index));
 
                 // Get plans in this folder
                 const folderPlans = plans.filter(p => p.folderId === folder.id || p.folder === folder.name);
@@ -3296,30 +3299,48 @@
         // Handle folder drag over
         function handleFolderDragOver(e, folderIndex) {
             e.preventDefault();
+            e.stopPropagation();
             e.dataTransfer.dropEffect = 'move';
-            e.currentTarget.closest('.folder-section').classList.add('drag-over');
+            const folderSection = document.getElementById(`folder-section-${folderIndex}`);
+            if (folderSection) {
+                folderSection.classList.add('drag-over');
+            }
         }
 
         // Handle folder drag enter
         function handleFolderDragEnter(e, folderIndex) {
             e.preventDefault();
-            e.currentTarget.closest('.folder-section').classList.add('drag-over');
+            e.stopPropagation();
+            const folderSection = document.getElementById(`folder-section-${folderIndex}`);
+            if (folderSection) {
+                folderSection.classList.add('drag-over');
+            }
         }
 
         // Handle folder drag leave
         function handleFolderDragLeave(e, folderIndex) {
-            e.currentTarget.closest('.folder-section').classList.remove('drag-over');
+            e.preventDefault();
+            e.stopPropagation();
+            const folderSection = document.getElementById(`folder-section-${folderIndex}`);
+            if (folderSection) {
+                folderSection.classList.remove('drag-over');
+            }
         }
 
         // Handle folder drop
         function handleFolderDrop(e, folderIndex) {
             e.preventDefault();
-            e.currentTarget.closest('.folder-section').classList.remove('drag-over');
+            e.stopPropagation();
+
+            const folderSection = document.getElementById(`folder-section-${folderIndex}`);
+            if (folderSection) {
+                folderSection.classList.remove('drag-over');
+            }
 
             const planIndex = parseInt(e.dataTransfer.getData('planIndex'));
             const targetFolder = folders[folderIndex];
 
-            if (targetFolder) {
+            if (targetFolder && !isNaN(planIndex)) {
                 movePlanToFolder(planIndex, targetFolder.name);
             }
         }
