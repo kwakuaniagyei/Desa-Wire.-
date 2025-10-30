@@ -302,7 +302,7 @@
 
         .plan-thumbnail {
             width: 100%;
-            height: 350px;
+            height: 250px;
             background: #f9fafb;
             display: flex;
             align-items: center;
@@ -2158,12 +2158,12 @@
 
         .pdf-document-area {
             flex: 1;
-            overflow: hidden;
+            overflow-y: auto;
             background: #f3f4f6;
-            padding: 0px;
+            padding: 20px;
             position: relative;
             display: flex;
-            align-items: center;
+            align-items: flex-start;
             justify-content: center;
         }
 
@@ -2173,27 +2173,27 @@
 
         #pdfDocumentContent {
             width: 100%;
-            max-width: 100%;
+            max-width: 900px;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 0px;
-            background: transparent;
-            padding: 20px;
-            box-shadow: none;
-            border-radius: 0px;
-            height: 100%;
+            background: white;
+            padding: 40px 60px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-height: calc(100vh - 200px);
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             overflow: visible;
         }
 
         #pdfDocumentContent canvas {
-            max-width: 95%;
-            max-height: 95%;
-            height: auto;
-            width: auto;
+            width: 100% !important;
+            height: auto !important;
+            max-width: 100%;
             background: white;
+            display: block;
+            margin: 0 auto;
             border-radius: 0px;
             box-shadow: none;
             object-fit: contain;
@@ -2201,6 +2201,146 @@
             image-rendering: sharp;
             -ms-interpolation-mode: nearest-neighbor;
             border: 1px solid #000000;
+        }
+
+        /* PDF Top Right Controls */
+        .pdf-top-right-controls {
+            position: absolute;
+            top: 24px;
+            left: 24px;
+            display: flex;
+            gap: 8px;
+            z-index: 100;
+            background: white;
+            padding: 8px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .pdf-control-icon {
+            width: 40px;
+            height: 40px;
+            background: #f3f4f6;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            color: #374151;
+            font-size: 18px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+
+        .pdf-control-icon:hover {
+            background: #e5e7eb;
+            border-color: #d1d5db;
+        }
+
+        /* Eye Dropdown Menu */
+        .eye-dropdown-menu {
+            position: absolute;
+            top: 48px;
+            left: 0;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            min-width: 280px;
+            max-height: 600px;
+            overflow-y: auto;
+            display: none;
+            z-index: 1000;
+        }
+
+        .eye-dropdown-menu.show {
+            display: block;
+        }
+
+        .eye-dropdown-header {
+            padding: 16px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .eye-dropdown-section {
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .eye-dropdown-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 0;
+            cursor: pointer;
+            font-size: 14px;
+            color: #374151;
+        }
+
+        .eye-dropdown-label input[type="checkbox"] {
+            width: 18px;
+            height: 18px;
+            cursor: pointer;
+        }
+
+        .eye-dropdown-colors {
+            display: flex;
+            gap: 8px;
+            flex-wrap: wrap;
+            margin-top: 8px;
+        }
+
+        .eye-color-circle {
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 16px;
+        }
+
+        .eye-color-circle.selected {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.2);
+        }
+
+        /* PDF Name Display at Bottom */
+        .pdf-bottom-name-bar {
+            position: fixed;
+            bottom: 0;
+            left: 60px;
+            right: 0;
+            background: #2a2f37;
+            padding: 12px 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 16px;
+            z-index: 10002;
+            height: 50px;
+        }
+
+        .pdf-name-display {
+            background: #3a3f47;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .pdf-name-display i {
+            color: #9ca3af;
         }
 
         /* ===== PDF RIGHT TASKS SIDEBAR ===== */
@@ -3004,8 +3144,8 @@
             card.ondragend = (e) => handlePlanDragEnd(e);
             card.onclick = () => viewPlan(index);
 
-            // Use plan ID for unique thumbnail identifier to avoid conflicts in folders
-            const thumbnailId = `thumbnail-${plan.id || index}`;
+            // Use plan ID and timestamp for truly unique thumbnail identifier
+            const thumbnailId = `thumbnail-${plan.id || plan.name}-${Date.now()}-${Math.random()}`;
 
             const thumbnail = document.createElement('div');
             thumbnail.className = 'plan-thumbnail';
@@ -3035,18 +3175,23 @@
                 const pdf = await loadingTask.promise;
                 const page = await pdf.getPage(1);
 
-                const scale = 5.5;  // Ultra high-quality zoom for premium professional appearance
+                // Calculate scale to fill the thumbnail width
+                const thumbWidth = 300;  // Standard thumbnail width
+                const thumbHeight = 250;  // Thumbnail height
+                const unscaledViewport = page.getViewport({ scale: 1 });
+                const scale = thumbWidth / unscaledViewport.width * 1.2;  // Scale up to fill and zoom into header
+
                 const viewport = page.getViewport({ scale: scale });
 
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d');
-                canvas.height = viewport.height;
-                canvas.width = viewport.width;
+                canvas.height = thumbHeight;
+                canvas.width = thumbWidth;
 
                 // Set canvas style for better rendering
                 canvas.style.maxWidth = '100%';
                 canvas.style.maxHeight = '100%';
-                canvas.style.objectFit = 'contain';
+                canvas.style.objectFit = 'cover';
 
                 const renderContext = {
                     canvasContext: context,
@@ -4034,6 +4179,12 @@
 
                 // Render PDF using PDF.js
                 renderPDFInViewer(base64Data, contentContainer, pdfData.plan);
+
+                // Update bottom name bar
+                const nameBar = document.querySelector('.pdf-name-display');
+                if (nameBar) {
+                    nameBar.innerHTML = `<i class="fas fa-pen"></i><span>${pdfData.plan.name || 'Document.pdf'}</span>`;
+                }
             } else {
                 // Load default template if no PDF data
                 contentContainer.innerHTML = getDefaultPDFTemplate();
@@ -4041,6 +4192,22 @@
 
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
+        }
+
+        // Add this helper function to calculate optimal PDF scale for different monitors
+        function getOptimalPDFScale() {
+            const dpr = window.devicePixelRatio || 1;
+
+            // For external monitors (standard DPI)
+            if (dpr === 1) {
+                return 2.0; // Higher scale for external monitors
+            }
+            // For laptop screens (high DPI)
+            else if (dpr >= 2) {
+                return 1.5; // Lower scale for laptop screens
+            }
+            // For mid-range DPI
+            return 1.8;
         }
 
         function renderPDFInViewer(base64Data, container, planData) {
@@ -4053,32 +4220,47 @@
 
                 const loadingTask = pdfjsLib.getDocument({ data: byteArray });
                 loadingTask.promise.then(pdf => {
-                    container.innerHTML = `<div style="width: 100%; height: 100%; display: flex; flex-direction: column; align-items: center; justify-content: center;">
-                        <div id="pdfPagesContainer" style="flex: 1; overflow-y: hidden; background: transparent; display: flex; align-items: center; justify-content: center;"></div>
-                    </div>`;
+                    container.innerHTML = '';
 
-                    const pagesContainer = container.querySelector('#pdfPagesContainer');
+                    const pagesContainer = document.createElement('div');
+                    pagesContainer.style.cssText = `
+                        width: 100%;
+                        max-width: 100%;
+                        background: white;
+                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+                        padding: 40px 60px;
+                        margin: 0 auto;
+                    `;
+                    container.appendChild(pagesContainer);
+                    const scale = getOptimalPDFScale();
+                    const dpr = window.devicePixelRatio || 1;
+                    const numPages = Math.min(pdf.numPages, 10);
 
-                    // Render first 5 pages or all pages if less than 5
-                    const numPages = Math.min(pdf.numPages, 5);
                     for (let pageNum = 1; pageNum <= numPages; pageNum++) {
                         pdf.getPage(pageNum).then(page => {
-                            const scale = 5.5;
                             const viewport = page.getViewport({ scale: scale });
                             const canvas = document.createElement('canvas');
-                            const context = canvas.getContext('2d', { alpha: false });
-                            canvas.width = viewport.width;
-                            canvas.height = viewport.height;
+                            const context = canvas.getContext('2d', {
+                                alpha: false,
+                                desynchronized: true,
+                                willReadFrequently: false
+                            });
+
+                            // Set canvas size for high DPI
+                            canvas.width = viewport.width * dpr;
+                            canvas.height = viewport.height * dpr;
+
+                            // Set display size
+                            canvas.style.width = '100%';
+                            canvas.style.height = 'auto';
                             canvas.style.display = 'block';
-                            canvas.style.margin = '0px auto';
-                            canvas.style.border = '1px solid #000000';
-                            canvas.style.borderRadius = '0px';
-                            canvas.style.imageRendering = 'sharp';
-                            canvas.style.imageRendering = 'crisp-edges';
+                            canvas.style.marginBottom = pageNum < numPages ? '0px' : '0';
 
                             const renderContext = {
                                 canvasContext: context,
-                                viewport: viewport
+                                viewport: page.getViewport({ scale: scale * dpr }),
+                                intent: 'display',
+                                renderInteractiveForms: false
                             };
 
                             page.render(renderContext).promise.then(() => {
@@ -4106,6 +4288,29 @@
                 tasksPanel.style.display = tasksPanel.style.display === 'none' ? 'block' : 'none';
             }
         }
+
+        // Toggle PDF search
+        function togglePDFSearch() {
+            alert('Search functionality coming soon');
+        }
+
+        // Toggle eye dropdown
+        function toggleEyeDropdown() {
+            const dropdown = document.getElementById('eyeDropdownMenu');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        // Close eye dropdown when clicking outside (add to existing click handler)
+        document.addEventListener('click', function(e) {
+            const eyeBtn = document.getElementById('eyeDropdownBtn');
+            const dropdown = document.getElementById('eyeDropdownMenu');
+
+            if (dropdown && eyeBtn && !eyeBtn.contains(e.target) && !dropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
 
         function getDefaultPDFTemplate() {
             return `
@@ -4288,6 +4493,84 @@
 
             <!-- Center Content Area -->
             <div class="pdf-center-content">
+                <!-- Top Right Controls (Search and Eye) -->
+                <div class="pdf-top-right-controls">
+                    <button class="pdf-control-icon" title="Search" onclick="togglePDFSearch()">
+                        <i class="fas fa-search"></i>
+                    </button>
+                    <button class="pdf-control-icon" title="View Options" onclick="toggleEyeDropdown()" id="eyeDropdownBtn">
+                        <i class="fas fa-eye"></i>
+                    </button>
+
+                    <!-- Eye Dropdown Menu (content below) -->
+                    <div class="eye-dropdown-menu" id="eyeDropdownMenu">
+                        <div class="eye-dropdown-header">Show</div>
+
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label">
+                                <input type="checkbox" checked> All layers
+                            </label>
+                        </div>
+
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label">
+                                <input type="checkbox" checked> Tasks
+                            </label>
+                            <div style="padding-left: 26px;">
+                                <label class="eye-dropdown-label">
+                                    <input type="checkbox" checked> Filtered tasks
+                                </label>
+                                <label class="eye-dropdown-label">
+                                    <input type="checkbox" checked> Other tasks
+                                </label>
+                            </div>
+                        </div>
+
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label">
+                                <input type="checkbox" checked> Markups
+                            </label>
+                            <div class="eye-dropdown-colors">
+                                <div class="eye-color-circle selected" style="background: #dc2626;"><i class="fas fa-check"></i></div>
+                                <div class="eye-color-circle selected" style="background: #2563eb;"><i class="fas fa-check"></i></div>
+                                <div class="eye-color-circle selected" style="background: #f59e0b;"><i class="fas fa-check"></i></div>
+                                <div class="eye-color-circle selected" style="background: #16a34a;"><i class="fas fa-check"></i></div>
+                                <div class="eye-color-circle selected" style="background: #d946ef;"><i class="fas fa-check"></i></div>
+                                <div class="eye-color-circle selected" style="background: #06b6d4;"><i class="fas fa-check"></i></div>
+                                <div class="eye-color-circle selected" style="background: #eab308;"><i class="fas fa-check"></i></div>
+                                <div class="eye-color-circle selected" style="background: #22c55e;"><i class="fas fa-check"></i></div>
+                                <div class="eye-color-circle selected" style="background: #fff; border: 1px solid #e5e7eb;"><i class="fas fa-check" style="color: #000;"></i></div>
+                                <div class="eye-color-circle selected" style="background: #000;"><i class="fas fa-check"></i></div>
+                            </div>
+                            <label class="eye-dropdown-label" style="margin-top: 8px;">
+                                <input type="checkbox" checked> <span style="color: #9333ea;">● Private</span>
+                            </label>
+                        </div>
+
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label"><input type="checkbox" checked> Attachments</label>
+                        </div>
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label"><input type="checkbox" checked> Plan links</label>
+                        </div>
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label"><input type="checkbox" checked> Form Links</label>
+                        </div>
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label"><input type="checkbox" checked> Photos</label>
+                        </div>
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label"><input type="checkbox" checked> RFIs</label>
+                        </div>
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label"><input type="checkbox" checked> Specifications</label>
+                        </div>
+                        <div class="eye-dropdown-section">
+                            <label class="eye-dropdown-label"><input type="checkbox" checked> Submittals</label>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- Document Display Area -->
                 <div class="pdf-document-area">
                     <div id="pdfDocumentContent">
@@ -4328,10 +4611,11 @@
         </div>
 
         <!-- Edit Bar -->
-        <div class="pdf-edit-bar">
-            <div class="pdf-edit-label">
+        <!-- Bottom Name Bar -->
+        <div class="pdf-bottom-name-bar">
+            <div class="pdf-name-display">
                 <i class="fas fa-pen"></i>
-                <span>desa wire</span>
+                <span>Document.pdf</span>
             </div>
         </div>
     </div>
