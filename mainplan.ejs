@@ -1813,7 +1813,8 @@
 
         /* PDF Viewer Modal */
         .pdf-viewer-modal {
-            display: none;
+            display: flex;
+            flex-direction: column;
             position: fixed;
             top: 60px;
             left: 280px;
@@ -1821,11 +1822,15 @@
             bottom: 0;
             background-color: white;
             z-index: 10000;
-            flex-direction: column;
+            margin: 0 !important;
+            padding: 0 !important;
+            visibility: hidden;
+            opacity: 0;
         }
 
         .pdf-viewer-modal.show {
-            display: flex;
+            visibility: visible;
+            opacity: 1;
         }
 
         /* When sidebar is collapsed, expand PDF viewer to full width */
@@ -1835,6 +1840,124 @@
 
         .sidebar.collapsed ~ .pdf-viewer-modal.show {
             left: 80px;
+        }
+
+        /* Enhanced Fullscreen Mode - UPDATED */
+        .pdf-viewer-modal.fullscreen-mode {
+            position: fixed !important;
+            top: 0 !important;
+            left: 0 !important;
+            right: 0 !important;
+            bottom: 0 !important;
+            width: 100vw !important;
+            height: 100vh !important;
+            z-index: 99999 !important;
+            background: #ffffff !important;
+        }
+
+        /* Hide UI elements in fullscreen - UPDATED */
+        .pdf-viewer-modal.fullscreen-mode .pdf-viewer-secondary-header {
+            display: none !important;
+        }
+
+        .pdf-viewer-modal.fullscreen-mode .pdf-tasks-sidebar {
+            display: none !important;
+        }
+
+        /* KEEP search and eye controls visible in fullscreen */
+        .pdf-viewer-modal.fullscreen-mode .pdf-top-right-controls {
+            display: flex !important;
+            position: fixed !important;
+            top: 20px !important;
+            right: 20px !important;
+            z-index: 100000 !important;
+        }
+
+        .pdf-viewer-modal.fullscreen-mode .pdf-bottom-panel {
+            display: none !important;
+        }
+
+        .pdf-viewer-modal.fullscreen-mode .pdf-date-selector {
+            display: none !important;
+        }
+
+        .pdf-viewer-modal.fullscreen-mode .pdf-bottom-name-bar {
+            display: none !important;
+        }
+
+        /* Keep toolbar visible in fullscreen - UPDATED positioning */
+        .pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar {
+            background-color: rgba(31, 41, 55, 0.95) !important;
+            opacity: 1;
+            transition: opacity 0.3s ease;
+            position: fixed !important;
+            left: 20px !important;
+            top: 20px !important;
+            z-index: 100000 !important;
+        }
+
+        .pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar:hover {
+            opacity: 1;
+        }
+
+        /* Expand document area to full width in fullscreen - UPDATED */
+        .pdf-viewer-modal.fullscreen-mode .pdf-center-content {
+            width: 100% !important;
+            margin-left: 0 !important;
+            padding-left: 120px !important; /* Space for the toolbar */
+        }
+
+        .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+            width: 100% !important;
+            max-width: 100% !important;
+            padding: 10px 20px !important; /* Reduced padding for fullscreen */
+            display: flex !important;
+            align-items: flex-start !important;
+            justify-content: center !important;
+            overflow-y: auto !important;
+            overflow-x: auto !important;
+            background: #ffffff !important;
+            height: 100vh !important;
+            border: none !important;
+        }
+
+        /* PDF content in fullscreen - FIT TO SCREEN */
+        .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent {
+            width: 100% !important;
+            max-width: 100% !important;
+            margin: 0 !important;
+            background: transparent !important;
+            padding: 0 !important;
+        }
+
+        .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
+            width: auto !important;
+            max-width: none !important;
+            height: auto !important;
+            margin: 10px auto !important; /* Reduced margin in fullscreen */
+            display: block !important;
+            background: white !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important; /* Subtle shadow */
+            image-rendering: pixelated !important;
+            image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: crisp-edges !important;
+            -ms-interpolation-mode: high-quality !important;
+            -webkit-backface-visibility: hidden !important;
+            backface-visibility: hidden !important;
+            -webkit-font-smoothing: antialiased !important;
+            -moz-osx-font-smoothing: grayscale !important;
+            filter: contrast(1.05) saturate(1.02) !important; /* Slight enhancement */
+            will-change: transform !important;
+            contain: layout style paint !important;
+            /* NO FIXED TRANSFORM - let getOptimalPDFScale handle it */
+        }
+
+        /* Eye dropdown in fullscreen mode */
+        .pdf-viewer-modal.fullscreen-mode .eye-dropdown-menu {
+            position: fixed !important;
+            top: 70px !important;
+            right: 20px !important;
+            z-index: 100001 !important;
         }
 
         /* Left Sidebar with Tools */
@@ -1950,6 +2073,201 @@
             display: flex;
             align-items: center;
             gap: 12px;
+        }
+
+        /* Professional PDF Search Styles */
+        .pdf-search-professional {
+            position: absolute;
+            top: 12px;
+            right: 16px;
+            width: 320px;
+            background: white;
+            border: 1px solid #e0e7ff;
+            border-radius: 8px;
+            box-shadow: 0 4px 20px rgba(37, 99, 235, 0.15);
+            z-index: 10004;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+
+        .search-pro-header {
+            padding: 8px;
+            border-bottom: 1px solid #f0f4ff;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .search-pro-input-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            background: #f9fafb;
+            border-radius: 6px;
+            padding: 0 10px;
+            border: 1px solid #e5e7eb;
+            transition: all 0.2s;
+        }
+
+        .search-pro-input-wrapper:focus-within {
+            border-color: #2563eb;
+            background: white;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-pro-icon {
+            color: #9ca3af;
+            font-size: 13px;
+            flex-shrink: 0;
+        }
+
+        .search-pro-input {
+            flex: 1;
+            border: none;
+            outline: none;
+            font-size: 13px;
+            padding: 8px 0;
+            background: transparent;
+            color: #1f2937;
+        }
+
+        .search-pro-input::placeholder {
+            color: #9ca3af;
+        }
+
+        .search-pro-counter {
+            font-size: 11px;
+            font-weight: 600;
+            color: #2563eb;
+            background: #eff6ff;
+            padding: 2px 6px;
+            border-radius: 3px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        .search-pro-controls {
+            display: flex;
+            gap: 4px;
+            justify-content: flex-end;
+        }
+
+        .search-pro-btn {
+            width: 32px;
+            height: 32px;
+            border: 1px solid #e5e7eb;
+            background: white;
+            border-radius: 5px;
+            color: #6b7280;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 13px;
+            transition: all 0.2s;
+        }
+
+        .search-pro-btn:hover {
+            background: #f3f4f6;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .search-pro-btn:active {
+            background: #eff6ff;
+        }
+
+        .close-btn {
+            margin-left: 4px;
+        }
+
+        .search-pro-results {
+            max-height: 280px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .search-pro-results-list {
+            padding: 8px;
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+        }
+
+        .search-result-item {
+            padding: 8px 10px;
+            background: linear-gradient(135deg, #f9fafb 0%, #f3f4f6 100%);
+            border-left: 3px solid #2563eb;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: 1px solid #e5e7eb;
+        }
+
+        .search-result-item:hover {
+            background: linear-gradient(135deg, #eff6ff 0%, #e0e7ff 100%);
+            border-color: #2563eb;
+            transform: translateX(2px);
+            box-shadow: 0 2px 8px rgba(37, 99, 235, 0.1);
+        }
+
+        .search-result-item.active {
+            background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+            border-color: #1d4ed8;
+            color: white;
+        }
+
+        .search-result-item.active .result-number,
+        .search-result-item.active .result-context {
+            color: white;
+        }
+
+        .result-number {
+            font-size: 10px;
+            font-weight: 700;
+            color: #2563eb;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+        }
+
+        .result-context {
+            font-size: 12px;
+            color: #374151;
+            line-height: 1.3;
+            word-break: break-word;
+        }
+
+        .search-result-more {
+            padding: 8px 10px;
+            text-align: center;
+            color: #6b7280;
+            font-size: 11px;
+            font-weight: 500;
+            margin-top: 4px;
+            background: #f9fafb;
+            border-radius: 4px;
+        }
+
+        /* Scrollbar Styling */
+        .search-pro-results::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .search-pro-results::-webkit-scrollbar-track {
+            background: transparent;
+        }
+
+        .search-pro-results::-webkit-scrollbar-thumb {
+            background: #d1d5db;
+            border-radius: 3px;
+        }
+
+        .search-pro-results::-webkit-scrollbar-thumb:hover {
+            background: #9ca3af;
         }
 
         .search-icon, .view-icon {
@@ -2239,13 +2557,16 @@
         .pdf-viewer-secondary-header {
             background: #f9fafb;
             border-bottom: 1px solid #e5e7eb;
-            padding: 8px 16px;
+            padding: 16px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 44px;
+            height: auto;
+            min-height: 56px;
             position: relative;
             z-index: 10003;
+            margin: 0 !important;
+            flex-shrink: 0;
         }
 
         .pdf-secondary-left {
@@ -2256,16 +2577,16 @@
 
         .pdf-back-btn {
             background: none;
-            border: none;
+            border: 1px solid #000000;
             display: flex;
             align-items: center;
             gap: 6px;
-            color: #6b7280;
+            color: #1f2937;
             cursor: pointer;
             font-size: 13px;
             font-weight: 500;
             transition: all 0.2s;
-            padding: 4px 8px;
+            padding: 6px 12px;
             border-radius: 4px;
         }
 
@@ -2281,10 +2602,10 @@
         }
 
         .pdf-action-btn, .pdf-filter-btn, .pdf-version-btn {
-            background: none;
-            border: 1px solid #d1d5db;
+            background: white;
+            border: 1px solid #000000;
             padding: 6px 12px;
-            border-radius: 6px;
+            border-radius: 4px;
             font-size: 12px;
             color: #374151;
             cursor: pointer;
@@ -2303,51 +2624,150 @@
         /* ===== PDF VIEWER MAIN WRAPPER ===== */
         .pdf-viewer-main-wrapper {
             display: flex;
-            height: calc(100vh - 44px);
+            flex-direction: row;
+            flex: 1;
             overflow: hidden;
             position: relative;
+            margin: 0 !important;
+            padding: 0 !important;
+            top: 0 !important;
+            width: 100%;
+            height: 100%;
+            min-height: 0;
         }
 
-        /* ===== PDF LEFT SIDEBAR TOOLS ===== */
+        /* ===== PDF TOOLBAR STYLES ===== */
         .pdf-left-sidebar {
-            width: 60px;
-            background: #3a3f47;
-            border-right: 1px solid #2a2f37;
-            display: flex;
+            background-color: #1f2937;
+            border-radius: 0.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 0.5rem;
+            display: none;
             flex-direction: column;
-            align-items: center;
-            padding: 16px 0;
-            gap: 6px;
-            overflow-y: visible;
-            height: fit-content;
-            align-self: flex-start;
+            gap: 0.25rem;
+            width: auto;
+            height: auto;
+            position: absolute;
+            left: 20px;
+            top: 80px;
+            z-index: 10001;
+            min-width: auto;
+            max-width: none;
+            border-right: none;
+            overflow: visible;
+            flex-shrink: 1;
+        }
+
+        /* Show toolbar only when PDF viewer is open */
+        .pdf-viewer-modal.show .pdf-left-sidebar {
+            display: flex;
         }
 
         .pdf-tool-btn {
-            width: 36px;
-            height: 36px;
-            background: none;
+            width: 3rem;
+            height: 3rem;
             border: none;
-            color: #d1d5db;
-            font-size: 16px;
-            cursor: pointer;
-            border-radius: 6px;
+            border-radius: 0.375rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            transition: all 0.2s;
-            padding: 4px;
-            margin: 2px 0;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: #374151;
+            color: #d1d5db;
+            font-size: 1.25rem;
+            padding: 0;
+            margin: 0;
+            flex-shrink: 0;
         }
 
         .pdf-tool-btn:hover {
-            background: #4a5158;
-            color: white;
+            background-color: #4b5563;
+            color: #ffffff;
         }
 
         .pdf-tool-btn.active {
-            background: #2563eb;
-            color: white;
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .pdf-tool-btn.record {
+            position: relative;
+        }
+
+        .pdf-tool-btn.record.recording {
+            background-color: #dc2626;
+            color: #ffffff;
+        }
+
+        .record-icon {
+            width: 20px;
+            height: 20px;
+            border: 2px solid currentColor;
+            border-radius: 50%;
+        }
+
+        .record-icon.recording {
+            background-color: currentColor;
+            animation: pdf-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+
+        @keyframes pdf-pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+
+        .pdf-tool-separator {
+            height: 1px;
+            background-color: #4b5563;
+            margin: 0.25rem 0;
+            width: 100%;
+        }
+
+        /* Navigation Arrows Container */
+        .nav-arrows-container {
+            background-color: #1f2937;
+            border-radius: 0.5rem;
+            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            padding: 0;
+            display: flex;
+            gap: 0;
+            margin-top: 0.5rem;
+            width: 100%;
+        }
+
+        .nav-btn {
+            width: 50%;
+            height: 3rem;
+            border: none;
+            background-color: #374151;
+            color: #d1d5db;
+            font-size: 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease-in-out;
+            padding: 0;
+            margin: 0;
+        }
+
+        .nav-btn:hover {
+            background-color: #4b5563;
+            color: #ffffff;
+        }
+
+        .nav-btn:first-child {
+            border-radius: 0.375rem 0 0 0.375rem;
+            border-right: 1px solid #2a2f37;
+        }
+
+        .nav-btn:last-child {
+            border-radius: 0 0.375rem 0.375rem 0;
         }
 
         /* ===== PDF CENTER CONTENT ===== */
@@ -2357,66 +2777,80 @@
             flex-direction: column;
             background: white;
             overflow: hidden;
+            width: 100%;
+            min-width: 0;
+            min-height: 0;
         }
 
+        /* Enhanced PDF document area */
         .pdf-document-area {
             flex: 1;
-            overflow-y: auto;
-            background: #f3f4f6;
-            padding: 20px;
+            overflow: auto;
+            background: #f5f5f5;
+            padding: 40px 24px 150px 24px;
             position: relative;
             display: flex;
             align-items: flex-start;
             justify-content: center;
+            border-top: 1px solid #d1d5db;
+            border-left: 1px solid #d1d5db;
+            border-right: 1px solid #d1d5db;
+            border-bottom: none;
         }
 
         .pdf-document-area::-webkit-scrollbar {
             display: none;
         }
 
+        /* Enhanced PDF document content container */
         #pdfDocumentContent {
             width: 100%;
-            max-width: 900px;
-            margin: 0 auto;
+            max-width: none;
+            margin: 0 auto 150px auto;
             display: flex;
             flex-direction: column;
             gap: 0px;
-            background: white;
-            padding: 40px 60px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-            min-height: calc(100vh - 200px);
+            background: transparent;
+            padding: 0;
+            box-shadow: none !important;
+            outline: none !important;
+            border: none !important;
+            filter: none !important;
+            min-height: auto;
             align-items: center;
             justify-content: flex-start;
-            overflow: visible;
         }
 
+        /* PDF canvas styling */
         #pdfDocumentContent canvas {
-            width: 100% !important;
-            height: auto !important;
-            max-width: 100%;
-            background: white;
-            display: block;
-            margin: 0 auto;
-            border-radius: 0px;
-            box-shadow: none;
-            object-fit: contain;
-            image-rendering: crisp-edges;
-            image-rendering: sharp;
-            -ms-interpolation-mode: nearest-neighbor;
-            border: 1px solid #000000;
+            display: block !important;
+            margin: 0 auto 20px auto !important;
+            background: white !important;
+            border: 1px solid #d1d5db !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            image-rendering: -webkit-optimize-contrast !important;
+            image-rendering: crisp-edges !important;
+            -ms-interpolation-mode: high-quality !important;
+        }
+
+        /* Remove white frame from all canvas elements */
+        canvas {
+            border-radius: 0px !important;
+            box-shadow: none !important;
+            filter: none !important;
         }
 
         /* PDF Top Right Controls */
         .pdf-top-right-controls {
-            position: absolute;
-            top: 24px;
-            left: 24px;
+            position: fixed;
+            top: 120px;
+            right: 500px;
             display: flex;
             gap: 8px;
-            z-index: 100;
+            z-index: 10001;
             background: white;
-            padding: 8px;
-            border-radius: 8px;
+            padding: 6px;
+            border-radius: 6px;
             box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
         }
 
@@ -2442,18 +2876,18 @@
 
         /* Eye Dropdown Menu */
         .eye-dropdown-menu {
-            position: absolute;
-            top: 48px;
-            left: 0;
+            position: fixed;
+            top: 160px;
+            right: 500px;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            min-width: 280px;
+            min-width: 320px;
             max-height: 600px;
             overflow-y: auto;
             display: none;
-            z-index: 1000;
+            z-index: 10010;
         }
 
         .eye-dropdown-menu.show {
@@ -2518,20 +2952,21 @@
         .pdf-bottom-name-bar {
             position: fixed;
             bottom: 0;
-            left: 60px;
-            right: 0;
-            background: #2a2f37;
+            left: 260px;
+            right: 320px;
+            background: white;
             padding: 12px 24px;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 16px;
             z-index: 10002;
-            height: 50px;
+            height: 48px;
+            border-top: 1px solid #e5e7eb;
         }
 
         .pdf-name-display {
-            background: #3a3f47;
+            background: #1f2937;
             color: white;
             padding: 8px 16px;
             border-radius: 6px;
@@ -2540,6 +2975,12 @@
             display: flex;
             align-items: center;
             gap: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .pdf-name-display:hover {
+            background: #374151;
         }
 
         .pdf-name-display i {
@@ -2548,7 +2989,7 @@
 
         /* ===== PDF RIGHT TASKS SIDEBAR ===== */
         .pdf-tasks-sidebar {
-            width: 280px;
+            width: 480px;
             background: white;
             border-left: 1px solid #e5e7eb;
             display: flex;
@@ -2560,16 +3001,16 @@
         .pdf-tasks-header {
             background: white;
             border-bottom: 1px solid #e5e7eb;
-            padding: 12px 16px;
+            padding: 20px 24px;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 50px;
+            height: auto;
             flex-shrink: 0;
         }
 
         .pdf-tasks-title {
-            font-size: 14px;
+            font-size: 16px;
             font-weight: 600;
             color: #1f2937;
         }
@@ -2588,7 +3029,7 @@
             cursor: pointer;
             width: 28px;
             height: 28px;
-            display: flex;
+            display: none;
             align-items: center;
             justify-content: center;
             border-radius: 4px;
@@ -2622,12 +3063,13 @@
         .pdf-tasks-content {
             flex: 1;
             overflow-y: auto;
-            padding: 16px;
+            padding: 28px 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
             color: #9ca3af;
+            font-size: 14px;
         }
 
         .pdf-tasks-content::-webkit-scrollbar {
@@ -2646,8 +3088,8 @@
         /* ===== PDF BOTTOM PANELS ===== */
         .pdf-bottom-panel {
             position: fixed;
-            bottom: 100px;
-            right: 300px;
+            bottom: 70px;
+            right: 500px;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
@@ -2723,15 +3165,16 @@
             bottom: 0;
             left: 0;
             right: 0;
-            background: #2a2f37;
-            padding: 12px 24px;
-            display: flex;
+            background: transparent;
+            padding: 0;
+            display: none;
             align-items: center;
             justify-content: center;
             gap: 16px;
             z-index: 10002;
-            height: 50px;
+            height: 0;
         }
+
 
         .pdf-edit-label {
             background: #3a3f47;
@@ -4252,12 +4695,17 @@
             // Open PDF viewer with the selected plan
             const plan = plans[index];
             if (plan) {
+                // Track the current plan index for navigation
+                currentPlanIndex = index;
+
                 // Create PDF data object with plan information
                 const pdfData = {
                     plan: plan,
                     html: generatePDFViewerContent(plan)
                 };
                 openPDFViewer(pdfData);
+
+                console.log('Viewing plan at index:', index, 'of', plans.length);
             }
         }
 
@@ -4686,11 +5134,11 @@
             const modal = document.getElementById('pdfViewerModal');
             const contentContainer = document.getElementById('pdfDocumentContent');
 
+            // Clear the container
+            contentContainer.innerHTML = '';
+
             // Load actual PDF file using PDF.js
             if (pdfData && pdfData.plan && pdfData.plan.preview) {
-                // Clear the container
-                contentContainer.innerHTML = '';
-
                 // Extract base64 from preview
                 const base64Data = pdfData.plan.preview.split(',')[1] || pdfData.plan.preview;
 
@@ -4702,9 +5150,6 @@
                 if (nameBar) {
                     nameBar.innerHTML = `<i class="fas fa-pen"></i><span>${pdfData.plan.name || 'Document.pdf'}</span>`;
                 }
-            } else {
-                // Load default template if no PDF data
-                contentContainer.innerHTML = getDefaultPDFTemplate();
             }
 
             modal.classList.add('show');
@@ -4712,19 +5157,112 @@
         }
 
         // Add this helper function to calculate optimal PDF scale for different monitors
-        function getOptimalPDFScale() {
-            const dpr = window.devicePixelRatio || 1;
+        // IMPROVED: Calculate optimal PDF scale for ANY page size (landscape or portrait)
+        // IMPROVED: Calculate optimal PDF scale for ANY screen size with device detection
+        function getOptimalPDFScale(pageViewport) {
+            const pdfDocumentArea = document.querySelector('.pdf-document-area');
+            const pdfViewerModal = document.querySelector('.pdf-viewer-modal');
 
-            // For external monitors (standard DPI)
-            if (dpr === 1) {
-                return 2.0; // Higher scale for external monitors
+            if (!pdfDocumentArea) {
+                return 1.2; // Fallback scale
             }
-            // For laptop screens (high DPI)
-            else if (dpr >= 2) {
-                return 1.5; // Lower scale for laptop screens
+
+            // ===== ACCURATE SCREEN DETECTION =====
+            const screenWidth = window.innerWidth;
+            const screenHeight = window.innerHeight;
+            const screenDiagonal = Math.sqrt(Math.pow(screenWidth, 2) + Math.pow(screenHeight, 2));
+            const dpi = window.devicePixelRatio || 1;
+
+            // Improved detection logic:
+            // - Laptops: < 1600px width OR < 2000 diagonal pixels
+            // - Large monitors: >= 2400px width (2K/4K displays)
+            const isLaptop = screenWidth < 1600 || screenDiagonal < 2000;
+            const isLargeMonitor = screenWidth >= 2400;
+            const isFullscreen = pdfViewerModal && pdfViewerModal.classList.contains('fullscreen-mode');
+
+            // Get available space (container dimensions)
+            const containerWidth = pdfDocumentArea.offsetWidth;
+            const containerHeight = pdfDocumentArea.offsetHeight;
+
+            // Get actual page dimensions from the viewport
+            const pageWidth = pageViewport.width;
+            const pageHeight = pageViewport.height;
+
+            // Determine if page is landscape or portrait
+            const isLandscape = pageWidth > pageHeight;
+
+            let targetScale;
+
+            // ===== PROFESSIONAL SCALING LOGIC =====
+
+            if (isLaptop) {
+                // LAPTOP SCREENS (< 1600px width)
+                if (isFullscreen) {
+                    // Laptop fullscreen: Moderate fill - professional and readable
+                    // Use 80% of available space for good breathing room
+                    const widthScale = (containerWidth * 0.80) / pageWidth;
+                    const heightScale = (containerHeight * 0.80) / pageHeight;
+                    targetScale = Math.min(widthScale, heightScale);
+                    // Cap between 1.0 and 1.8 for professional appearance
+                    targetScale = Math.max(1.0, Math.min(targetScale, 1.8));
+                } else {
+                    // Laptop normal view: Comfortable viewing with margins
+                    const widthScale = (containerWidth * 0.85) / pageWidth;
+                    const heightScale = (containerHeight * 0.85) / pageHeight;
+                    targetScale = Math.min(widthScale, heightScale);
+                    targetScale = Math.max(0.8, Math.min(targetScale, 1.5));
+                }
             }
-            // For mid-range DPI
-            return 1.8;
+            else if (isLargeMonitor) {
+                // LARGE MONITORS (>= 2400px width - 2K/4K displays)
+                if (isFullscreen) {
+                    // Large monitor fullscreen: Fill more aggressively while staying professional
+                    // Use 85% of space - larger monitors need more fill to look good
+                    const widthScale = (containerWidth * 0.85) / pageWidth;
+                    const heightScale = (containerHeight * 0.85) / pageHeight;
+                    targetScale = Math.min(widthScale, heightScale);
+                    // Allow larger scaling for big monitors (1.5 to 3.5)
+                    targetScale = Math.max(1.5, Math.min(targetScale, 3.5));
+                } else {
+                    // Large monitor normal: Comfortable with good margins
+                    const widthScale = (containerWidth * 0.82) / pageWidth;
+                    const heightScale = (containerHeight * 0.82) / pageHeight;
+                    targetScale = Math.min(widthScale, heightScale);
+                    targetScale = Math.max(1.0, Math.min(targetScale, 2.5));
+                }
+            }
+            else {
+                // MEDIUM MONITORS (1600-2399px width)
+                if (isFullscreen) {
+                    const widthScale = (containerWidth * 0.83) / pageWidth;
+                    const heightScale = (containerHeight * 0.83) / pageHeight;
+                    targetScale = Math.min(widthScale, heightScale);
+                    targetScale = Math.max(1.2, Math.min(targetScale, 2.5));
+                } else {
+                    const widthScale = (containerWidth * 0.83) / pageWidth;
+                    const heightScale = (containerHeight * 0.83) / pageHeight;
+                    targetScale = Math.min(widthScale, heightScale);
+                    targetScale = Math.max(0.9, Math.min(targetScale, 2.0));
+                }
+            }
+
+            // ===== DEBUG LOGGING =====
+            console.log('PDF Scale Calculation:', {
+                screenWidth,
+                screenHeight,
+                screenDiagonal: Math.round(screenDiagonal),
+                dpi,
+                detectedType: isLaptop ? 'LAPTOP' : (isLargeMonitor ? 'LARGE MONITOR' : 'MEDIUM MONITOR'),
+                isFullscreen: isFullscreen ? 'YES' : 'NO',
+                isLandscape: isLandscape ? 'YES' : 'NO',
+                pageWidth: Math.round(pageWidth),
+                pageHeight: Math.round(pageHeight),
+                containerWidth: Math.round(containerWidth),
+                containerHeight: Math.round(containerHeight),
+                finalScale: targetScale.toFixed(2) + 'x'
+            });
+
+            return targetScale;
         }
 
         function renderPDFInViewer(base64Data, container, planData) {
@@ -4743,52 +5281,86 @@
                     pagesContainer.style.cssText = `
                         width: 100%;
                         max-width: 100%;
-                        background: white;
-                        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-                        padding: 40px 60px;
+                        background: transparent;
+                        box-shadow: none;
+                        padding: 0;
                         margin: 0 auto;
+                        display: flex;
+                        flex-direction: column;
+                        align-items: center;
+                        gap: 20px;
                     `;
+                    pagesContainer.id = 'pdfDocumentContent';
                     container.appendChild(pagesContainer);
-                    const scale = getOptimalPDFScale();
+
                     const dpr = window.devicePixelRatio || 1;
                     const numPages = Math.min(pdf.numPages, 10);
 
-                    for (let pageNum = 1; pageNum <= numPages; pageNum++) {
-                        pdf.getPage(pageNum).then(page => {
-                            const viewport = page.getViewport({ scale: scale });
-                            const canvas = document.createElement('canvas');
-                            const context = canvas.getContext('2d', {
-                                alpha: false,
-                                desynchronized: true,
-                                willReadFrequently: false
+                    // Set the total pages for navigation
+                    totalPDFPages = numPages;
+                    currentPDFPage = 1;
+
+                    // Get first page to calculate scale (all pages use same scale)
+                    pdf.getPage(1).then(firstPage => {
+                        const firstPageViewport = firstPage.getViewport({ scale: 1 });
+
+                        // Calculate optimal scale based on ACTUAL page dimensions
+                        const optimalScale = getOptimalPDFScale(firstPageViewport);
+
+                        console.log('Rendering PDF with scale:', optimalScale);
+                        console.log('Page dimensions:', firstPageViewport.width, 'x', firstPageViewport.height);
+
+                        // Render all pages with the calculated scale
+                        for (let pageNum = 1; pageNum <= numPages; pageNum++) {
+                            pdf.getPage(pageNum).then(page => {
+                                const viewport = page.getViewport({ scale: optimalScale });
+
+                                const canvas = document.createElement('canvas');
+                                const context = canvas.getContext('2d', {
+                                    alpha: false,
+                                    desynchronized: false,
+                                    willReadFrequently: false
+                                });
+
+                                // Set canvas size for high DPI with enhanced quality
+                                canvas.width = viewport.width * dpr;
+                                canvas.height = viewport.height * dpr;
+
+                                // Set display size to match viewport (scaled size)
+                                canvas.style.width = viewport.width + 'px';
+                                canvas.style.height = viewport.height + 'px';
+                                canvas.style.display = 'block';
+                                canvas.style.marginBottom = pageNum < numPages ? '20px' : '0';
+                                canvas.style.border = '1px solid #d1d5db';
+                                canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+                                canvas.style.backgroundColor = 'white';
+
+                                const renderContext = {
+                                    canvasContext: context,
+                                    viewport: page.getViewport({ scale: optimalScale * dpr }),
+                                    intent: 'display',
+                                    renderInteractiveForms: false
+                                };
+
+                                page.render(renderContext).promise.then(() => {
+                                    pagesContainer.appendChild(canvas);
+                                }).catch(error => {
+                                    console.error('Error rendering page:', pageNum, error);
+                                });
+                            }).catch(error => {
+                                console.error('Error loading page:', pageNum, error);
                             });
-
-                            // Set canvas size for high DPI
-                            canvas.width = viewport.width * dpr;
-                            canvas.height = viewport.height * dpr;
-
-                            // Set display size
-                            canvas.style.width = '100%';
-                            canvas.style.height = 'auto';
-                            canvas.style.display = 'block';
-                            canvas.style.marginBottom = pageNum < numPages ? '0px' : '0';
-
-                            const renderContext = {
-                                canvasContext: context,
-                                viewport: page.getViewport({ scale: scale * dpr }),
-                                intent: 'display',
-                                renderInteractiveForms: false
-                            };
-
-                            page.render(renderContext).promise.then(() => {
-                                pagesContainer.appendChild(canvas);
-                            });
-                        });
-                    }
+                        }
+                    }).catch(error => {
+                        console.error('Error loading first page:', error);
+                    });
+                }).catch(error => {
+                    console.error('Error loading PDF:', error);
+                    container.innerHTML = '<div style="padding: 20px; color: red; text-align: center;">Error loading PDF: ' + error.message + '</div>';
                 });
             } catch (error) {
-                console.error('Error rendering PDF:', error);
-                container.innerHTML = '<div style="padding: 20px; color: red;">Error loading PDF: ' + error.message + '</div>';
+                console.error('Error in renderPDFInViewer:', error);
+                container.innerHTML = '<div style="padding: 20px; color: red; text-align: center;">Error rendering PDF: ' + error.message + '</div>';
             }
         }
 
@@ -4797,6 +5369,274 @@
             modal.classList.remove('show');
             document.body.style.overflow = 'auto';
         }
+
+        // PDF Toolbar Functionality
+        let pdfActiveTool = null;
+        let pdfIsRecording = false;
+        let pdfIsFullscreen = false;
+
+        function initPDFToolbar() {
+            const toolButtons = document.querySelectorAll('.pdf-left-sidebar .pdf-tool-btn[data-tool]');
+            const recordBtn = document.getElementById('pdfRecordBtn');
+            const undoBtn = document.getElementById('pdfUndoBtn');
+
+            const toolLabels = {
+                fullscreen: 'Fullscreen',
+                add: 'Add',
+                remove: 'Remove',
+                location: 'Location',
+                link: 'Link',
+                draw: 'Draw',
+                duplicate: 'Duplicate',
+                shape: 'Shape',
+                text: 'Text',
+                tag: 'Tag',
+                cursor: 'Cursor'
+            };
+
+            // Find and setup fullscreen button
+            const fullscreenBtn = document.querySelector('.pdf-left-sidebar .pdf-tool-btn[data-tool="fullscreen"]');
+            if (fullscreenBtn) {
+                // Remove all existing event listeners by cloning and replacing
+                const newFullscreenBtn = fullscreenBtn.cloneNode(true);
+                fullscreenBtn.parentNode.replaceChild(newFullscreenBtn, fullscreenBtn);
+                const updatedFullscreenBtn = document.querySelector('.pdf-left-sidebar .pdf-tool-btn[data-tool="fullscreen"]');
+
+                updatedFullscreenBtn.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+
+                    const pdfModal = document.getElementById('pdfViewerModal');
+
+                    if (pdfModal) {
+                        pdfIsFullscreen = !pdfIsFullscreen;
+
+                        if (pdfIsFullscreen) {
+                            // Enter fullscreen mode
+                            pdfModal.classList.add('fullscreen-mode');
+                            this.classList.add('active');
+
+                            // Request browser fullscreen API
+                            if (pdfModal.requestFullscreen) {
+                                pdfModal.requestFullscreen();
+                            } else if (pdfModal.webkitRequestFullscreen) {
+                                pdfModal.webkitRequestFullscreen();
+                            } else if (pdfModal.msRequestFullscreen) {
+                                pdfModal.msRequestFullscreen();
+                            }
+
+                            console.log('Fullscreen enabled');
+
+                            // Re-render PDF with new scale after short delay
+                            setTimeout(() => {
+                                if (currentPlanIndex >= 0 && plans[currentPlanIndex]) {
+                                    const plan = plans[currentPlanIndex];
+                                    const container = document.getElementById('pdfDocumentContent');
+                                    if (plan.preview && container) {
+                                        const base64Data = plan.preview.split(',')[1] || plan.preview;
+                                        renderPDFInViewer(base64Data, container, plan);
+                                    }
+                                }
+                            }, 100);
+                        } else {
+                            // Exit fullscreen mode
+                            pdfModal.classList.remove('fullscreen-mode');
+                            this.classList.remove('active');
+
+                            // Exit browser fullscreen API
+                            if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
+                                if (document.exitFullscreen) {
+                                    document.exitFullscreen().catch(() => {});
+                                } else if (document.webkitExitFullscreen) {
+                                    document.webkitExitFullscreen();
+                                } else if (document.msExitFullscreen) {
+                                    document.msExitFullscreen();
+                                }
+                            }
+
+                            console.log('Fullscreen disabled');
+
+                            // Re-render PDF with normal scale after short delay
+                            setTimeout(() => {
+                                if (currentPlanIndex >= 0 && plans[currentPlanIndex]) {
+                                    const plan = plans[currentPlanIndex];
+                                    const container = document.getElementById('pdfDocumentContent');
+                                    if (plan.preview && container) {
+                                        const base64Data = plan.preview.split(',')[1] || plan.preview;
+                                        renderPDFInViewer(base64Data, container, plan);
+                                    }
+                                }
+                            }, 100);
+                        }
+                    }
+                });
+            }
+
+            // Setup tool buttons with event delegation to avoid duplicate listeners
+            const toolButtonsContainer = document.querySelector('.pdf-left-sidebar');
+            if (toolButtonsContainer) {
+                // Use event delegation on the container
+                const handleToolClick = (e) => {
+                    const button = e.target.closest('.pdf-tool-btn[data-tool]');
+                    if (!button) return;
+
+                    const tool = button.getAttribute('data-tool');
+
+                    // Skip fullscreen button from general tool handling
+                    if (tool === 'fullscreen') {
+                        return;
+                    }
+
+                    if (pdfActiveTool === tool) {
+                        button.classList.remove('active');
+                        pdfActiveTool = null;
+                    } else {
+                        const allToolButtons = document.querySelectorAll('.pdf-left-sidebar .pdf-tool-btn[data-tool]');
+                        allToolButtons.forEach(btn => {
+                            if (btn.getAttribute('data-tool') !== 'fullscreen') {
+                                btn.classList.remove('active');
+                            }
+                        });
+                        button.classList.add('active');
+                        pdfActiveTool = tool;
+                        console.log('Active tool:', toolLabels[tool]);
+                    }
+                };
+
+                // Remove old listener and add new one
+                toolButtonsContainer.removeEventListener('click', window.toolButtonHandler);
+                window.toolButtonHandler = handleToolClick;
+                toolButtonsContainer.addEventListener('click', handleToolClick);
+            }
+
+            const updatedRecordBtn = document.getElementById('pdfRecordBtn');
+            if (updatedRecordBtn) {
+                // Remove old listeners by using event delegation
+                updatedRecordBtn.removeEventListener('click', window.recordBtnHandler);
+                window.recordBtnHandler = function() {
+                    pdfIsRecording = !pdfIsRecording;
+                    const recordIcon = this.querySelector('.record-icon');
+
+                    if (pdfIsRecording) {
+                        this.classList.add('recording');
+                        if (recordIcon) recordIcon.classList.add('recording');
+                        console.log('Recording started');
+                    } else {
+                        this.classList.remove('recording');
+                        if (recordIcon) recordIcon.classList.remove('recording');
+                        console.log('Recording stopped');
+                    }
+                };
+                updatedRecordBtn.addEventListener('click', window.recordBtnHandler);
+            }
+
+            const updatedUndoBtn = document.getElementById('pdfUndoBtn');
+            if (updatedUndoBtn) {
+                updatedUndoBtn.removeEventListener('click', window.undoBtnHandler);
+                window.undoBtnHandler = function() {
+                    console.log('Undo action');
+                };
+                updatedUndoBtn.addEventListener('click', window.undoBtnHandler);
+            }
+
+            // Navigation arrows functionality
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+
+            if (prevBtn) {
+                prevBtn.removeEventListener('click', window.prevBtnHandler);
+                window.prevBtnHandler = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Previous plan - Current index:', currentPlanIndex, 'Total plans:', plans.length);
+                    // Call PDF viewer previous plan function if available
+                    if (typeof previousPDFPage === 'function') {
+                        previousPDFPage();
+                    }
+                };
+                prevBtn.addEventListener('click', window.prevBtnHandler);
+            }
+
+            if (nextBtn) {
+                nextBtn.removeEventListener('click', window.nextBtnHandler);
+                window.nextBtnHandler = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    console.log('Next plan - Current index:', currentPlanIndex, 'Total plans:', plans.length);
+                    // Call PDF viewer next plan function if available
+                    if (typeof nextPDFPage === 'function') {
+                        nextPDFPage();
+                    }
+                };
+                nextBtn.addEventListener('click', window.nextBtnHandler);
+            }
+        }
+
+        // Listen for fullscreen change events to sync state
+        document.addEventListener('fullscreenchange', handleFullscreenChange);
+        document.addEventListener('webkitfullscreenchange', handleFullscreenChange);
+        document.addEventListener('msfullscreenchange', handleFullscreenChange);
+
+        function handleFullscreenChange() {
+            const pdfModal = document.getElementById('pdfViewerModal');
+            const fullscreenBtn = document.querySelector('.pdf-left-sidebar .pdf-tool-btn[data-tool="fullscreen"]');
+
+            if (!document.fullscreenElement && !document.webkitFullscreenElement && !document.msFullscreenElement) {
+                // Exited fullscreen (via ESC key or browser UI)
+                pdfIsFullscreen = false;
+                if (pdfModal) pdfModal.classList.remove('fullscreen-mode');
+                if (fullscreenBtn) fullscreenBtn.classList.remove('active');
+            }
+        }
+
+        // Initialize toolbar when PDF viewer opens
+        function setupToolbarObserver() {
+            const pdfViewerModal = document.getElementById('pdfViewerModal');
+            if (!pdfViewerModal) {
+                // Element not found yet, try again after a short delay
+                setTimeout(setupToolbarObserver, 100);
+                return;
+            }
+
+            const observer = new MutationObserver(() => {
+                if (pdfViewerModal.classList.contains('show')) {
+                    initPDFToolbar();
+                } else if (!pdfViewerModal.classList.contains('show')) {
+                    // Reset fullscreen state when PDF viewer is closed
+                    pdfIsFullscreen = false;
+                }
+            });
+
+            observer.observe(pdfViewerModal, { attributes: true });
+        }
+
+        // Wait for document to be ready before setting up observer
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', setupToolbarObserver);
+        } else {
+            setupToolbarObserver();
+        }
+
+        // Handle window resize - recalculate PDF scale on screen size change
+        let resizeTimeout;
+        window.addEventListener('resize', function() {
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(function() {
+                const pdfViewerModal = document.getElementById('pdfViewerModal');
+                if (pdfViewerModal && pdfViewerModal.classList.contains('show')) {
+                    console.log('Window resized - recalculating PDF scale');
+                    // Get current plan and re-render
+                    if (currentPlanIndex >= 0 && plans[currentPlanIndex]) {
+                        const plan = plans[currentPlanIndex];
+                        const container = document.getElementById('pdfDocumentContent');
+                        if (plan.preview && container) {
+                            const base64Data = plan.preview.split(',')[1] || plan.preview;
+                            renderPDFInViewer(base64Data, container, plan);
+                        }
+                    }
+                }
+            }, 300); // Wait 300ms after resize stops
+        });
 
         // Toggle tasks panel visibility
         function toggleTasksPanel() {
@@ -4808,7 +5648,187 @@
 
         // Toggle PDF search
         function togglePDFSearch() {
-            alert('Search functionality coming soon');
+            const searchContainer = document.getElementById('pdfSearchContainer');
+            if (!searchContainer) {
+                createPDFSearchBox();
+            } else {
+                searchContainer.classList.toggle('hidden');
+                if (!searchContainer.classList.contains('hidden')) {
+                    document.getElementById('pdfSearchInput').focus();
+                }
+            }
+        }
+
+        function createPDFSearchBox() {
+            const searchHTML = `
+                <div id="pdfSearchContainer" class="pdf-search-professional">
+                    <div class="search-pro-header">
+                        <div class="search-pro-input-wrapper">
+                            <i class="fas fa-search search-pro-icon"></i>
+                            <input type="text" id="pdfSearchInput" class="search-pro-input" placeholder="Search in PDF..." autocomplete="off" />
+                            <div class="search-pro-counter">
+                                <span id="searchCurrentMatch">0</span>/<span id="searchTotalMatches">0</span>
+                            </div>
+                        </div>
+                        <div class="search-pro-controls">
+                            <button class="search-pro-btn prev-match" onclick="searchPreviousMatch()" title="Previous match">
+                                <i class="fas fa-chevron-up"></i>
+                            </button>
+                            <button class="search-pro-btn next-match" onclick="searchNextMatch()" title="Next match">
+                                <i class="fas fa-chevron-down"></i>
+                            </button>
+                            <button class="search-pro-btn close-btn" onclick="closePDFSearch()" title="Close search">
+                                <i class="fas fa-times"></i>
+                            </button>
+                        </div>
+                    </div>
+                    <div id="searchResultsPanel" class="search-pro-results">
+                        <div id="searchResultsList" class="search-pro-results-list"></div>
+                    </div>
+                </div>
+            `;
+
+            const pdfDocumentContent = document.getElementById('pdfDocumentContent');
+            if (pdfDocumentContent) {
+                pdfDocumentContent.insertAdjacentHTML('beforebegin', searchHTML);
+                setupSearchListeners();
+            }
+        }
+
+        function setupSearchListeners() {
+            const searchInput = document.getElementById('pdfSearchInput');
+            if (searchInput) {
+                searchInput.addEventListener('input', function(e) {
+                    const query = e.target.value.trim();
+                    if (query.length > 0) {
+                        searchPDFContent(query);
+                    } else {
+                        clearSearchResults();
+                    }
+                });
+
+                searchInput.addEventListener('keydown', function(e) {
+                    if (e.key === 'Escape') {
+                        closePDFSearch();
+                    }
+                });
+            }
+        }
+
+        let pdfSearchMatches = [];
+        let currentMatchIndex = -1;
+
+        function searchPDFContent(query) {
+            const pdfContent = document.getElementById('pdfDocumentContent');
+            const resultsList = document.getElementById('searchResultsList');
+            const totalMatches = document.getElementById('searchTotalMatches');
+            const currentMatch = document.getElementById('searchCurrentMatch');
+
+            if (!pdfContent || !resultsList) return;
+
+            pdfSearchMatches = [];
+            currentMatchIndex = -1;
+
+            let matches = 0;
+            const text = pdfContent.innerText || pdfContent.textContent || '';
+
+            if (!text || query.length === 0) {
+                totalMatches.textContent = '0';
+                currentMatch.textContent = '0';
+                resultsList.innerHTML = '';
+                return;
+            }
+
+            const regex = new RegExp(query.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'gi');
+
+            // Search in text content
+            let searchResult;
+            while ((searchResult = regex.exec(text)) !== null) {
+                matches++;
+                const start = Math.max(0, searchResult.index - 50);
+                const end = Math.min(text.length, searchResult.index + query.length + 50);
+                const context = text.substring(start, end).trim();
+                pdfSearchMatches.push({
+                    index: matches,
+                    context: context,
+                    position: searchResult.index
+                });
+            }
+
+            // Update total matches
+            totalMatches.textContent = matches;
+            currentMatch.textContent = matches > 0 ? '1' : '0';
+
+            // Display results
+            resultsList.innerHTML = '';
+            pdfSearchMatches.slice(0, 8).forEach((result, idx) => {
+                const resultItem = document.createElement('div');
+                resultItem.className = 'search-result-item' + (idx === 0 && matches > 0 ? ' active' : '');
+                resultItem.innerHTML = `
+                    <div class="result-number">Match #${result.index}</div>
+                    <div class="result-context">${result.context.substring(0, 80)}...</div>
+                `;
+                resultItem.onclick = () => selectSearchMatch(idx);
+                resultsList.appendChild(resultItem);
+            });
+
+            if (pdfSearchMatches.length > 8) {
+                const moreItem = document.createElement('div');
+                moreItem.className = 'search-result-more';
+                moreItem.textContent = `+${pdfSearchMatches.length - 8} more matches`;
+                resultsList.appendChild(moreItem);
+            }
+
+            if (matches > 0) {
+                currentMatchIndex = 0;
+            }
+        }
+
+        function selectSearchMatch(index) {
+            currentMatchIndex = index;
+            document.getElementById('searchCurrentMatch').textContent = index + 1;
+            updateActiveMatch();
+        }
+
+        function searchNextMatch() {
+            if (pdfSearchMatches.length === 0) return;
+            currentMatchIndex = (currentMatchIndex + 1) % pdfSearchMatches.length;
+            document.getElementById('searchCurrentMatch').textContent = currentMatchIndex + 1;
+            updateActiveMatch();
+        }
+
+        function searchPreviousMatch() {
+            if (pdfSearchMatches.length === 0) return;
+            currentMatchIndex = (currentMatchIndex - 1 + pdfSearchMatches.length) % pdfSearchMatches.length;
+            document.getElementById('searchCurrentMatch').textContent = currentMatchIndex + 1;
+            updateActiveMatch();
+        }
+
+        function updateActiveMatch() {
+            const resultsList = document.getElementById('searchResultsList');
+            const items = resultsList.querySelectorAll('.search-result-item');
+            items.forEach((item, idx) => {
+                item.classList.remove('active');
+                if (idx === currentMatchIndex) {
+                    item.classList.add('active');
+                    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        }
+
+        function clearSearchResults() {
+            const resultsList = document.getElementById('searchResultsList') || document.querySelector('.search-compact-results');
+            const resultsCount = document.getElementById('searchResultsCount') || document.querySelector('.search-compact-count');
+            if (resultsList) resultsList.innerHTML = '';
+            if (resultsCount) resultsCount.textContent = '0 results';
+        }
+
+        function closePDFSearch() {
+            const searchContainer = document.getElementById('pdfSearchContainer');
+            if (searchContainer) {
+                searchContainer.remove();
+            }
+            clearSearchResults();
         }
 
         // Toggle eye dropdown
@@ -4828,86 +5848,6 @@
                 dropdown.classList.remove('show');
             }
         });
-
-        function getDefaultPDFTemplate() {
-            return `
-                <div class="doc-header">
-                    <div class="doc-logo">
-                        <div class="company-logo">CANA</div>
-                        <div class="company-info">
-                            <strong>CANA Management Ltd.</strong><br>
-                            #100, 5720 - 4th Street S.E.<br>
-                            Calgary, Alberta T2H1K7<br>
-                            P: (403) 255-6521
-                        </div>
-                    </div>
-                    <div class="project-info">
-                        <strong>Project: 65589 AMUFL</strong><br>
-                        800 Main Street S<br>
-                        Airdrie, Alberta T4B 3G1
-                    </div>
-                </div>
-
-                <div class="doc-title">
-                    <h2>Submittal #08 44 00-7.0 - Curtain Wall Shop Drawing & PA Speaker Reinforcing Package</h2>
-                    <h3>08 44 00 - Aluminum Curtain Wall</h3>
-                </div>
-
-                <div class="doc-info-grid">
-                    <div class="info-row">
-                        <span class="info-label">Revision</span>
-                        <span class="info-value">0</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Submittal Manager</span>
-                        <span class="info-value">Conor Jensen (CANA Construction Co. Ltd.)</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Status</span>
-                        <span class="info-value">Open</span>
-                    </div>
-                    <div class="info-row">
-                        <span class="info-label">Date Created</span>
-                        <span class="info-value">Nov 7, 2024</span>
-                    </div>
-                </div>
-
-                <div class="description-box">
-                    <strong>Description</strong>
-                    As discussed, please see the combined Curtain Wall Drawing & PA Speaker Reinforcing Package attached for your review & comment.
-                </div>
-
-                <div class="workflow-section">
-                    <div class="workflow-title">Submittal Workflow</div>
-                    <table class="workflow-table">
-                        <thead>
-                            <tr>
-                                <th>Name</th>
-                                <th>Sent Date</th>
-                                <th>Due Date</th>
-                                <th>Response</th>
-                                <th>Attachments</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <tr>
-                                <td>Conor Jensen</td>
-                                <td>Nov 7, 2024</td>
-                                <td>Nov 7, 2024</td>
-                                <td>Submitted</td>
-                                <td><a href="#">Document.pdf</a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
-
-                <div class="doc-footer">
-                    <div>CANA Management Ltd.</div>
-                    <div>Page 1 of 1</div>
-                    <div>Printed On: Nov 8, 2024 09:54 AM MST</div>
-                </div>
-            `;
-        }
 
         // Keyboard shortcut for closing
         document.addEventListener('keydown', function(e) {
@@ -4996,11 +5936,56 @@
             `;
             document.head.appendChild(style);
         }
+
+        /* ===== PDF NAVIGATION ===== */
+        let currentPDFPage = 1;
+        let totalPDFPages = 1;
+        let currentPlanIndex = -1; // Track current plan being viewed
+
+        function previousPDFPage() {
+            // Navigate to previous plan
+            if (currentPlanIndex > 0) {
+                currentPlanIndex--;
+                viewPlan(currentPlanIndex);
+                console.log('Previous plan - Index:', currentPlanIndex);
+            }
+        }
+
+        function nextPDFPage() {
+            // Navigate to next plan
+            if (currentPlanIndex < plans.length - 1) {
+                currentPlanIndex++;
+                viewPlan(currentPlanIndex);
+                console.log('Next plan - Index:', currentPlanIndex);
+            }
+        }
+
+        function scrollToPDFPage(pageNum) {
+            const pagesContainer = document.querySelector('#pdfDocumentContent');
+            const documentArea = document.querySelector('.pdf-document-area');
+
+            if (pagesContainer) {
+                const canvases = pagesContainer.querySelectorAll('canvas');
+                if (canvases[pageNum - 1]) {
+                    const targetCanvas = canvases[pageNum - 1];
+                    console.log('Scrolling to page:', pageNum);
+
+                    // Scroll the canvas into view with smooth behavior
+                    targetCanvas.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+
+                    // Alternative: Scroll the document area
+                    if (documentArea) {
+                        const offset = targetCanvas.offsetTop - documentArea.offsetTop;
+                        documentArea.scrollTop = offset;
+                    }
+                }
+            }
+        }
     </script>
 
     <!-- PDF VIEWER MODAL -->
     <div class="pdf-viewer-modal" id="pdfViewerModal">
-        <!-- Secondary Header Bar (replacing top header - uses existing page header) -->
+        <!-- Secondary Header Bar (Inside Modal) -->
         <div class="pdf-viewer-secondary-header">
             <div class="pdf-secondary-left">
                 <button class="pdf-back-btn" onclick="closePDFViewer()">
@@ -5027,64 +6012,81 @@
         <div class="pdf-viewer-main-wrapper">
             <!-- Left Sidebar with Tools -->
             <div class="pdf-left-sidebar">
-                <button class="pdf-tool-btn" title="Full Screen">
-                    <i class="fas fa-expand"></i>
+                <!-- Fullscreen -->
+                <button class="pdf-tool-btn" data-tool="fullscreen" title="Fullscreen">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
                 </button>
 
-                <div style="display: flex; flex-direction: column; gap: 4px;">
-                    <button class="pdf-tool-btn" title="Zoom In">
-                        <i class="fas fa-plus"></i>
+                <!-- Add -->
+                <button class="pdf-tool-btn" data-tool="add" title="Add">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+
+                <!-- Remove -->
+                <button class="pdf-tool-btn" data-tool="remove" title="Remove">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                </button>
+
+                <!-- Location -->
+                <button class="pdf-tool-btn" data-tool="location" title="Location">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                </button>
+
+                <!-- Link -->
+                <button class="pdf-tool-btn" data-tool="link" title="Link">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                </button>
+
+                <!-- Draw -->
+                <button class="pdf-tool-btn" data-tool="draw" title="Draw">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                </button>
+
+                <!-- Duplicate -->
+                <button class="pdf-tool-btn" data-tool="duplicate" title="Duplicate">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                </button>
+
+                <!-- Shape -->
+                <button class="pdf-tool-btn" data-tool="shape" title="Shape">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                </button>
+
+                <!-- Text -->
+                <button class="pdf-tool-btn" data-tool="text" title="Text">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                </button>
+
+                <!-- Tag -->
+                <button class="pdf-tool-btn" data-tool="tag" title="Tag">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                </button>
+
+                <!-- Divider -->
+                <div class="pdf-tool-separator"></div>
+
+                <!-- Record Button -->
+                <button class="pdf-tool-btn record" id="pdfRecordBtn" title="Record">
+                    <div class="record-icon"></div>
+                </button>
+
+                <!-- Cursor -->
+                <button class="pdf-tool-btn" data-tool="cursor" title="Cursor">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></svg>
+                </button>
+
+                <!-- Undo Button -->
+                <button class="pdf-tool-btn" id="pdfUndoBtn" title="Undo">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+                </button>
+
+                <!-- Navigation Arrows -->
+                <div class="nav-arrows-container">
+                    <button class="nav-btn" id="prevBtn" title="Previous Page">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
                     </button>
-                    <button class="pdf-tool-btn" title="Zoom Out">
-                        <i class="fas fa-minus"></i>
-                    </button>
-                </div>
-
-                <div style="width: 30px; height: 1px; background: #4a5158; margin: 8px 0;"></div>
-
-                <button class="pdf-tool-btn" title="Pin Location">
-                    <i class="fas fa-map-marker-alt"></i>
-                </button>
-                <button class="pdf-tool-btn" title="Link">
-                    <i class="fas fa-link"></i>
-                </button>
-                <button class="pdf-tool-btn" title="Draw Line">
-                    <i class="fas fa-minus" style="transform: rotate(45deg);"></i>
-                </button>
-                <button class="pdf-tool-btn" title="Shapes">
-                    <i class="far fa-square"></i>
-                </button>
-                <button class="pdf-tool-btn" title="Markup">
-                    <i class="fas fa-toolbox"></i>
-                </button>
-                <button class="pdf-tool-btn" title="Text">
-                    <i class="fas fa-font"></i>
-                </button>
-                <button class="pdf-tool-btn" title="Pen">
-                    <i class="fas fa-pen"></i>
-                </button>
-
-                <div style="width: 30px; height: 1px; background: #4a5158; margin: 8px 0;"></div>
-
-                <button class="pdf-tool-btn" title="Record">
-                    <div style="width: 12px; height: 12px; background: white; border-radius: 50%;"></div>
-                </button>
-
-                <div style="width: 30px; height: 1px; background: #4a5158; margin: 8px 0;"></div>
-
-                <button class="pdf-tool-btn" title="Select">
-                    <i class="fas fa-mouse-pointer"></i>
-                </button>
-                <button class="pdf-tool-btn" title="Undo">
-                    <i class="fas fa-undo"></i>
-                </button>
-
-                <div style="display: flex; flex-direction: column; gap: 4px; margin-top: auto;">
-                    <button class="pdf-tool-btn" title="Previous">
-                        <i class="fas fa-chevron-left"></i>
-                    </button>
-                    <button class="pdf-tool-btn" title="Next">
-                        <i class="fas fa-chevron-right"></i>
+                    <button class="nav-btn" id="nextBtn" title="Next Page">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
                     </button>
                 </div>
             </div>
