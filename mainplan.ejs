@@ -6851,12 +6851,11 @@
             }, 100);
         }
 
-        // Main rotation function - applies rotation to PDF and saves to database
+        // Main rotation function - ONLY updates the version preview, does NOT rotate main PDF
         async function rotatePDFSheet(degrees) {
             console.log('🔄 Rotation initiated with degrees:', degrees);
 
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
-            console.log('Plan index:', planIndex, 'currentPlanIndex:', currentPlanIndex, 'currentPDFPlan:', currentPDFPlan);
 
             if (planIndex === -1 || !plans || !plans[planIndex]) {
                 console.warn('No plan found');
@@ -6872,7 +6871,7 @@
             }
 
             try {
-                console.log('Rotating plan:', plan.id);
+                console.log('Rotating version preview for plan:', plan.id);
 
                 // Initialize rotation for this plan if not exists
                 if (!planRotations[plan.id]) {
@@ -6889,35 +6888,40 @@
 
                 console.log('New rotation angle:', planRotations[plan.id]);
 
-                // Apply rotation to current PDF viewer
-                await renderRotatedPDF(plan, planRotations[plan.id]);
+                // ✅ Store rotation in plan object
+                plan.rotation = planRotations[plan.id];
 
-                // Update thumbnail in grid
-                updatePlanThumbnail(planIndex, planRotations[plan.id]);
+                // ✅ Update only the version preview thumbnails in the modal
+                updateVersionThumbnailsRotation(planRotations[plan.id]);
 
-                // Save rotation to database
+                // ✅ Save rotation to database
                 await saveRotationToDatabase(plan.id, planRotations[plan.id]);
 
                 // Show feedback
                 const rotationDisplay = planRotations[plan.id] === 0 ? 'reset' : `${planRotations[plan.id]}°`;
-                showNotification(`📐 PDF rotated to ${rotationDisplay}`, 'success');
+                showNotification(`📐 Version preview rotated to ${rotationDisplay}`, 'success');
 
                 // Close actions dropdown
                 if (typeof togglePDFActionsDropdown === 'function') {
                     togglePDFActionsDropdown();
                 }
 
-                // ✅ OPEN VERSION CONTROL MODAL WITH ROTATED PREVIEW
-                setTimeout(() => {
-                    if (typeof openVersionControlModal === 'function') {
-                        openVersionControlModal();
-                    }
-                }, 300);
-
             } catch (error) {
-                console.error('Error rotating PDF:', error);
-                showNotification('Error rotating PDF', 'error');
+                console.error('Error rotating version preview:', error);
+                showNotification('Error rotating preview', 'error');
             }
+        }
+
+        // Update version thumbnail rotation in the modal (without reloading)
+        function updateVersionThumbnailsRotation(rotationDegrees) {
+            const versionThumbnails = document.querySelectorAll('.version-thumbnail img');
+
+            versionThumbnails.forEach(img => {
+                img.style.transform = `rotate(${rotationDegrees}deg)`;
+                img.style.transition = 'transform 0.4s ease-out';
+            });
+
+            console.log('✅ Updated all version thumbnails to', rotationDegrees, 'degrees');
         }
 
         // Render PDF with rotation applied
@@ -7136,7 +7140,7 @@
         // Track editing state
         let editingVersionId = null;
 
-        // Open version control modal
+        // Open version control modal - loads WITHOUT rotation applied first
         function openVersionControlModal() {
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
 
@@ -7145,10 +7149,14 @@
                 return;
             }
 
+            const plan = plans[planIndex];
+
             const modal = document.getElementById('versionControlModal');
             if (modal) {
                 modal.classList.add('show');
-                loadVersionHistory(plans[planIndex].id);
+
+                // Load version history with current rotation applied to previews
+                loadVersionHistory(plan.id);
             }
 
             // Close actions dropdown
@@ -7169,11 +7177,22 @@
         // Load version history from database
         async function loadVersionHistory(planId) {
             try {
+                // Get the current plan to access its rotation
+                const currentPlan = plans.find(p => p.id === planId);
+                const currentRotation = currentPlan?.rotation || planRotations[planId] || 0;
+
                 const response = await fetch(`/api/plans/${planId}/versions`);
                 const result = await response.json();
 
                 if (result.success && result.versions) {
-                    renderVersionList(result.versions);
+                    // Apply current rotation to all version previews
+                    const versionsWithRotation = result.versions.map(version => {
+                        return {
+                            ...version,
+                            rotation: currentRotation // Use current plan's rotation
+                        };
+                    });
+                    renderVersionList(versionsWithRotation);
                 } else {
                     renderVersionList([]);
                 }
@@ -7183,7 +7202,7 @@
             }
         }
 
-        // Render version list with editable fields
+        // Render version list with editable fields and rotation applied to thumbnails
         function renderVersionList(versions) {
             const versionList = document.getElementById('versionList');
 
@@ -7202,10 +7221,17 @@
                 const formattedDate = uploadDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
                 const formattedTime = uploadDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
+                // Apply rotation to thumbnail (this will be updated dynamically when rotation changes)
+                const rotation = version.rotation || 0;
+                const rotationStyle = `transform: rotate(${rotation}deg); transition: transform 0.4s ease-out;`;
+
                 return `
                     <div class="version-item" id="version-item-${version.id}">
                         <div class="version-thumbnail">
-                            <img src="${version.preview || '/img/pdf-placeholder.png'}" alt="Version thumbnail">
+                            <img src="${version.preview || '/img/pdf-placeholder.png'}"
+                                 alt="Version thumbnail"
+                                 style="${rotationStyle}"
+                                 data-rotation="${rotation}">
                         </div>
                         <div class="version-info">
                             <div class="version-name">${version.name || 'desa wire.pdf'}</div>
