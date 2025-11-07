@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const path = require('path');
+const fs = require('fs');
 const session = require('express-session');
 
 const app = express();
@@ -65,7 +66,7 @@ app.use((req, res, next) => {
     next();
 });
 
-// Import routes
+// Import routes and database
 const authRoutes = require('./routes/authRoutes');
 const projectsRoutes = require('./routes/projectsRoutes');
 const peopleRoutes = require('./routes/peopleRoutes');
@@ -75,6 +76,7 @@ const plansRoutes = require('./routes/plansRoutes');
 const integrationRoutes = require('./routes/integrationRoutes');
 const projectsController = require('./controllers/projectsController');
 const accountController = require('./controllers/accountController');
+const { plansDB } = require('./database/db');
 
 // Define specific routes BEFORE the catch-all projects routes
 app.get('/login', (req, res) => {
@@ -477,6 +479,72 @@ app.get('/api/account', accountController.getAccountData);
 app.post('/api/account/settings', accountController.updateAccountSettings);
 app.post('/api/account/password', accountController.changePassword);
 app.post('/api/account/two-factor', accountController.toggleTwoFactor);
+
+// Update plan details (Sheet # and Description)
+app.put('/api/plans/:id', (req, res) => {
+    try {
+        const planId = req.params.id;
+        const { name, sheetNumber, description, rotation } = req.body;
+
+        console.log('📝 Updating plan:', planId, { name, sheetNumber, description, rotation });
+
+        // Build update object with only provided fields
+        const updates = {};
+        if (name) updates.name = name;
+        if (sheetNumber) updates.sheetNumber = sheetNumber;
+        if (description !== undefined) updates.description = description;
+        if (rotation !== undefined) updates.rotation = rotation;
+
+        // Update using the database object
+        const updatedPlan = plansDB.update(planId, updates);
+
+        if (!updatedPlan) {
+            console.error('❌ Plan not found:', planId);
+            return res.json({ success: false, error: 'Plan not found' });
+        }
+
+        console.log('✅ Plan saved permanently to database:', planId, {
+            name: updatedPlan.name,
+            sheetNumber: updatedPlan.sheetNumber,
+            description: updatedPlan.description,
+            rotation: updatedPlan.rotation
+        });
+
+        res.json({
+            success: true,
+            message: 'Plan updated successfully',
+            plan: updatedPlan
+        });
+    } catch (error) {
+        console.error('❌ Error updating plan:', error);
+        res.json({ success: false, error: error.message });
+    }
+});
+
+// Delete plan
+app.delete('/api/plans/:id', (req, res) => {
+    try {
+        const planId = req.params.id;
+
+        console.log('🗑️ Deleting plan:', planId);
+
+        const success = plansDB.delete(planId);
+
+        if (success) {
+            console.log('✅ Plan deleted successfully:', planId);
+            res.json({
+                success: true,
+                message: 'Plan deleted successfully'
+            });
+        } else {
+            console.error('❌ Plan not found:', planId);
+            res.json({ success: false, error: 'Plan not found' });
+        }
+    } catch (error) {
+        console.error('❌ Error deleting plan:', error);
+        res.json({ success: false, error: error.message });
+    }
+});
 
 // Use routes (projects routes must come AFTER specific routes to avoid catching them)
 app.use('/auth', authRoutes);

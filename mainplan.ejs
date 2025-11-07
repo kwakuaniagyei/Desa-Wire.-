@@ -64,7 +64,7 @@
             border: none;
             padding: 8px 16px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 17px;
             font-weight: 500;
             cursor: pointer;
             display: flex;
@@ -83,7 +83,7 @@
             border: 1px solid #d1d5db;
             padding: 8px 16px;
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 17px;
             font-weight: 500;
             cursor: pointer;
             display: flex;
@@ -1910,22 +1910,21 @@
         .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
             width: 100% !important;
             max-width: 100% !important;
-            padding: 10px 20px !important; /* Reduced padding for fullscreen */
+            padding: 40px 10px 10px 10px !important;
             display: flex !important;
-            align-items: flex-start !important;
+            align-items: center !important;
             justify-content: center !important;
-            overflow-y: auto !important;
-            overflow-x: auto !important;
+            overflow: auto !important;
             background: #ffffff !important;
-            height: 100vh !important;
+            height: calc(100vh - 40px) !important;
             border: none !important;
         }
 
         /* PDF content in fullscreen - FIT TO SCREEN */
         .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
+            width: auto !important;
+            max-width: none !important;
+            margin: 0 auto !important;
             background: transparent !important;
             padding: 0 !important;
         }
@@ -1934,10 +1933,10 @@
             width: auto !important;
             max-width: none !important;
             height: auto !important;
-            margin: 10px auto !important; /* Reduced margin in fullscreen */
+            margin: 0 !important;
             display: block !important;
             background: white !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important; /* Subtle shadow */
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
             image-rendering: pixelated !important;
             image-rendering: -webkit-optimize-contrast !important;
             image-rendering: crisp-edges !important;
@@ -1946,11 +1945,32 @@
             backface-visibility: hidden !important;
             -webkit-font-smoothing: antialiased !important;
             -moz-osx-font-smoothing: grayscale !important;
-            filter: contrast(1.05) saturate(1.02) !important; /* Slight enhancement */
+            filter: contrast(1.05) saturate(1.02) !important;
             will-change: transform !important;
             contain: layout style paint !important;
-            /* NO FIXED TRANSFORM - let getOptimalPDFScale handle it */
         }
+
+        /* LAPTOP FULLSCREEN ONLY - Shrink PDF canvas using CSS transform */
+        @media screen and (max-width: 1600px) {
+            .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
+                transform: scale(0.65) !important;
+                transform-origin: top center !important;
+            }
+        }
+
+        /* BIG MONITOR - Keep fullscreen PDF normal size with SHARP rendering */
+        @media screen and (min-width: 1601px) {
+            .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
+                transform: scale(1) !important;
+                transform-origin: top center !important;
+                image-rendering: crisp-edges !important;
+                image-rendering: -webkit-optimize-contrast !important;
+                filter: contrast(1.1) brightness(0.98) !important;
+                will-change: transform !important;
+                -webkit-text-stroke: 0.2px rgba(0,0,0,0.01) !important;
+            }
+        }
+
 
         /* Eye dropdown in fullscreen mode */
         .pdf-viewer-modal.fullscreen-mode .eye-dropdown-menu {
@@ -2577,17 +2597,17 @@
 
         .pdf-back-btn {
             background: none;
-            border: 1px solid #000000;
+            border: 1px solid #d1d5db;
             display: flex;
             align-items: center;
             gap: 6px;
-            color: #1f2937;
+            color: #374151;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 17px;
             font-weight: 500;
             transition: all 0.2s;
-            padding: 6px 12px;
-            border-radius: 4px;
+            padding: 8px 16px;
+            border-radius: 6px;
         }
 
         .pdf-back-btn:hover {
@@ -2603,10 +2623,11 @@
 
         .pdf-action-btn, .pdf-filter-btn, .pdf-version-btn {
             background: white;
-            border: 1px solid #000000;
-            padding: 6px 12px;
-            border-radius: 4px;
-            font-size: 12px;
+            border: 1px solid #d1d5db;
+            padding: 8px 16px;
+            border-radius: 6px;
+            font-size: 17px;
+            font-weight: 500;
             color: #374151;
             cursor: pointer;
             display: flex;
@@ -2619,6 +2640,147 @@
             background: #f3f4f6;
             border-color: #9ca3af;
             color: #1f2937;
+        }
+
+        /* ===== PDF ACTIONS DROPDOWN MENU ===== */
+        .pdf-actions-dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .pdf-actions-dropdown-menu {
+            position: absolute;
+            top: calc(100% + 4px);
+            left: 0;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-width: 200px;
+            display: none;
+            z-index: 10005;
+            overflow: hidden;
+            padding: 4px 0;
+        }
+
+        .pdf-actions-dropdown-menu.show {
+            display: block;
+            animation: dropdownFadeIn 0.15s ease-out;
+        }
+
+        @keyframes dropdownFadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(-4px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .pdf-actions-item {
+            padding: 8px 16px;
+            cursor: pointer;
+            font-size: 13px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1f2937;
+            transition: background-color 0.15s;
+            display: block;
+            border: none;
+            background: none;
+            width: 100%;
+            text-align: left;
+            line-height: 1.4;
+        }
+
+        .pdf-actions-item:hover {
+            background-color: #f3f4f6;
+        }
+
+        .pdf-actions-item.danger {
+            color: #dc2626;
+        }
+
+        .pdf-actions-item.danger:hover {
+            background-color: #fef2f2;
+        }
+
+        .pdf-actions-divider {
+            height: 1px;
+            background: #e5e7eb;
+            margin: 4px 0;
+        }
+
+        /* ===== PDF ROTATION SUBMENU STYLES ===== */
+
+        /* Container for items with submenus */
+        .pdf-actions-item-with-submenu {
+            position: relative;
+        }
+
+        /* Make the rotate button show chevron on the right */
+        .pdf-actions-item-with-submenu .pdf-actions-item {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            width: 100%;
+        }
+
+        /* Rotation submenu styling - appears on hover */
+        .pdf-rotate-submenu {
+            position: absolute;
+            left: 100%;
+            top: 0;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            min-width: 120px;
+            display: none;
+            z-index: 10006;
+            padding: 4px 0;
+            margin-left: 4px;
+        }
+
+        /* Show submenu on hover */
+        .pdf-actions-item-with-submenu:hover .pdf-rotate-submenu,
+        .pdf-rotate-submenu:hover {
+            display: block;
+        }
+
+        /* Rotation option buttons */
+        .pdf-rotate-option {
+            width: 100%;
+            padding: 8px 24px;
+            border: none;
+            background: none;
+            text-align: right;
+            font-size: 13px;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            color: #1f2937;
+            cursor: pointer;
+            transition: background-color 0.15s;
+            display: block;
+        }
+
+        .pdf-rotate-option:hover {
+            background-color: #f3f4f6;
+        }
+
+        /* Rotation animation for canvas */
+        @keyframes rotateAnimation {
+            from {
+                opacity: 0.7;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        /* Applied to canvas during rotation */
+        .rotating {
+            animation: rotateAnimation 0.4s ease-out;
         }
 
         /* ===== PDF VIEWER MAIN WRAPPER ===== */
@@ -2981,10 +3143,16 @@
 
         .pdf-name-display:hover {
             background: #374151;
+            transform: scale(1.02);
         }
 
         .pdf-name-display i {
             color: #9ca3af;
+            transition: color 0.2s;
+        }
+
+        .pdf-name-display:hover i {
+            color: #60a5fa;
         }
 
         /* ===== PDF RIGHT TASKS SIDEBAR ===== */
@@ -3192,6 +3360,123 @@
 
         .pdf-edit-label:hover {
             background: #4a5158;
+        }
+
+        /* Plan Details Modal */
+        .plan-details-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+
+        .plan-details-modal.show {
+            display: flex;
+        }
+
+        .plan-details-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 500px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .plan-details-header {
+            padding: 24px 24px 16px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .plan-details-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .plan-details-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .plan-details-close:hover {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .plan-details-body {
+            padding: 24px;
+        }
+
+        .plan-details-field {
+            margin-bottom: 20px;
+        }
+
+        .plan-details-label {
+            display: block;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .plan-details-input {
+            width: 100%;
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .plan-details-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .plan-details-save-btn {
+            width: 100%;
+            background-color: #3b82f6;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .plan-details-save-btn:hover {
+            background-color: #2563eb;
+        }
+
+        .plan-details-save-btn:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
         }
 
     </style>
@@ -3690,6 +3975,14 @@
                 } else {
                     folders = [];
                 }
+
+                // Step 6: Initialize planRotations object with loaded rotations
+                planRotations = {};
+                plans.forEach(plan => {
+                    planRotations[plan.id] = plan.rotation || 0;
+                });
+                console.log('📐 Initialized planRotations:', planRotations);
+
             } catch (error) {
                 console.error('Error loading plans:', error);
                 plans = [];
@@ -3861,7 +4154,7 @@
 
             const info = document.createElement('div');
             info.className = 'plan-info';
-            info.innerHTML = `<div class="plan-name">${plan.name}</div>`;
+            info.innerHTML = `<div class="plan-name">${plan.sheetNumber || plan.name}</div>`;
 
             card.appendChild(thumbnail);
             card.appendChild(info);
@@ -4697,6 +4990,14 @@
             if (plan) {
                 // Track the current plan index for navigation
                 currentPlanIndex = index;
+                currentPDFPlan = index; // Track for edit feature
+
+                // Step 5: Load saved rotation from database
+                if (plan.rotation) {
+                    planRotations[plan.id] = plan.rotation;
+                } else {
+                    planRotations[plan.id] = 0;
+                }
 
                 // Create PDF data object with plan information
                 const pdfData = {
@@ -4706,6 +5007,8 @@
                 openPDFViewer(pdfData);
 
                 console.log('Viewing plan at index:', index, 'of', plans.length);
+                console.log('✅ currentPDFPlan set to:', currentPDFPlan);
+                console.log('📐 Loaded rotation:', planRotations[plan.id]);
             }
         }
 
@@ -5145,20 +5448,49 @@
                 // Render PDF using PDF.js
                 renderPDFInViewer(base64Data, contentContainer, pdfData.plan);
 
-                // Update bottom name bar
+                // Update bottom name bar with clickable edit button
                 const nameBar = document.querySelector('.pdf-name-display');
                 if (nameBar) {
-                    nameBar.innerHTML = `<i class="fas fa-pen"></i><span>${pdfData.plan.name || 'Document.pdf'}</span>`;
+                    nameBar.innerHTML = `<i class="fas fa-pen"></i><span id="pdfBottomNameDisplay">${pdfData.plan.name || 'Document.pdf'}</span>`;
+
+                    // Remove old click listener
+                    const newNameBar = nameBar.cloneNode(true);
+                    nameBar.parentNode.replaceChild(newNameBar, nameBar);
+
+                    // Add click listener to the new element
+                    const freshNameBar = document.querySelector('.pdf-name-display');
+                    if (freshNameBar) {
+                        freshNameBar.style.cursor = 'pointer';
+                        freshNameBar.addEventListener('click', function(e) {
+                            e.preventDefault();
+                            e.stopPropagation();
+                            console.log('📝 Bottom name bar edit clicked!');
+                            console.log('currentPlanIndex:', currentPlanIndex);
+                            console.log('currentPDFPlan:', currentPDFPlan);
+
+                            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+                            if (planIndex !== -1 && plans && plans[planIndex]) {
+                                console.log('✅ Opening Plan Details modal');
+                                openPlanDetailsModal(planIndex);
+                            } else {
+                                console.warn('❌ No plan selected');
+                                showNotification('Please open a plan first', 'error');
+                            }
+                        });
+                        console.log('✅ Bottom name bar edit listener attached');
+                    }
                 }
             }
 
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
+
         }
 
-        // Add this helper function to calculate optimal PDF scale for different monitors
-        // IMPROVED: Calculate optimal PDF scale for ANY page size (landscape or portrait)
-        // IMPROVED: Calculate optimal PDF scale for ANY screen size with device detection
+        // ════════════════════════════════════════════════════════════════════════════
+        // SEPARATE SCALING FOR BIG MONITORS vs LAPTOPS - PDF FULLSCREEN FIX
+        // ════════════════════════════════════════════════════════════════════════════
         function getOptimalPDFScale(pageViewport) {
             const pdfDocumentArea = document.querySelector('.pdf-document-area');
             const pdfViewerModal = document.querySelector('.pdf-viewer-modal');
@@ -5167,78 +5499,121 @@
                 return 1.2; // Fallback scale
             }
 
-            // ===== ACCURATE SCREEN DETECTION =====
+            // ===== SCREEN DETECTION =====
             const screenWidth = window.innerWidth;
             const screenHeight = window.innerHeight;
             const screenDiagonal = Math.sqrt(Math.pow(screenWidth, 2) + Math.pow(screenHeight, 2));
             const dpi = window.devicePixelRatio || 1;
 
-            // Improved detection logic:
-            // - Laptops: < 1600px width OR < 2000 diagonal pixels
-            // - Large monitors: >= 2400px width (2K/4K displays)
+            // Detect screen type
             const isLaptop = screenWidth < 1600 || screenDiagonal < 2000;
             const isLargeMonitor = screenWidth >= 2400;
             const isFullscreen = pdfViewerModal && pdfViewerModal.classList.contains('fullscreen-mode');
 
-            // Get available space (container dimensions)
-            const containerWidth = pdfDocumentArea.offsetWidth;
-            const containerHeight = pdfDocumentArea.offsetHeight;
-
-            // Get actual page dimensions from the viewport
+            // Get container and page dimensions
+            let containerWidth = pdfDocumentArea.offsetWidth;
+            let containerHeight = pdfDocumentArea.offsetHeight;
             const pageWidth = pageViewport.width;
             const pageHeight = pageViewport.height;
-
-            // Determine if page is landscape or portrait
             const isLandscape = pageWidth > pageHeight;
+
+            // DEBUG: Log everything
+            console.log('════════════════════════════════════════');
+            console.log('🖥️ SCREEN TYPE:', isLaptop ? 'LAPTOP' : (isLargeMonitor ? 'BIG MONITOR' : 'MEDIUM'));
+            console.log('📺 SCREEN SIZE:', screenWidth + 'x' + screenHeight);
+            console.log('⛶ FULLSCREEN MODE:', isFullscreen ? 'YES ✅' : 'NO ❌');
+            console.log('📏 CONTAINER:', containerWidth + 'x' + containerHeight);
+            console.log('📄 PAGE:', Math.round(pageWidth) + 'x' + Math.round(pageHeight));
+            console.log('════════════════════════════════════════');
 
             let targetScale;
 
-            // ===== PROFESSIONAL SCALING LOGIC =====
-
+            // ═══════════════════════════════════════════════════════════════════════
+            // LAPTOP SCALING - EXTRA CONSERVATIVE (Fit entire page, no scroll)
+            // ═══════════════════════════════════════════════════════════════════════
             if (isLaptop) {
-                // LAPTOP SCREENS (< 1600px width)
                 if (isFullscreen) {
-                    // Laptop fullscreen: Moderate fill - professional and readable
-                    // Use 80% of available space for good breathing room
-                    const widthScale = (containerWidth * 0.80) / pageWidth;
-                    const heightScale = (containerHeight * 0.80) / pageHeight;
+                    // LAPTOP FULLSCREEN - RESPONSIVE FIT
+                    // Use 75% of space to ensure entire page fits without scrolling
+
+                    // Available space with 25% margin on all sides
+                    const availableWidth = containerWidth * 0.75;
+                    const availableHeight = containerHeight * 0.75;
+
+                    // Calculate what scale fits both dimensions
+                    const widthScale = availableWidth / pageWidth;
+                    const heightScale = availableHeight / pageHeight;
+
+                    // Use the SMALLER scale to ensure entire page fits
                     targetScale = Math.min(widthScale, heightScale);
-                    // Cap between 1.0 and 1.8 for professional appearance
-                    targetScale = Math.max(1.0, Math.min(targetScale, 1.8));
+
+                    // No additional limits - let it scale naturally to fit
+                    // This ensures responsive behavior on any laptop screen size
+
+                    console.log('🖥️ LAPTOP FULLSCREEN (RESPONSIVE FIT):', {
+                        containerWidth,
+                        containerHeight,
+                        availableWidth: availableWidth.toFixed(0),
+                        availableHeight: availableHeight.toFixed(0),
+                        pageWidth: Math.round(pageWidth),
+                        pageHeight: Math.round(pageHeight),
+                        widthScale: widthScale.toFixed(2),
+                        heightScale: heightScale.toFixed(2),
+                        calculatedScale: targetScale.toFixed(2) + 'x',
+                        result: '✅ ENTIRE PAGE FITS RESPONSIVELY'
+                    });
                 } else {
-                    // Laptop normal view: Comfortable viewing with margins
+                    // Laptop normal view (not fullscreen)
                     const widthScale = (containerWidth * 0.85) / pageWidth;
                     const heightScale = (containerHeight * 0.85) / pageHeight;
                     targetScale = Math.min(widthScale, heightScale);
-                    targetScale = Math.max(0.8, Math.min(targetScale, 1.5));
+                    targetScale = Math.max(0.8, Math.min(targetScale, 1.3));
                 }
             }
+            // ═══════════════════════════════════════════════════════════════════════
+            // BIG MONITOR SCALING - AGGRESSIVE (Fill the screen)
+            // ═══════════════════════════════════════════════════════════════════════
             else if (isLargeMonitor) {
-                // LARGE MONITORS (>= 2400px width - 2K/4K displays)
                 if (isFullscreen) {
-                    // Large monitor fullscreen: Fill more aggressively while staying professional
-                    // Use 85% of space - larger monitors need more fill to look good
+                    // BIG MONITOR FULLSCREEN
+                    // Goal: Fill screen, PDF should be large and readable
+                    // Strategy: Use 85% of space, allow 2.0x-3.5x scale
+
                     const widthScale = (containerWidth * 0.85) / pageWidth;
                     const heightScale = (containerHeight * 0.85) / pageHeight;
                     targetScale = Math.min(widthScale, heightScale);
-                    // Allow larger scaling for big monitors (1.5 to 3.5)
-                    targetScale = Math.max(1.5, Math.min(targetScale, 3.5));
+
+                    // CRITICAL: Min 2.0x, Max 3.5x for big monitors
+                    // This ensures PDF fills the large screen properly
+                    targetScale = Math.max(2.0, Math.min(targetScale, 3.5));
+
+                    console.log('🖥️ BIG MONITOR FULLSCREEN:', {
+                        containerWidth,
+                        containerHeight,
+                        calculatedScale: targetScale.toFixed(2) + 'x',
+                        result: targetScale >= 2.2 && targetScale <= 3.2 ? '✅ PERFECT' : '⚠️ ADJUST'
+                    });
                 } else {
-                    // Large monitor normal: Comfortable with good margins
+                    // Big monitor normal view
                     const widthScale = (containerWidth * 0.82) / pageWidth;
                     const heightScale = (containerHeight * 0.82) / pageHeight;
                     targetScale = Math.min(widthScale, heightScale);
                     targetScale = Math.max(1.0, Math.min(targetScale, 2.5));
                 }
             }
+            // ═══════════════════════════════════════════════════════════════════════
+            // MEDIUM MONITOR SCALING (1600-2399px)
+            // ═══════════════════════════════════════════════════════════════════════
             else {
-                // MEDIUM MONITORS (1600-2399px width)
                 if (isFullscreen) {
-                    const widthScale = (containerWidth * 0.83) / pageWidth;
-                    const heightScale = (containerHeight * 0.83) / pageHeight;
+                    // MEDIUM MONITOR FULLSCREEN
+                    // Use 65% of viewport (further reduced)
+                    const widthScale = (containerWidth * 0.65) / pageWidth;
+                    const heightScale = (containerHeight * 0.65) / pageHeight;
                     targetScale = Math.min(widthScale, heightScale);
-                    targetScale = Math.max(1.2, Math.min(targetScale, 2.5));
+                    targetScale = Math.max(0.6, Math.min(targetScale, 1.1));
                 } else {
+                    // Medium monitor normal view
                     const widthScale = (containerWidth * 0.83) / pageWidth;
                     const heightScale = (containerHeight * 0.83) / pageHeight;
                     targetScale = Math.min(widthScale, heightScale);
@@ -5246,20 +5621,14 @@
                 }
             }
 
-            // ===== DEBUG LOGGING =====
-            console.log('PDF Scale Calculation:', {
-                screenWidth,
-                screenHeight,
-                screenDiagonal: Math.round(screenDiagonal),
-                dpi,
-                detectedType: isLaptop ? 'LAPTOP' : (isLargeMonitor ? 'LARGE MONITOR' : 'MEDIUM MONITOR'),
-                isFullscreen: isFullscreen ? 'YES' : 'NO',
-                isLandscape: isLandscape ? 'YES' : 'NO',
-                pageWidth: Math.round(pageWidth),
-                pageHeight: Math.round(pageHeight),
-                containerWidth: Math.round(containerWidth),
-                containerHeight: Math.round(containerHeight),
-                finalScale: targetScale.toFixed(2) + 'x'
+            // ===== SUMMARY LOGGING =====
+            console.log('📊 PDF SCALE SUMMARY:', {
+                screenType: isLaptop ? '🖥️ LAPTOP' : (isLargeMonitor ? '🖥️ BIG MONITOR' : '🖥️ MEDIUM'),
+                screenSize: `${screenWidth}×${screenHeight}`,
+                mode: isFullscreen ? '⛶ FULLSCREEN' : '🪟 NORMAL',
+                finalScale: targetScale.toFixed(2) + 'x',
+                pageSize: `${Math.round(pageWidth)}×${Math.round(pageHeight)}`,
+                orientation: isLandscape ? '↔️ LANDSCAPE' : '↕️ PORTRAIT'
             });
 
             return targetScale;
@@ -5327,8 +5696,11 @@
                                 canvas.height = viewport.height * dpr;
 
                                 // Set display size to match viewport (scaled size)
-                                canvas.style.width = viewport.width + 'px';
-                                canvas.style.height = viewport.height + 'px';
+                                let displayWidth = viewport.width;
+                                let displayHeight = viewport.height;
+
+                                canvas.style.width = displayWidth + 'px';
+                                canvas.style.height = displayHeight + 'px';
                                 canvas.style.display = 'block';
                                 canvas.style.marginBottom = pageNum < numPages ? '20px' : '0';
                                 canvas.style.border = '1px solid #d1d5db';
@@ -5941,6 +6313,8 @@
         let currentPDFPage = 1;
         let totalPDFPages = 1;
         let currentPlanIndex = -1; // Track current plan being viewed
+        let currentPDFPlan = -1; // Track current plan for edit feature
+        let planRotations = {}; // Track rotation angles per plan ID
 
         function previousPDFPage() {
             // Navigate to previous plan
@@ -5981,6 +6355,443 @@
                 }
             }
         }
+
+        // ════════════════════════════════════════════════════════════════════════════
+        // PLAN DETAILS EDIT FEATURE - Functions
+        // ════════════════════════════════════════════════════════════════════════════
+
+        // Track which plan is being edited
+        let currentEditingPlanIndex = -1;
+
+        // Open plan details modal for editing
+        function openPlanDetailsModal(planIndex) {
+            console.log('openPlanDetailsModal called with planIndex:', planIndex);
+            console.log('plans array:', plans);
+
+            const plan = plans[planIndex];
+            if (!plan) {
+                console.error('Plan not found at index:', planIndex);
+                return;
+            }
+
+            console.log('Plan found:', plan);
+
+            // Store current editing plan index
+            currentEditingPlanIndex = planIndex;
+
+            // Populate modal fields
+            const sheetInput = document.getElementById('planSheetNumber');
+            const descInput = document.getElementById('planDescription');
+            const modal = document.getElementById('planDetailsModal');
+
+            console.log('Modal:', modal);
+            console.log('Sheet input:', sheetInput);
+            console.log('Desc input:', descInput);
+
+            if (sheetInput) sheetInput.value = plan.sheetNumber || plan.name || '';
+            if (descInput) descInput.value = plan.description || '';
+
+            // Show modal
+            if (modal) {
+                modal.classList.add('show');
+                console.log('Modal shown');
+            } else {
+                console.error('Modal not found');
+            }
+        }
+
+        // Close plan details modal
+        function closePlanDetailsModal() {
+            document.getElementById('planDetailsModal').classList.remove('show');
+            currentEditingPlanIndex = -1;
+        }
+
+        // Save plan details
+        async function savePlanDetails() {
+            if (currentEditingPlanIndex === -1) return;
+
+            const plan = plans[currentEditingPlanIndex];
+            const sheetNumber = document.getElementById('planSheetNumber').value.trim();
+            const description = document.getElementById('planDescription').value.trim();
+
+            if (!sheetNumber) {
+                showNotification('Please enter a sheet number', 'error');
+                return;
+            }
+
+            try {
+                console.log('Saving plan details...');
+                console.log('Plan ID:', plan.id);
+                console.log('Sheet Number:', sheetNumber);
+                console.log('Description:', description);
+
+                // Update in database
+                const response = await fetch(`/api/plans/${plan.id}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        name: sheetNumber,
+                        sheetNumber: sheetNumber,
+                        description: description
+                    })
+                });
+
+                console.log('API Response Status:', response.status);
+                const result = await response.json();
+                console.log('API Response:', result);
+
+                if (result.success || response.ok) {
+                    // Update local data
+                    plan.name = sheetNumber;
+                    plan.sheetNumber = sheetNumber;
+                    plan.description = description;
+
+                    // Update PDF viewer bottom name display if viewing a PDF
+                    const bottomNameDisplay = document.getElementById('pdfBottomNameDisplay');
+                    if (bottomNameDisplay) {
+                        bottomNameDisplay.textContent = sheetNumber;
+                    }
+
+                    console.log('✅ Plan updated locally and in database');
+                    showNotification('✅ Plan details updated successfully!', 'success');
+                    closePlanDetailsModal();
+                    updateView();
+                } else {
+                    console.error('API returned error:', result);
+                    showNotification('Error updating plan details: ' + (result.error || 'Unknown error'), 'error');
+                }
+            } catch (error) {
+                console.error('Error saving plan details:', error);
+                showNotification('Error saving plan details: ' + error.message, 'error');
+            }
+        }
+
+        // Close plan details modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const planDetailsModal = document.getElementById('planDetailsModal');
+            const planDetailsContent = document.querySelector('.plan-details-content');
+
+            if (planDetailsModal &&
+                e.target === planDetailsModal &&
+                !planDetailsContent.contains(e.target)) {
+                closePlanDetailsModal();
+            }
+        });
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const planDetailsModal = document.getElementById('planDetailsModal');
+                if (planDetailsModal && planDetailsModal.classList.contains('show')) {
+                    closePlanDetailsModal();
+                }
+            }
+        });
+
+        // Handle Edit Plan Details button click
+        function handleEditPlanClick() {
+            console.log('=== EDIT PLAN CLICK HANDLER ===');
+            console.log('currentPDFPlan:', currentPDFPlan);
+            console.log('currentPlanIndex:', currentPlanIndex);
+            console.log('plans array length:', plans.length);
+
+            // Use currentPlanIndex instead of currentPDFPlan for better reliability
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+            if (planIndex !== -1 && plans && plans[planIndex]) {
+                console.log('✅ Opening modal for plan:', plans[planIndex].name);
+                openPlanDetailsModal(planIndex);
+            } else {
+                console.warn('❌ Cannot open modal - no plan selected');
+                console.warn('currentPlanIndex:', currentPlanIndex);
+                console.warn('currentPDFPlan:', currentPDFPlan);
+                showNotification('Please open a plan first', 'error');
+            }
+        }
+
+        // ===== PDF ROTATION SUBMENU FUNCTIONS =====
+        let rotateSubmenuTimeout = null;
+
+        // Show rotation submenu with timeout to prevent flickering
+        function showRotateSubmenu() {
+            if (rotateSubmenuTimeout) {
+                clearTimeout(rotateSubmenuTimeout);
+            }
+            const submenu = document.getElementById('rotateSubmenu');
+            if (submenu) {
+                submenu.style.display = 'block';
+            }
+        }
+
+        // Hide rotation submenu with timeout
+        function hideRotateSubmenu() {
+            rotateSubmenuTimeout = setTimeout(() => {
+                const submenu = document.getElementById('rotateSubmenu');
+                if (submenu) {
+                    submenu.style.display = 'none';
+                }
+            }, 100);
+        }
+
+        // Main rotation function - applies rotation to PDF and saves to database
+        async function rotatePDFSheet(degrees) {
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+            if (planIndex === -1 || !plans || !plans[planIndex]) {
+                showNotification('Please open a plan first', 'error');
+                return;
+            }
+
+            const plan = plans[planIndex];
+            if (!plan.id) {
+                showNotification('Plan ID not found', 'error');
+                return;
+            }
+
+            try {
+                // Initialize rotation for this plan if not exists
+                if (!planRotations[plan.id]) {
+                    planRotations[plan.id] = 0;
+                }
+
+                // Calculate new rotation angle (cumulative)
+                planRotations[plan.id] = (planRotations[plan.id] + degrees) % 360;
+
+                // Normalize to 0-360 range
+                if (planRotations[plan.id] < 0) {
+                    planRotations[plan.id] += 360;
+                }
+
+                // Apply rotation to current PDF viewer
+                await renderRotatedPDF(plan, planRotations[plan.id]);
+
+                // Update thumbnail in grid
+                updatePlanThumbnail(planIndex, planRotations[plan.id]);
+
+                // Save rotation to database
+                await saveRotationToDatabase(plan.id, planRotations[plan.id]);
+
+                // Show feedback
+                const rotationDisplay = planRotations[plan.id] === 0 ? 'reset' : `${planRotations[plan.id]}°`;
+                showNotification(`📐 PDF rotated to ${rotationDisplay}`, 'success');
+
+            } catch (error) {
+                console.error('Error rotating PDF:', error);
+                showNotification('Error rotating PDF', 'error');
+            }
+        }
+
+        // Render PDF with rotation applied
+        async function renderRotatedPDF(plan, rotationDegrees) {
+            try {
+                const pdfViewer = document.querySelector('#pdfDocumentContent');
+                if (!pdfViewer) return;
+
+                // Add rotation animation class
+                const canvases = pdfViewer.querySelectorAll('canvas');
+                canvases.forEach(canvas => {
+                    canvas.classList.add('rotating');
+                    setTimeout(() => canvas.classList.remove('rotating'), 400);
+                });
+
+                // Apply CSS rotation for immediate visual feedback
+                const container = pdfViewer.closest('.pdf-document-area');
+                if (container) {
+                    container.style.transform = `rotate(${rotationDegrees}deg)`;
+                }
+
+                // Store rotation in plan object for persistence
+                plan.rotation = rotationDegrees;
+
+            } catch (error) {
+                console.error('Error rendering rotated PDF:', error);
+            }
+        }
+
+        // Update plan thumbnail in grid with rotation
+        function updatePlanThumbnail(planIndex, rotationDegrees) {
+            try {
+                const thumbnails = document.querySelectorAll('.plan-item');
+                if (thumbnails[planIndex]) {
+                    const img = thumbnails[planIndex].querySelector('img');
+                    if (img) {
+                        img.style.transform = `rotate(${rotationDegrees}deg)`;
+                    }
+                }
+            } catch (error) {
+                console.error('Error updating thumbnail:', error);
+            }
+        }
+
+        // Save rotation to database
+        async function saveRotationToDatabase(planId, rotationDegrees) {
+            try {
+                const response = await fetch(`/api/plans/${planId}`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        rotation: rotationDegrees
+                    })
+                });
+
+                if (!response.ok) {
+                    throw new Error(`API error: ${response.status}`);
+                }
+
+                const result = await response.json();
+                if (!result.success) {
+                    console.warn('Server returned success: false');
+                }
+
+            } catch (error) {
+                console.error('Error saving rotation to database:', error);
+                showNotification('Could not save rotation to database', 'warning');
+            }
+        }
+
+        // ===== PDF ACTIONS DROPDOWN FUNCTIONS =====
+
+        // Toggle PDF Actions dropdown
+        function togglePDFActionsDropdown(event) {
+            if (event) {
+                event.stopPropagation();
+            }
+            const dropdown = document.getElementById('pdfActionsDropdownMenu');
+            if (dropdown) {
+                dropdown.classList.toggle('show');
+            }
+        }
+
+        // Close dropdown when clicking outside
+        document.addEventListener('click', function(e) {
+            const actionsDropdown = document.querySelector('.pdf-actions-dropdown');
+            const dropdown = document.getElementById('pdfActionsDropdownMenu');
+
+            if (dropdown && actionsDropdown &&
+                !actionsDropdown.contains(e.target)) {
+                dropdown.classList.remove('show');
+            }
+        });
+
+        // 1. Edit number/description
+        function editPlanNumberDescription() {
+            console.log('Edit number/description clicked');
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+            if (planIndex !== -1 && plans && plans[planIndex]) {
+                openPlanDetailsModal(planIndex);
+                togglePDFActionsDropdown();
+            } else {
+                showNotification('Please open a plan first', 'error');
+            }
+        }
+
+        // 3. Manage tags
+        function managePDFTags() {
+            console.log('Manage tags clicked');
+            showNotification('🏷️ Manage tags feature coming soon', 'info');
+            togglePDFActionsDropdown();
+        }
+
+        // 4. Set scale
+        function setPDFScale() {
+            console.log('Set scale clicked');
+            showNotification('📏 Set scale feature coming soon', 'info');
+            togglePDFActionsDropdown();
+        }
+
+        // 5. Compare
+        function comparePDFVersions() {
+            console.log('Compare clicked');
+            showNotification('🔍 Compare feature coming soon', 'info');
+            togglePDFActionsDropdown();
+        }
+
+        // 6. Export as PDF
+        function exportAsPDF() {
+            console.log('Export as PDF clicked');
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+            if (planIndex !== -1 && plans && plans[planIndex]) {
+                const plan = plans[planIndex];
+                showNotification('📄 Exporting PDF...', 'success');
+
+                // Create download link
+                const link = document.createElement('a');
+                link.href = plan.preview;
+                link.download = `${plan.name || 'document'}.pdf`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+
+                setTimeout(() => {
+                    showNotification('✅ PDF exported successfully!', 'success');
+                }, 500);
+            } else {
+                showNotification('Please open a plan first', 'error');
+            }
+
+            togglePDFActionsDropdown();
+        }
+
+        // 7. Export markup summary
+        function exportMarkupSummary() {
+            console.log('Export markup summary clicked');
+            showNotification('📋 Export markup summary feature coming soon', 'info');
+            togglePDFActionsDropdown();
+        }
+
+        // 8. Export QR code
+        function exportQRCode() {
+            console.log('Export QR code clicked');
+            showNotification('📱 Export QR code feature coming soon', 'info');
+            togglePDFActionsDropdown();
+        }
+
+        // 9. Delete plan
+        async function deletePDFPlan() {
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+            if (planIndex === -1 || !plans || !plans[planIndex]) {
+                showNotification('Please open a plan first', 'error');
+                togglePDFActionsDropdown();
+                return;
+            }
+
+            const plan = plans[planIndex];
+
+            // Close dropdown first
+            togglePDFActionsDropdown();
+
+            if (confirm(`Are you sure you want to delete "${plan.name || 'this plan'}"?\n\nThis action cannot be undone.`)) {
+                try {
+                    const response = await fetch(`/api/plans/${plan.id}`, {
+                        method: 'DELETE',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        }
+                    });
+
+                    const result = await response.json();
+
+                    if (result.success) {
+                        showNotification('✅ Plan deleted successfully', 'success');
+                        plans.splice(planIndex, 1);
+                        closePDFViewer();
+                        updateView();
+                    } else {
+                        showNotification('❌ Error deleting plan', 'error');
+                    }
+                } catch (error) {
+                    console.error('Error deleting plan:', error);
+                    showNotification('❌ Error deleting plan', 'error');
+                }
+            }
+        }
     </script>
 
     <!-- PDF VIEWER MODAL -->
@@ -5993,10 +6804,70 @@
                     <span>All plans</span>
                 </button>
                 <div class="pdf-secondary-center">
-                    <button class="pdf-action-btn">
-                        Actions
-                        <i class="fas fa-chevron-down"></i>
-                    </button>
+                    <div class="pdf-actions-dropdown">
+                        <button class="pdf-action-btn" id="pdfActionsBtn" onclick="togglePDFActionsDropdown(event)">
+                            <span>Actions</span>
+                            <i class="fas fa-chevron-down"></i>
+                        </button>
+
+                        <!-- Actions Dropdown Menu -->
+                        <div class="pdf-actions-dropdown-menu" id="pdfActionsDropdownMenu">
+                            <button class="pdf-actions-item" onclick="editPlanNumberDescription()">
+                                Edit number/description
+                            </button>
+
+                            <div class="pdf-actions-item-with-submenu">
+                                <button class="pdf-actions-item" onmouseenter="showRotateSubmenu()" onmouseleave="hideRotateSubmenu()">
+                                    Rotate sheet
+                                    <i class="fas fa-chevron-right" style="margin-left: auto; font-size: 11px;"></i>
+                                </button>
+                                <!-- Rotation Submenu -->
+                                <div class="pdf-rotate-submenu" id="rotateSubmenu" onmouseenter="showRotateSubmenu()" onmouseleave="hideRotateSubmenu()">
+                                    <button class="pdf-rotate-option" onclick="rotatePDFSheet(-90)">
+                                        -90°
+                                    </button>
+                                    <button class="pdf-rotate-option" onclick="rotatePDFSheet(180)">
+                                        180°
+                                    </button>
+                                    <button class="pdf-rotate-option" onclick="rotatePDFSheet(90)">
+                                        90°
+                                    </button>
+                                </div>
+                            </div>
+
+                            <button class="pdf-actions-item" onclick="managePDFTags()">
+                                Manage tags
+                            </button>
+
+                            <button class="pdf-actions-item" onclick="setPDFScale()">
+                                Set scale
+                            </button>
+
+                            <button class="pdf-actions-item" onclick="comparePDFVersions()">
+                                Compare
+                            </button>
+
+                            <div class="pdf-actions-divider"></div>
+
+                            <button class="pdf-actions-item" onclick="exportAsPDF()">
+                                Export as PDF
+                            </button>
+
+                            <button class="pdf-actions-item" onclick="exportMarkupSummary()">
+                                Export markup summary
+                            </button>
+
+                            <button class="pdf-actions-item" onclick="exportQRCode()">
+                                Export QR code
+                            </button>
+
+                            <div class="pdf-actions-divider"></div>
+
+                            <button class="pdf-actions-item danger" onclick="deletePDFPlan()">
+                                Delete plan
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
             <div style="display: flex; gap: 8px;">
@@ -6216,6 +7087,27 @@
             <div class="pdf-name-display">
                 <i class="fas fa-pen"></i>
                 <span>Document.pdf</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Plan Details Modal -->
+    <div id="planDetailsModal" class="plan-details-modal">
+        <div class="plan-details-content">
+            <div class="plan-details-header">
+                <h2 class="plan-details-title">Plan Details</h2>
+                <button class="plan-details-close" onclick="closePlanDetailsModal()">×</button>
+            </div>
+            <div class="plan-details-body">
+                <div class="plan-details-field">
+                    <label class="plan-details-label">Sheet #</label>
+                    <input type="text" class="plan-details-input" id="planSheetNumber" placeholder="e.g., desa wire1">
+                </div>
+                <div class="plan-details-field">
+                    <label class="plan-details-label">Description</label>
+                    <input type="text" class="plan-details-input" id="planDescription" placeholder="e.g., Second Floor">
+                </div>
+                <button class="plan-details-save-btn" onclick="savePlanDetails()">Save changes</button>
             </div>
         </div>
     </div>
