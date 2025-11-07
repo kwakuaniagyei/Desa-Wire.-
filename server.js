@@ -480,13 +480,13 @@ app.post('/api/account/settings', accountController.updateAccountSettings);
 app.post('/api/account/password', accountController.changePassword);
 app.post('/api/account/two-factor', accountController.toggleTwoFactor);
 
-// Update plan details (Sheet # and Description)
+// Update plan details (Sheet # and Description, Rotation, Notes)
 app.put('/api/plans/:id', (req, res) => {
     try {
         const planId = req.params.id;
-        const { name, sheetNumber, description, rotation } = req.body;
+        const { name, sheetNumber, description, rotation, notes } = req.body;
 
-        console.log('📝 Updating plan:', planId, { name, sheetNumber, description, rotation });
+        console.log('📝 Updating plan:', planId, { name, sheetNumber, description, rotation, notes });
 
         // Build update object with only provided fields
         const updates = {};
@@ -494,6 +494,7 @@ app.put('/api/plans/:id', (req, res) => {
         if (sheetNumber) updates.sheetNumber = sheetNumber;
         if (description !== undefined) updates.description = description;
         if (rotation !== undefined) updates.rotation = rotation;
+        if (notes !== undefined) updates.notes = notes;
 
         // Update using the database object
         const updatedPlan = plansDB.update(planId, updates);
@@ -507,7 +508,8 @@ app.put('/api/plans/:id', (req, res) => {
             name: updatedPlan.name,
             sheetNumber: updatedPlan.sheetNumber,
             description: updatedPlan.description,
-            rotation: updatedPlan.rotation
+            rotation: updatedPlan.rotation,
+            notes: updatedPlan.notes
         });
 
         res.json({
@@ -543,6 +545,201 @@ app.delete('/api/plans/:id', (req, res) => {
     } catch (error) {
         console.error('❌ Error deleting plan:', error);
         res.json({ success: false, error: error.message });
+    }
+});
+
+// Rotate plan and create version
+app.post('/api/plans/:id/rotate', (req, res) => {
+    try {
+        const { id } = req.params;
+        const { rotation, description, notes } = req.body;
+
+        console.log('📐 Rotating plan:', id, 'to', rotation, 'degrees');
+
+        // Update plan rotation in database
+        const updatedPlan = plansDB.update(id, { rotation });
+
+        if (!updatedPlan) {
+            console.error('❌ Plan not found:', id);
+            return res.json({ success: false, error: 'Plan not found' });
+        }
+
+        console.log('✅ Rotation saved:', id, rotation);
+
+        res.json({
+            success: true,
+            message: 'Plan rotated and version created',
+            plan: updatedPlan
+        });
+    } catch (error) {
+        console.error('❌ Error rotating plan:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Get version history
+app.get('/api/plans/:id/versions', (req, res) => {
+    try {
+        const { id } = req.params;
+
+        console.log('📚 Loading version history for plan:', id);
+
+        // Get the plan to fetch its versions
+        const plan = plansDB.getById(id);
+
+        if (!plan) {
+            console.error('❌ Plan not found:', id);
+            return res.json({ success: false, error: 'Plan not found' });
+        }
+
+        // Return versions array (you can extend this to load from a versions table if needed)
+        const versions = plan.versions || [];
+
+        res.json({
+            success: true,
+            versions: versions
+        });
+    } catch (error) {
+        console.error('❌ Error loading versions:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Create new version
+app.post('/api/plans/:id/versions', (req, res) => {
+    try {
+        const { id } = req.params;
+        const { description, notes } = req.body;
+
+        console.log('🆕 Creating new version for plan:', id);
+
+        // Get current plan data
+        const plan = plansDB.getById(id);
+
+        if (!plan) {
+            console.error('❌ Plan not found:', id);
+            return res.status(404).json({ success: false, error: 'Plan not found' });
+        }
+
+        // Create version entry
+        const newVersion = {
+            id: Date.now().toString(),
+            name: plan.name || 'desa wire.pdf',
+            rotation: plan.rotation || 0,
+            description: description || new Date().toISOString().split('T')[0],
+            notes: notes || '--',
+            preview: plan.preview || '/img/pdf-placeholder.png',
+            uploadedBy: 'User',
+            createdAt: new Date().toISOString()
+        };
+
+        // Add to versions array in plan
+        if (!plan.versions) {
+            plan.versions = [];
+        }
+        plan.versions.push(newVersion);
+
+        // Update plan with versions
+        plansDB.update(id, { versions: plan.versions });
+
+        console.log('✅ New version created for plan:', id);
+
+        res.json({
+            success: true,
+            message: 'New version created',
+            versionId: newVersion.id
+        });
+    } catch (error) {
+        console.error('❌ Error creating version:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Update version
+app.put('/api/plans/:id/versions/:versionId', (req, res) => {
+    try {
+        const { id, versionId } = req.params;
+        const { description, notes } = req.body;
+
+        console.log('📝 Updating version:', versionId, 'for plan:', id, { description, notes });
+
+        // Get the plan
+        const plan = plansDB.findById(id);
+
+        if (!plan) {
+            console.error('❌ Plan not found:', id);
+            return res.status(404).json({ success: false, error: 'Plan not found' });
+        }
+
+        // Find and update the version
+        if (plan.versions && Array.isArray(plan.versions)) {
+            const versionIndex = plan.versions.findIndex(v => v.id === versionId);
+
+            if (versionIndex !== -1) {
+                // Version found, update it
+                if (description !== undefined) plan.versions[versionIndex].description = description;
+                if (notes !== undefined) plan.versions[versionIndex].notes = notes;
+
+                plansDB.update(id, { versions: plan.versions });
+                console.log('✅ Version updated for plan:', id);
+                res.json({
+                    success: true,
+                    message: 'Version updated successfully',
+                    version: plan.versions[versionIndex]
+                });
+            } else {
+                console.error('❌ Version not found:', versionId);
+                res.status(404).json({ success: false, error: 'Version not found' });
+            }
+        } else {
+            console.error('❌ No versions found for plan:', id);
+            res.status(404).json({ success: false, error: 'No versions available' });
+        }
+    } catch (error) {
+        console.error('❌ Error updating version:', error);
+        res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// Delete version
+app.delete('/api/plans/:id/versions/:versionId', (req, res) => {
+    try {
+        const { id, versionId } = req.params;
+
+        console.log('🗑️ Deleting version:', versionId, 'from plan:', id);
+
+        // Get the plan
+        const plan = plansDB.findById(id);
+
+        if (!plan) {
+            console.error('❌ Plan not found:', id);
+            return res.status(404).json({ success: false, error: 'Plan not found' });
+        }
+
+        // Find and remove the version
+        if (plan.versions && Array.isArray(plan.versions)) {
+            const initialLength = plan.versions.length;
+            plan.versions = plan.versions.filter(v => v.id !== versionId);
+
+            if (plan.versions.length < initialLength) {
+                // Version was found and removed
+                plansDB.update(id, { versions: plan.versions });
+                console.log('✅ Version deleted for plan:', id);
+                res.json({
+                    success: true,
+                    message: 'Version deleted successfully'
+                });
+            } else {
+                console.error('❌ Version not found:', versionId);
+                res.status(404).json({ success: false, error: 'Version not found' });
+            }
+        } else {
+            console.error('❌ No versions found for plan:', id);
+            res.status(404).json({ success: false, error: 'No versions available' });
+        }
+    } catch (error) {
+        console.error('❌ Error deleting version:', error);
+        res.status(500).json({ success: false, error: error.message });
     }
 });
 
