@@ -2682,7 +2682,8 @@
         .pdf-actions-item {
             padding: 8px 16px;
             cursor: pointer;
-            font-size: 13px;
+            font-size: 17px;
+            font-weight: 500;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             color: #1f2937;
             transition: background-color 0.15s;
@@ -2756,7 +2757,8 @@
             border: none;
             background: none;
             text-align: right;
-            font-size: 13px;
+            font-size: 17px;
+            font-weight: 500;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             color: #1f2937;
             cursor: pointer;
@@ -2781,6 +2783,176 @@
         /* Applied to canvas during rotation */
         .rotating {
             animation: rotateAnimation 0.4s ease-out;
+        }
+
+        /* ===== VERSION CONTROL MODAL ===== */
+        .version-control-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10002;
+        }
+
+        .version-control-modal.show {
+            display: flex;
+        }
+
+        .version-control-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 800px;
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .version-control-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .version-control-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .version-control-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .version-control-close:hover {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .version-control-body {
+            padding: 24px 32px;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .version-new-btn {
+            background-color: #2563eb;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 24px;
+            transition: all 0.2s;
+        }
+
+        .version-new-btn:hover {
+            background-color: #1d4ed8;
+        }
+
+        .version-list {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .version-item {
+            background: #f9fafb;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px;
+            display: flex;
+            gap: 16px;
+            transition: all 0.2s;
+        }
+
+        .version-item:hover {
+            background: #f3f4f6;
+            border-color: #d1d5db;
+        }
+
+        .version-thumbnail {
+            width: 120px;
+            height: 160px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
+            overflow: hidden;
+            flex-shrink: 0;
+        }
+
+        .version-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .version-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .version-name {
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        .version-meta {
+            font-size: 13px;
+            color: #6b7280;
+        }
+
+        .version-description {
+            font-size: 13px;
+            color: #374151;
+            margin-top: 4px;
+        }
+
+        .version-notes {
+            font-size: 13px;
+            color: #6b7280;
+            font-style: italic;
+        }
+
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: scale(1);
+            }
         }
 
         /* ===== PDF VIEWER MAIN WRAPPER ===== */
@@ -2958,6 +3130,7 @@
             border-left: 1px solid #d1d5db;
             border-right: 1px solid #d1d5db;
             border-bottom: none;
+            perspective: 1000px;
         }
 
         .pdf-document-area::-webkit-scrollbar {
@@ -2981,6 +3154,12 @@
             min-height: auto;
             align-items: center;
             justify-content: flex-start;
+        }
+
+        /* PDF document content rotation support */
+        #pdfDocumentContent {
+            transition: transform 0.4s ease-out;
+            transform-origin: center center;
         }
 
         /* PDF canvas styling */
@@ -6537,20 +6716,27 @@
 
         // Main rotation function - applies rotation to PDF and saves to database
         async function rotatePDFSheet(degrees) {
+            console.log('🔄 Rotation initiated with degrees:', degrees);
+
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+            console.log('Plan index:', planIndex, 'currentPlanIndex:', currentPlanIndex, 'currentPDFPlan:', currentPDFPlan);
 
             if (planIndex === -1 || !plans || !plans[planIndex]) {
+                console.warn('No plan found');
                 showNotification('Please open a plan first', 'error');
                 return;
             }
 
             const plan = plans[planIndex];
             if (!plan.id) {
+                console.warn('No plan ID');
                 showNotification('Plan ID not found', 'error');
                 return;
             }
 
             try {
+                console.log('Rotating plan:', plan.id);
+
                 // Initialize rotation for this plan if not exists
                 if (!planRotations[plan.id]) {
                     planRotations[plan.id] = 0;
@@ -6563,6 +6749,8 @@
                 if (planRotations[plan.id] < 0) {
                     planRotations[plan.id] += 360;
                 }
+
+                console.log('New rotation angle:', planRotations[plan.id]);
 
                 // Apply rotation to current PDF viewer
                 await renderRotatedPDF(plan, planRotations[plan.id]);
@@ -6577,6 +6765,11 @@
                 const rotationDisplay = planRotations[plan.id] === 0 ? 'reset' : `${planRotations[plan.id]}°`;
                 showNotification(`📐 PDF rotated to ${rotationDisplay}`, 'success');
 
+                // Close actions dropdown
+                if (typeof togglePDFActionsDropdown === 'function') {
+                    togglePDFActionsDropdown();
+                }
+
             } catch (error) {
                 console.error('Error rotating PDF:', error);
                 showNotification('Error rotating PDF', 'error');
@@ -6589,21 +6782,22 @@
                 const pdfViewer = document.querySelector('#pdfDocumentContent');
                 if (!pdfViewer) return;
 
-                // Add rotation animation class
+                // Apply CSS rotation directly to the content
+                pdfViewer.style.transform = `rotate(${rotationDegrees}deg)`;
+                pdfViewer.style.transition = 'transform 0.4s ease-out';
+                pdfViewer.style.transformOrigin = 'center center';
+
+                // Add rotation animation class to canvases
                 const canvases = pdfViewer.querySelectorAll('canvas');
                 canvases.forEach(canvas => {
                     canvas.classList.add('rotating');
                     setTimeout(() => canvas.classList.remove('rotating'), 400);
                 });
 
-                // Apply CSS rotation for immediate visual feedback
-                const container = pdfViewer.closest('.pdf-document-area');
-                if (container) {
-                    container.style.transform = `rotate(${rotationDegrees}deg)`;
-                }
-
                 // Store rotation in plan object for persistence
                 plan.rotation = rotationDegrees;
+
+                console.log('PDF rotated to', rotationDegrees, 'degrees');
 
             } catch (error) {
                 console.error('Error rendering rotated PDF:', error);
@@ -6792,6 +6986,132 @@
                 }
             }
         }
+
+        // ===== VERSION CONTROL MODAL FUNCTIONS =====
+
+        // Open version control modal
+        function openVersionControlModal() {
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+            if (planIndex === -1 || !plans || !plans[planIndex]) {
+                showNotification('Please open a plan first', 'error');
+                return;
+            }
+
+            const modal = document.getElementById('versionControlModal');
+            if (modal) {
+                modal.classList.add('show');
+                loadVersionHistory(plans[planIndex].id);
+            }
+
+            togglePDFActionsDropdown();
+        }
+
+        // Close version control modal
+        function closeVersionControlModal() {
+            const modal = document.getElementById('versionControlModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Load version history from database
+        async function loadVersionHistory(planId) {
+            try {
+                const response = await fetch(`/api/plans/${planId}/versions`);
+                const result = await response.json();
+
+                if (result.success && result.versions) {
+                    renderVersionList(result.versions);
+                } else {
+                    renderVersionList([]);
+                }
+            } catch (error) {
+                console.error('Error loading versions:', error);
+                renderVersionList([]);
+            }
+        }
+
+        // Render version list
+        function renderVersionList(versions) {
+            const versionList = document.getElementById('versionList');
+
+            if (!versions || versions.length === 0) {
+                versionList.innerHTML = `
+                    <div style="text-align: center; padding: 40px; color: #9ca3af;">
+                        <p>No version history available</p>
+                    </div>
+                `;
+                return;
+            }
+
+            versionList.innerHTML = versions.map(version => `
+                <div class="version-item">
+                    <div class="version-thumbnail">
+                        <img src="${version.preview || '/img/pdf-placeholder.png'}" alt="Version thumbnail">
+                    </div>
+                    <div class="version-info">
+                        <div class="version-name">${version.name || 'desa wire.pdf'}</div>
+                        <div class="version-meta">
+                            Uploaded by ${version.uploadedBy || 'Unknown'} on ${new Date(version.createdAt).toLocaleDateString()} ${new Date(version.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                        </div>
+                        <div class="version-description">
+                            <strong>Description:</strong> ${version.description || '--'}
+                        </div>
+                        <div class="version-notes">
+                            <strong>Notes:</strong> ${version.notes || '--'}
+                        </div>
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        // Create new version
+        async function createNewVersion() {
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+            if (planIndex === -1 || !plans || !plans[planIndex]) {
+                showNotification('Please open a plan first', 'error');
+                return;
+            }
+
+            const plan = plans[planIndex];
+
+            try {
+                const response = await fetch(`/api/plans/${plan.id}/versions`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        description: new Date().toISOString().split('T')[0],
+                        notes: '--'
+                    })
+                });
+
+                const result = await response.json();
+
+                if (result.success) {
+                    showNotification('✅ New version created', 'success');
+                    loadVersionHistory(plan.id);
+                } else {
+                    showNotification('Error creating version', 'error');
+                }
+            } catch (error) {
+                console.error('Error creating version:', error);
+                showNotification('Error creating version', 'error');
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const versionModal = document.getElementById('versionControlModal');
+            const versionContent = document.querySelector('.version-control-content');
+
+            if (versionModal && e.target === versionModal && !versionContent.contains(e.target)) {
+                closeVersionControlModal();
+            }
+        });
     </script>
 
     <!-- PDF VIEWER MODAL -->
@@ -6875,7 +7195,7 @@
                     <i class="fas fa-filter"></i>
                     Filter tasks
                 </button>
-                <button class="pdf-version-btn">Version control</button>
+                <button class="pdf-version-btn" onclick="openVersionControlModal()">Version control</button>
             </div>
         </div>
 
@@ -7108,6 +7428,27 @@
                     <input type="text" class="plan-details-input" id="planDescription" placeholder="e.g., Second Floor">
                 </div>
                 <button class="plan-details-save-btn" onclick="savePlanDetails()">Save changes</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Sheet Version Control Modal -->
+    <div id="versionControlModal" class="version-control-modal">
+        <div class="version-control-content">
+            <div class="version-control-header">
+                <h2 class="version-control-title">Sheet Version Control</h2>
+                <button class="version-control-close" onclick="closeVersionControlModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="version-control-body">
+                <button class="version-new-btn" onclick="createNewVersion()">
+                    <i class="fas fa-plus"></i>
+                    New version
+                </button>
+                <div class="version-list" id="versionList">
+                    <!-- Versions will be loaded here dynamically -->
+                </div>
             </div>
         </div>
     </div>
