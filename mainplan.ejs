@@ -2731,7 +2731,7 @@
             width: 100%;
         }
 
-        /* Rotation submenu styling - appears on hover */
+        /* Rotation submenu styling */
         .pdf-rotate-submenu {
             position: absolute;
             left: 100%;
@@ -2739,9 +2739,9 @@
             background: white;
             border: 1px solid #d1d5db;
             border-radius: 4px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
             display: none;
-            z-index: 10006;
+            z-index: 10007;
             padding: 8px;
             margin-left: 4px;
             flex-direction: row;
@@ -2749,9 +2749,8 @@
             min-width: auto;
         }
 
-        /* Show submenu on hover */
-        .pdf-actions-item-with-submenu:hover .pdf-rotate-submenu,
-        .pdf-rotate-submenu:hover {
+        /* Show submenu when parent is hovered OR when submenu itself is hovered */
+        .pdf-actions-item-with-submenu:hover .pdf-rotate-submenu {
             display: flex;
         }
 
@@ -2776,6 +2775,12 @@
 
         .pdf-rotate-option:hover {
             background-color: #f3f4f6;
+            border-color: #2563eb;
+            color: #2563eb;
+        }
+
+        .pdf-rotate-option:active {
+            background-color: #e5e7eb;
         }
 
         /* Rotation animation for canvas */
@@ -6828,27 +6833,27 @@
         }
 
         // ===== PDF ROTATION SUBMENU FUNCTIONS =====
-        let rotateSubmenuTimeout = null;
-
-        // Show rotation submenu with timeout to prevent flickering
-        function showRotateSubmenu() {
-            if (rotateSubmenuTimeout) {
-                clearTimeout(rotateSubmenuTimeout);
+        // Toggle rotation submenu
+        function toggleRotateSubmenu(event) {
+            if (event) {
+                event.preventDefault();
+                event.stopPropagation();
             }
+
             const submenu = document.getElementById('rotateSubmenu');
             if (submenu) {
-                submenu.style.display = 'block';
+                const isVisible = submenu.style.display === 'flex';
+                submenu.style.display = isVisible ? 'none' : 'flex';
+                console.log('Rotation submenu toggled:', !isVisible);
             }
         }
 
-        // Hide rotation submenu with timeout
-        function hideRotateSubmenu() {
-            rotateSubmenuTimeout = setTimeout(() => {
-                const submenu = document.getElementById('rotateSubmenu');
-                if (submenu) {
-                    submenu.style.display = 'none';
-                }
-            }, 100);
+        // Close rotation submenu
+        function closeRotateSubmenu() {
+            const submenu = document.getElementById('rotateSubmenu');
+            if (submenu) {
+                submenu.style.display = 'none';
+            }
         }
 
         // Main rotation function - ONLY updates the version preview, does NOT rotate main PDF
@@ -7012,10 +7017,20 @@
         document.addEventListener('click', function(e) {
             const actionsDropdown = document.querySelector('.pdf-actions-dropdown');
             const dropdown = document.getElementById('pdfActionsDropdownMenu');
+            const rotateSubmenu = document.getElementById('rotateSubmenu');
 
-            if (dropdown && actionsDropdown &&
-                !actionsDropdown.contains(e.target)) {
+            // Close actions dropdown
+            if (dropdown && actionsDropdown && !actionsDropdown.contains(e.target)) {
                 dropdown.classList.remove('show');
+                closeRotateSubmenu();
+            }
+
+            // Close rotation submenu if clicking outside
+            const rotateBtn = document.getElementById('rotateSheetBtn');
+            if (rotateSubmenu && rotateBtn &&
+                !rotateBtn.contains(e.target) &&
+                !rotateSubmenu.contains(e.target)) {
+                closeRotateSubmenu();
             }
         });
 
@@ -7468,12 +7483,12 @@
                             </button>
 
                             <div class="pdf-actions-item-with-submenu">
-                                <button class="pdf-actions-item" onmouseenter="showRotateSubmenu()" onmouseleave="hideRotateSubmenu()">
+                                <button class="pdf-actions-item" id="rotateSheetBtn" onclick="toggleRotateSubmenu(event)">
                                     Rotate sheet
                                     <i class="fas fa-chevron-right" style="margin-left: auto; font-size: 11px;"></i>
                                 </button>
                                 <!-- Rotation Submenu -->
-                                <div class="pdf-rotate-submenu" id="rotateSubmenu" onmouseenter="showRotateSubmenu()" onmouseleave="hideRotateSubmenu()">
+                                <div class="pdf-rotate-submenu" id="rotateSubmenu">
                                     <button class="pdf-rotate-option" onclick="rotatePDFSheet(-90)">
                                         -90°
                                     </button>
