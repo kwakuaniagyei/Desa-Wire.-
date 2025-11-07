@@ -6907,6 +6907,13 @@
                     togglePDFActionsDropdown();
                 }
 
+                // ✅ OPEN VERSION CONTROL MODAL WITH ROTATED PREVIEW
+                setTimeout(() => {
+                    if (typeof openVersionControlModal === 'function') {
+                        openVersionControlModal();
+                    }
+                }, 300);
+
             } catch (error) {
                 console.error('Error rotating PDF:', error);
                 showNotification('Error rotating PDF', 'error');
