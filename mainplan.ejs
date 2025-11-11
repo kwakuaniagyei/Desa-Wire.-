@@ -8371,7 +8371,7 @@
             }
         }
 
-        // Download QR Code as Image - OPTIMIZED VERSION FOR CLARITY
+        // Download QR Code as Image - FIXED TO CAPTURE QR CANVAS DIRECTLY
         function downloadQRCode() {
             const wrapper = document.getElementById('qrDownloadWrapper');
             if (!wrapper) {
@@ -8392,39 +8392,61 @@
             }
 
             console.log('✅ Starting download...');
+            console.log('QR Code element found:', qrCanvas ? 'canvas' : 'img');
 
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
             const plan = plans[planIndex];
             const projectName = '<%= projectName %>' || 'Project';
             const fileName = `${projectName}-${plan.name || 'QR'}.png`;
 
-            // Use html2canvas to capture the QR wrapper with optimized settings
+            // If QR code is rendered as canvas, use toDataURL directly for best quality
+            if (qrCanvas) {
+                console.log('✅ Capturing QR code from canvas element');
+                try {
+                    // Get canvas data directly
+                    const canvasDataUrl = qrCanvas.toDataURL('image/png');
+
+                    // Create link and download
+                    const link = document.createElement('a');
+                    link.href = canvasDataUrl;
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+
+                    console.log('✅ Download triggered - File: ' + fileName);
+                    showNotification('✅ QR code downloaded successfully!\n\nFile: ' + fileName, 'success');
+                } catch (error) {
+                    console.error('❌ Error capturing canvas:', error);
+                    // Fallback to html2canvas
+                    downloadQRCodeFallback(wrapper, fileName);
+                }
+            } else {
+                // If QR code is an image, use html2canvas
+                console.log('✅ Capturing QR code from image element - using html2canvas');
+                downloadQRCodeFallback(wrapper, fileName);
+            }
+        }
+
+        // Fallback function for html2canvas capture
+        function downloadQRCodeFallback(wrapper, fileName) {
             html2canvas(wrapper, {
-                backgroundColor: null, // Use null to respect DOM styling (white background with padding)
-                scale: 4, // Higher scale for maximum clarity and scanability
-                logging: false, // Disable logging for cleaner output
+                backgroundColor: '#ffffff', // Explicitly set white background
+                scale: 4, // Higher scale for maximum clarity
+                logging: false,
                 useCORS: true,
                 allowTaint: true,
-                imageTimeout: 5000, // Wait up to 5 seconds for images to load
-                canvasWidth: 1024, // Set explicit dimensions for consistency
-                canvasHeight: 1024,
-                windowWidth: wrapper.scrollWidth,
-                windowHeight: wrapper.scrollHeight,
+                imageTimeout: 5000,
                 onclone: function(clonedDoc) {
-                    // Ensure cloned document preserves styling
                     const clonedWrapper = clonedDoc.getElementById('qrDownloadWrapper');
                     if (clonedWrapper) {
-                        // Force white background in cloned document
                         clonedWrapper.style.backgroundColor = '#ffffff';
                         clonedWrapper.style.display = 'inline-block';
                     }
-                    console.log('✅ Document cloned with styling preserved');
                 }
             }).then(canvas => {
-                console.log('✅ Canvas created:', canvas.width, 'x', canvas.height);
-                console.log('✅ Canvas resolution: ' + (canvas.width * canvas.height) + ' pixels');
+                console.log('✅ Canvas created via html2canvas:', canvas.width, 'x', canvas.height);
 
-                // Convert canvas to blob with maximum quality
                 canvas.toBlob(blob => {
                     if (!blob) {
                         console.error('Failed to create blob');
@@ -8432,9 +8454,6 @@
                         return;
                     }
 
-                    console.log('✅ Blob created, size:', (blob.size / 1024).toFixed(2) + ' KB');
-
-                    // Create download link
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
                     link.href = url;
@@ -8446,9 +8465,9 @@
 
                     console.log('✅ Download triggered - File: ' + fileName);
                     showNotification('✅ QR code downloaded successfully!\n\nFile: ' + fileName, 'success');
-                }, 'image/png', 1.0); // Maximum quality PNG
+                }, 'image/png', 1.0);
             }).catch(error => {
-                console.error('❌ Error downloading QR code:', error);
+                console.error('❌ Error in fallback download:', error);
                 showNotification('Error downloading QR code: ' + error.message, 'error');
             });
         }
