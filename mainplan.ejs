@@ -2731,7 +2731,7 @@
             width: 100%;
         }
 
-        /* Rotation submenu styling */
+        /* Rotation submenu styling - appears on hover */
         .pdf-rotate-submenu {
             position: absolute;
             left: 100%;
@@ -2739,9 +2739,9 @@
             background: white;
             border: 1px solid #d1d5db;
             border-radius: 4px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
             display: none;
-            z-index: 10007;
+            z-index: 10006;
             padding: 8px;
             margin-left: 4px;
             flex-direction: row;
@@ -2749,8 +2749,9 @@
             min-width: auto;
         }
 
-        /* Show submenu when parent is hovered OR when submenu itself is hovered */
-        .pdf-actions-item-with-submenu:hover .pdf-rotate-submenu {
+        /* Show submenu on hover */
+        .pdf-actions-item-with-submenu:hover .pdf-rotate-submenu,
+        .pdf-rotate-submenu:hover {
             display: flex;
         }
 
@@ -2775,12 +2776,6 @@
 
         .pdf-rotate-option:hover {
             background-color: #f3f4f6;
-            border-color: #2563eb;
-            color: #2563eb;
-        }
-
-        .pdf-rotate-option:active {
-            background-color: #e5e7eb;
         }
 
         /* Rotation animation for canvas */
@@ -3266,13 +3261,22 @@
             padding: 40px 24px 150px 24px;
             position: relative;
             display: flex;
-            align-items: flex-start;
+            align-items: center; /* ✅ CHANGED: center instead of flex-start */
             justify-content: center;
             border-top: 1px solid #d1d5db;
             border-left: 1px solid #d1d5db;
             border-right: 1px solid #d1d5db;
             border-bottom: none;
             perspective: 1000px;
+            cursor: default;
+            user-select: none;
+            /* ✅ ADDED: Ensure scrollbars are always visible when content overflows */
+            overflow-x: auto !important;
+            overflow-y: auto !important;
+        }
+
+        .pdf-document-area.grabbing {
+            cursor: grabbing !important;
         }
 
         .pdf-document-area::-webkit-scrollbar {
@@ -3281,21 +3285,23 @@
 
         /* Enhanced PDF document content container */
         #pdfDocumentContent {
-            width: 100%;
+            width: auto; /* ✅ CHANGED: auto instead of 100% */
             max-width: none;
-            margin: 0 auto 150px auto;
+            margin: 0 auto;
             display: flex;
             flex-direction: column;
-            gap: 0px;
+            gap: 20px;
             background: transparent;
-            padding: 0;
+            padding: 0; /* ✅ Padding will be added dynamically when zoomed */
             box-shadow: none !important;
             outline: none !important;
             border: none !important;
             filter: none !important;
             min-height: auto;
             align-items: center;
-            justify-content: flex-start;
+            justify-content: center;
+            /* ✅ ADDED: Allow content to expand beyond viewport */
+            min-width: min-content;
         }
 
         /* PDF document content rotation support */
@@ -3499,8 +3505,8 @@
         }
 
         .pdf-tasks-title {
-            font-size: 16px;
-            font-weight: 600;
+            font-size: 17px;
+            font-weight: 500;
             color: #1f2937;
         }
 
@@ -3549,16 +3555,89 @@
             background: #eff6ff;
         }
 
+        /* New Tasks Button - Magnifying Glass Icon */
+        /* REMOVED - Old circular button style */
+        /* .pdf-tasks-new-btn {
+            background: linear-gradient(135deg, #3b82f6 0%, #60a5fa 100%);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 80px;
+            height: 80px;
+            font-size: 32px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            box-shadow: 0 8px 20px rgba(59, 130, 246, 0.35);
+        }
+
+        .pdf-tasks-new-btn:hover {
+            background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+            box-shadow: 0 12px 28px rgba(59, 130, 246, 0.45);
+            transform: scale(1.08);
+        }
+
+        .pdf-tasks-new-btn:active {
+            transform: scale(0.95);
+        }
+
+        .pdf-tasks-new-btn i {
+            font-size: 36px;
+        }
+
+        .pdf-tasks-new-btn span {
+            display: none;
+        } */
+
+        /* Professional New Task Button - Immediately Under Header */
+        .pdf-tasks-new-text-btn {
+            background: white;
+            border: none;
+            border-bottom: 1px solid #f3f4f6;
+            color: #1f2937;
+            font-size: 17px;
+            cursor: pointer;
+            padding: 14px 24px;
+            width: 100%;
+            text-align: left;
+            transition: all 0.2s;
+            font-weight: 500;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            flex-shrink: 0;
+        }
+
+        .pdf-tasks-new-text-btn i {
+            font-size: 12px;
+            color: #9ca3af;
+            transition: color 0.2s;
+        }
+
+        .pdf-tasks-new-text-btn:hover {
+            background: #fafbfc;
+            color: #3b82f6;
+        }
+
+        .pdf-tasks-new-text-btn:hover i {
+            color: #3b82f6;
+        }
+
+        .pdf-tasks-new-text-btn:active {
+            background: #f3f4f6;
+        }
+
         .pdf-tasks-content {
             flex: 1;
             overflow-y: auto;
-            padding: 28px 24px;
+            padding: 0;
             display: flex;
             flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            color: #9ca3af;
-            font-size: 14px;
+            background: white;
         }
 
         .pdf-tasks-content::-webkit-scrollbar {
@@ -3800,6 +3879,970 @@
             cursor: not-allowed;
         }
 
+        /* Recent Activity Modal Styles */
+        /* ===== ENTERPRISE PROFESSIONAL RECENT ACTIVITY MODAL ===== */
+
+        .recent-activity-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.65);
+            backdrop-filter: blur(8px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .recent-activity-modal.show {
+            display: flex;
+        }
+
+        .recent-activity-content {
+            background: white;
+            border-radius: 16px;
+            width: 95%;
+            max-width: 1100px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            animation: modalSlideUp 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+            overflow: hidden;
+        }
+
+        /* Professional Gradient Header */
+        .recent-activity-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 50%, #f093fb 100%);
+            padding: 32px 40px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .recent-activity-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            z-index: 1;
+        }
+
+        .header-icon-wrapper {
+            width: 56px;
+            height: 56px;
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+
+        .header-icon-wrapper i {
+            font-size: 28px;
+            color: white;
+        }
+
+        .header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .recent-activity-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: white;
+            margin: 0;
+            letter-spacing: -0.5px;
+        }
+
+        .header-subtitle {
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .recent-activity-close {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            font-size: 20px;
+            color: white;
+            cursor: pointer;
+            padding: 12px;
+            width: 44px;
+            height: 44px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .recent-activity-close:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+
+        /* Advanced Filter Section */
+        .recent-activity-filters {
+            padding: 24px 40px;
+            background: #f8f9fa;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .filter-section {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .filter-label {
+            font-size: 12px;
+            font-weight: 700;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .filter-buttons {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .activity-filter-btn {
+            padding: 10px 20px;
+            border: 2px solid #e5e7eb;
+            background: white;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .activity-filter-btn i {
+            font-size: 14px;
+            color: #9ca3af;
+            transition: color 0.3s;
+        }
+
+        .activity-filter-btn:hover {
+            border-color: #667eea;
+            background: #f5f3ff;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
+        }
+
+        .activity-filter-btn:hover i {
+            color: #667eea;
+        }
+
+        .activity-filter-btn.active {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-color: transparent;
+            box-shadow: 0 8px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .activity-filter-btn.active i {
+            color: white;
+        }
+
+        .filter-count {
+            background: rgba(0, 0, 0, 0.1);
+            color: white;
+            padding: 2px 8px;
+            border-radius: 12px;
+            font-size: 11px;
+            font-weight: 700;
+            min-width: 24px;
+            text-align: center;
+        }
+
+        .activity-filter-btn:not(.active) .filter-count {
+            background: #e5e7eb;
+            color: #6b7280;
+        }
+
+        /* Search and Sort Controls */
+        .filter-controls {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .search-wrapper {
+            flex: 1;
+            position: relative;
+            display: flex;
+            align-items: center;
+        }
+
+        .search-wrapper i {
+            position: absolute;
+            left: 16px;
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .activity-search {
+            width: 100%;
+            padding: 12px 16px 12px 44px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            transition: all 0.3s;
+            background: white;
+        }
+
+        .activity-search:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        .sort-dropdown {
+            padding: 12px 16px;
+            border: 2px solid #e5e7eb;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #374151;
+            background: white;
+            cursor: pointer;
+            transition: all 0.3s;
+            min-width: 180px;
+        }
+
+        .sort-dropdown:focus {
+            outline: none;
+            border-color: #667eea;
+            box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+        }
+
+        /* Activity Timeline Body */
+        .recent-activity-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px 40px;
+            background: #fafbfc;
+        }
+
+        .recent-activity-body::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .recent-activity-body::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+
+        .recent-activity-body::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 4px;
+        }
+
+        .recent-activity-body::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Professional Activity Items */
+        .activity-date-group {
+            margin-bottom: 40px;
+        }
+
+        .activity-date-header {
+            font-size: 13px;
+            font-weight: 800;
+            color: #667eea;
+            text-transform: uppercase;
+            letter-spacing: 1.2px;
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .activity-date-header::after {
+            content: '';
+            flex: 1;
+            height: 2px;
+            background: linear-gradient(90deg, rgba(102, 126, 234, 0.3) 0%, transparent 100%);
+        }
+
+        .activity-item {
+            position: relative;
+            padding: 24px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 12px;
+            margin-bottom: 16px;
+            transition: all 0.3s ease;
+            display: flex;
+            gap: 24px;
+            align-items: flex-start;
+            box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+        }
+
+        .activity-item:hover {
+            border-color: #667eea;
+            box-shadow: 0 12px 24px rgba(102, 126, 234, 0.15);
+            transform: translateY(-4px);
+        }
+
+        .activity-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: linear-gradient(180deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px 0 0 12px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .activity-item:hover::before {
+            opacity: 1;
+        }
+
+        .activity-user-avatar {
+            width: 52px;
+            height: 52px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: 700;
+            font-size: 20px;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            position: relative;
+            border: 3px solid white;
+        }
+
+        .activity-user-avatar::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            right: -2px;
+            width: 16px;
+            height: 16px;
+            background: #10b981;
+            border: 3px solid white;
+            border-radius: 50%;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .activity-details {
+            flex: 1;
+            min-width: 0;
+        }
+
+        .activity-user-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+            margin-bottom: 6px;
+        }
+
+        .activity-action {
+            font-size: 15px;
+            color: #6b7280;
+            margin-bottom: 12px;
+            line-height: 1.6;
+        }
+
+        .activity-action strong {
+            color: #374151;
+            font-weight: 700;
+        }
+
+        .activity-meta {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-wrap: wrap;
+            margin-top: 14px;
+        }
+
+        .activity-meta-item {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-size: 13px;
+            color: #9ca3af;
+            font-weight: 500;
+        }
+
+        .activity-meta-item i {
+            font-size: 12px;
+            color: #cbd5e1;
+        }
+
+        .activity-folder-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 14px;
+            background: linear-gradient(135deg, #fef3c7 0%, #fde68a 100%);
+            border: 1px solid #fbbf24;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            color: #92400e;
+            box-shadow: 0 2px 4px rgba(251, 191, 36, 0.2);
+        }
+
+        .activity-folder-badge i {
+            font-size: 11px;
+        }
+
+        .activity-thumbnail {
+            width: 88px;
+            height: 120px;
+            border-radius: 10px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border: 2px solid #e5e7eb;
+            overflow: hidden;
+            flex-shrink: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+            position: relative;
+            transition: all 0.3s;
+        }
+
+        .activity-item:hover .activity-thumbnail {
+            transform: scale(1.05);
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.12);
+        }
+
+        .activity-thumbnail canvas {
+            width: 100%;
+            height: 100%;
+            display: block;
+            background: white;
+            border-radius: 8px;
+        }
+
+        .activity-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: block;
+        }
+
+        .activity-thumbnail i {
+            font-size: 36px;
+            color: #d1d5db;
+        }
+
+        .activity-time-badge {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(8px);
+            padding: 6px 12px;
+            border-radius: 16px;
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+        }
+
+        /* Statistics Footer */
+        .activity-footer {
+            padding: 20px 40px;
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-top: 1px solid #e5e7eb;
+        }
+
+        .footer-stats {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 40px;
+        }
+
+        .stat-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .stat-item i {
+            font-size: 24px;
+            color: #667eea;
+        }
+
+        .stat-item span:nth-child(2) {
+            font-size: 28px;
+            font-weight: 800;
+            color: #1f2937;
+            line-height: 1;
+        }
+
+        .stat-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: #6b7280;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-divider {
+            width: 1px;
+            height: 40px;
+            background: #d1d5db;
+        }
+
+        /* Empty State */
+        .activity-empty-state {
+            text-align: center;
+            padding: 80px 20px;
+        }
+
+        .activity-empty-icon {
+            width: 140px;
+            height: 140px;
+            margin: 0 auto 32px;
+            background: linear-gradient(135deg, #f3f4f6 0%, #e5e7eb 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 56px;
+            color: #9ca3af;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.08);
+        }
+
+        .activity-empty-title {
+            font-size: 22px;
+            font-weight: 700;
+            color: #374151;
+            margin-bottom: 12px;
+        }
+
+        .activity-empty-description {
+            font-size: 15px;
+            color: #9ca3af;
+        }
+
+        /* Animations */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* ===== TASK CREATION MODAL ===== */
+        .task-creation-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10005;
+        }
+
+        .task-creation-modal.show {
+            display: flex;
+        }
+
+        .task-creation-content {
+            background: white;
+            width: 95%;
+            max-width: 1100px;
+            max-height: 90vh;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        /* Header */
+        .task-creation-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .task-header-left {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .task-icon-square {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, #ff6b35 0%, #f7931e 100%);
+            border-radius: 4px;
+            flex-shrink: 0;
+        }
+
+        .task-header-text {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .task-number {
+            font-size: 12px;
+            color: #6b7280;
+            font-weight: 500;
+        }
+
+        .task-title-edit {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-title-input {
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            color: #1f2937;
+            padding: 4px 0;
+            outline: none;
+            min-width: 200px;
+        }
+
+        .task-title-input:focus {
+            border-bottom: 2px solid #3b82f6;
+        }
+
+        .task-title-icon {
+            color: #3b82f6;
+            font-size: 14px;
+            cursor: pointer;
+        }
+
+        .task-close-btn {
+            background: none;
+            border: none;
+            font-size: 20px;
+            color: #9ca3af;
+            cursor: pointer;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .task-close-btn:hover {
+            background: #f3f4f6;
+            color: #374151;
+        }
+
+        /* Body */
+        .task-creation-body {
+            flex: 1;
+            display: flex;
+            overflow: hidden;
+        }
+
+        .task-left-section {
+            flex: 1;
+            padding: 24px;
+            border-right: 1px solid #e5e7eb;
+            overflow-y: auto;
+        }
+
+        .task-right-section {
+            width: 380px;
+            padding: 24px;
+            background: #fafbfc;
+            overflow-y: auto;
+        }
+
+        .task-section {
+            margin-bottom: 24px;
+        }
+
+        .task-section-label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #374151;
+            margin-bottom: 8px;
+        }
+
+        .task-links {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .task-link-btn {
+            background: none;
+            border: none;
+            color: #3b82f6;
+            font-size: 13px;
+            cursor: pointer;
+            padding: 4px 0;
+            transition: color 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        .task-link-btn:hover {
+            color: #2563eb;
+        }
+
+        .task-separator {
+            color: #d1d5db;
+            font-size: 13px;
+        }
+
+        .dropdown-trigger {
+            display: flex;
+            align-items: center;
+            gap: 4px;
+        }
+
+        /* Task Attributes */
+        .task-attributes-header {
+            font-size: 15px;
+            font-weight: 600;
+            color: #1f2937;
+            margin-bottom: 20px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #e5e7eb;
+        }
+
+        .task-attribute-row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 10px 0;
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .task-attribute-label {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: #6b7280;
+            min-width: 120px;
+        }
+
+        .task-attribute-label i {
+            font-size: 12px;
+            color: #9ca3af;
+        }
+
+        .task-attribute-value {
+            flex: 1;
+            text-align: right;
+        }
+
+        .task-select,
+        .task-input {
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 6px 10px;
+            font-size: 13px;
+            color: #374151;
+            background: white;
+            width: 100%;
+            max-width: 200px;
+        }
+
+        .task-select:focus,
+        .task-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+        }
+
+        /* Plan Attachment */
+        .task-plan-attachment {
+            margin: 24px 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .task-attachment-preview {
+            position: relative;
+            width: 100%;
+            max-width: 260px;
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 12px;
+            margin-bottom: 8px;
+        }
+
+        .task-attachment-preview canvas {
+            width: 100%;
+            height: auto;
+            display: block;
+            border-radius: 4px;
+        }
+
+        .task-attachment-edit {
+            position: absolute;
+            top: 16px;
+            right: 16px;
+            width: 32px;
+            height: 32px;
+            background: white;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            transition: all 0.2s;
+        }
+
+        .task-attachment-edit:hover {
+            background: #f3f4f6;
+        }
+
+        .task-attachment-edit i {
+            font-size: 12px;
+            color: #6b7280;
+        }
+
+        .task-attachment-name {
+            font-size: 13px;
+            color: #374151;
+            font-weight: 500;
+        }
+
+        /* Footer */
+        .task-creation-footer {
+            padding: 16px 20px;
+            border-top: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+        }
+
+        .task-footer-left {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .task-attach-btn {
+            background: none;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: #6b7280;
+            transition: all 0.2s;
+        }
+
+        .task-attach-btn:hover {
+            background: #f3f4f6;
+            border-color: #9ca3af;
+        }
+
+        .task-message-input {
+            flex: 1;
+            border: 1px solid #d1d5db;
+            border-radius: 4px;
+            padding: 8px 12px;
+            font-size: 14px;
+            outline: none;
+        }
+
+        .task-message-input:focus {
+            border-color: #3b82f6;
+        }
+
+        .task-share-btn {
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 8px 20px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.2s;
+        }
+
+        .task-share-btn:hover {
+            background: #2563eb;
+        }
+
     </style>
 </head>
 <body>
@@ -3998,6 +5041,10 @@
                     <button class="btn-secondary">
                         <span>Actions</span>
                         <i class="fas fa-chevron-down"></i>
+                    </button>
+                    <button class="btn-secondary" onclick="openRecentActivityModal()">
+                        <i class="fas fa-clock"></i>
+                        <span>Recent Activity</span>
                     </button>
                 </div>
                 <div class="action-bar-right">
@@ -5320,6 +6367,9 @@
                     planRotations[plan.id] = 0;
                 }
 
+                // Reset zoom to 100% for new plan
+                resetPDFZoom(plan.id);
+
                 // Create PDF data object with plan information
                 const pdfData = {
                     plan: plan,
@@ -5330,6 +6380,7 @@
                 console.log('Viewing plan at index:', index, 'of', plans.length);
                 console.log('✅ currentPDFPlan set to:', currentPDFPlan);
                 console.log('📐 Loaded rotation:', planRotations[plan.id]);
+                console.log('🔍 Zoom reset to 100%');
             }
         }
 
@@ -6165,6 +7216,29 @@
                 });
             }
 
+            // Setup zoom button handlers
+            const zoomInBtn = document.getElementById('pdfZoomInBtn');
+            if (zoomInBtn) {
+                zoomInBtn.removeEventListener('click', window.zoomInBtnHandler);
+                window.zoomInBtnHandler = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    zoomInPDF();
+                };
+                zoomInBtn.addEventListener('click', window.zoomInBtnHandler);
+            }
+
+            const zoomOutBtn = document.getElementById('pdfZoomOutBtn');
+            if (zoomOutBtn) {
+                zoomOutBtn.removeEventListener('click', window.zoomOutBtnHandler);
+                window.zoomOutBtnHandler = function(e) {
+                    e.preventDefault();
+                    e.stopPropagation();
+                    zoomOutPDF();
+                };
+                zoomOutBtn.addEventListener('click', window.zoomOutBtnHandler);
+            }
+
             // Setup tool buttons with event delegation to avoid duplicate listeners
             const toolButtonsContainer = document.querySelector('.pdf-left-sidebar');
             if (toolButtonsContainer) {
@@ -6833,34 +7907,35 @@
         }
 
         // ===== PDF ROTATION SUBMENU FUNCTIONS =====
-        // Toggle rotation submenu
-        function toggleRotateSubmenu(event) {
-            if (event) {
-                event.preventDefault();
-                event.stopPropagation();
-            }
+        let rotateSubmenuTimeout = null;
 
+        // Show rotation submenu with timeout to prevent flickering
+        function showRotateSubmenu() {
+            if (rotateSubmenuTimeout) {
+                clearTimeout(rotateSubmenuTimeout);
+            }
             const submenu = document.getElementById('rotateSubmenu');
             if (submenu) {
-                const isVisible = submenu.style.display === 'flex';
-                submenu.style.display = isVisible ? 'none' : 'flex';
-                console.log('Rotation submenu toggled:', !isVisible);
+                submenu.style.display = 'block';
             }
         }
 
-        // Close rotation submenu
-        function closeRotateSubmenu() {
-            const submenu = document.getElementById('rotateSubmenu');
-            if (submenu) {
-                submenu.style.display = 'none';
-            }
+        // Hide rotation submenu with timeout
+        function hideRotateSubmenu() {
+            rotateSubmenuTimeout = setTimeout(() => {
+                const submenu = document.getElementById('rotateSubmenu');
+                if (submenu) {
+                    submenu.style.display = 'none';
+                }
+            }, 100);
         }
 
-        // Main rotation function - ONLY updates the version preview, does NOT rotate main PDF
+        // Main rotation function - applies rotation to PDF and saves to database
         async function rotatePDFSheet(degrees) {
             console.log('🔄 Rotation initiated with degrees:', degrees);
 
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+            console.log('Plan index:', planIndex, 'currentPlanIndex:', currentPlanIndex, 'currentPDFPlan:', currentPDFPlan);
 
             if (planIndex === -1 || !plans || !plans[planIndex]) {
                 console.warn('No plan found');
@@ -6876,7 +7951,7 @@
             }
 
             try {
-                console.log('Rotating version preview for plan:', plan.id);
+                console.log('Rotating plan:', plan.id);
 
                 // Initialize rotation for this plan if not exists
                 if (!planRotations[plan.id]) {
@@ -6893,18 +7968,18 @@
 
                 console.log('New rotation angle:', planRotations[plan.id]);
 
-                // ✅ Store rotation in plan object
-                plan.rotation = planRotations[plan.id];
+                // Apply rotation to current PDF viewer
+                await renderRotatedPDF(plan, planRotations[plan.id]);
 
-                // ✅ Update only the version preview thumbnails in the modal
-                updateVersionThumbnailsRotation(planRotations[plan.id]);
+                // Update thumbnail in grid
+                updatePlanThumbnail(planIndex, planRotations[plan.id]);
 
-                // ✅ Save rotation to database
+                // Save rotation to database
                 await saveRotationToDatabase(plan.id, planRotations[plan.id]);
 
                 // Show feedback
                 const rotationDisplay = planRotations[plan.id] === 0 ? 'reset' : `${planRotations[plan.id]}°`;
-                showNotification(`📐 Version preview rotated to ${rotationDisplay}`, 'success');
+                showNotification(`📐 PDF rotated to ${rotationDisplay}`, 'success');
 
                 // Close actions dropdown
                 if (typeof togglePDFActionsDropdown === 'function') {
@@ -6912,21 +7987,9 @@
                 }
 
             } catch (error) {
-                console.error('Error rotating version preview:', error);
-                showNotification('Error rotating preview', 'error');
+                console.error('Error rotating PDF:', error);
+                showNotification('Error rotating PDF', 'error');
             }
-        }
-
-        // Update version thumbnail rotation in the modal (without reloading)
-        function updateVersionThumbnailsRotation(rotationDegrees) {
-            const versionThumbnails = document.querySelectorAll('.version-thumbnail img');
-
-            versionThumbnails.forEach(img => {
-                img.style.transform = `rotate(${rotationDegrees}deg)`;
-                img.style.transition = 'transform 0.4s ease-out';
-            });
-
-            console.log('✅ Updated all version thumbnails to', rotationDegrees, 'degrees');
         }
 
         // Render PDF with rotation applied
@@ -7017,20 +8080,10 @@
         document.addEventListener('click', function(e) {
             const actionsDropdown = document.querySelector('.pdf-actions-dropdown');
             const dropdown = document.getElementById('pdfActionsDropdownMenu');
-            const rotateSubmenu = document.getElementById('rotateSubmenu');
 
-            // Close actions dropdown
-            if (dropdown && actionsDropdown && !actionsDropdown.contains(e.target)) {
+            if (dropdown && actionsDropdown &&
+                !actionsDropdown.contains(e.target)) {
                 dropdown.classList.remove('show');
-                closeRotateSubmenu();
-            }
-
-            // Close rotation submenu if clicking outside
-            const rotateBtn = document.getElementById('rotateSheetBtn');
-            if (rotateSubmenu && rotateBtn &&
-                !rotateBtn.contains(e.target) &&
-                !rotateSubmenu.contains(e.target)) {
-                closeRotateSubmenu();
             }
         });
 
@@ -7155,7 +8208,7 @@
         // Track editing state
         let editingVersionId = null;
 
-        // Open version control modal - loads WITHOUT rotation applied first
+        // Open version control modal
         function openVersionControlModal() {
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
 
@@ -7164,14 +8217,10 @@
                 return;
             }
 
-            const plan = plans[planIndex];
-
             const modal = document.getElementById('versionControlModal');
             if (modal) {
                 modal.classList.add('show');
-
-                // Load version history with current rotation applied to previews
-                loadVersionHistory(plan.id);
+                loadVersionHistory(plans[planIndex].id);
             }
 
             // Close actions dropdown
@@ -7192,22 +8241,11 @@
         // Load version history from database
         async function loadVersionHistory(planId) {
             try {
-                // Get the current plan to access its rotation
-                const currentPlan = plans.find(p => p.id === planId);
-                const currentRotation = currentPlan?.rotation || planRotations[planId] || 0;
-
                 const response = await fetch(`/api/plans/${planId}/versions`);
                 const result = await response.json();
 
                 if (result.success && result.versions) {
-                    // Apply current rotation to all version previews
-                    const versionsWithRotation = result.versions.map(version => {
-                        return {
-                            ...version,
-                            rotation: currentRotation // Use current plan's rotation
-                        };
-                    });
-                    renderVersionList(versionsWithRotation);
+                    renderVersionList(result.versions);
                 } else {
                     renderVersionList([]);
                 }
@@ -7217,7 +8255,7 @@
             }
         }
 
-        // Render version list with editable fields and rotation applied to thumbnails
+        // Render version list with editable fields
         function renderVersionList(versions) {
             const versionList = document.getElementById('versionList');
 
@@ -7236,17 +8274,10 @@
                 const formattedDate = uploadDate.toLocaleDateString('en-US', { month: '2-digit', day: '2-digit', year: '2-digit' });
                 const formattedTime = uploadDate.toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', hour12: true });
 
-                // Apply rotation to thumbnail (this will be updated dynamically when rotation changes)
-                const rotation = version.rotation || 0;
-                const rotationStyle = `transform: rotate(${rotation}deg); transition: transform 0.4s ease-out;`;
-
                 return `
                     <div class="version-item" id="version-item-${version.id}">
                         <div class="version-thumbnail">
-                            <img src="${version.preview || '/img/pdf-placeholder.png'}"
-                                 alt="Version thumbnail"
-                                 style="${rotationStyle}"
-                                 data-rotation="${rotation}">
+                            <img src="${version.preview || '/img/pdf-placeholder.png'}" alt="Version thumbnail">
                         </div>
                         <div class="version-info">
                             <div class="version-name">${version.name || 'desa wire.pdf'}</div>
@@ -7458,6 +8489,387 @@
                 closeVersionControlModal();
             }
         });
+
+        // ===== RECENT ACTIVITY MODAL FUNCTIONS =====
+        let currentActivityFilter = 'all';
+
+        // Generate PDF thumbnail from base64 data
+        async function generatePDFThumbnail(base64Data, containerId) {
+            try {
+                // Extract base64 part from data URL
+                const base64String = base64Data.split(',')[1];
+                const binaryString = atob(base64String);
+                const bytes = new Uint8Array(binaryString.length);
+                for (let i = 0; i < binaryString.length; i++) {
+                    bytes[i] = binaryString.charCodeAt(i);
+                }
+
+                // Load PDF
+                const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+                const page = await pdf.getPage(1);
+
+                // Render to canvas with appropriate scale
+                const canvas = document.getElementById(containerId);
+                if (!canvas) return;
+
+                const context = canvas.getContext('2d');
+                const viewport = page.getViewport({ scale: 0.5 });
+
+                canvas.width = viewport.width;
+                canvas.height = viewport.height;
+
+                await page.render({ canvasContext: context, viewport: viewport }).promise;
+            } catch (error) {
+                console.error('Error generating PDF thumbnail:', error);
+                // Show PDF icon as fallback
+                const container = document.getElementById(containerId);
+                if (container) {
+                    container.parentElement.innerHTML = '<i class="fas fa-file-pdf"></i>';
+                }
+            }
+        }
+
+        // Open recent activity modal
+        function openRecentActivityModal() {
+            const modal = document.getElementById('recentActivityModal');
+            if (modal) {
+                modal.classList.add('show');
+                loadRecentActivity();
+            }
+        }
+
+        // Close recent activity modal
+        function closeRecentActivityModal() {
+            const modal = document.getElementById('recentActivityModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Filter activity
+        function filterActivity(filter) {
+            currentActivityFilter = filter;
+
+            // Update active button
+            const filterButtons = document.querySelectorAll('.activity-filter-btn');
+            filterButtons.forEach(btn => btn.classList.remove('active'));
+            event.target.closest('.activity-filter-btn').classList.add('active');
+
+            // Reload activity
+            loadRecentActivity();
+        }
+
+        // Load recent activity from plans data
+        // Enhanced load recent activity with statistics
+        async function loadRecentActivity() {
+            const activityBody = document.getElementById('recentActivityBody');
+            if (!activityBody) return;
+
+            activityBody.innerHTML = `
+                <div style="text-align: center; padding: 40px;">
+                    <i class="fas fa-spinner fa-spin" style="font-size: 48px; color: #667eea;"></i>
+                    <p style="margin-top: 16px; color: #6b7280;">Loading activity...</p>
+                </div>
+            `;
+
+            try {
+                const projectId = getCurrentProjectId();
+                if (!projectId) {
+                    showEmptyActivityState('No project selected');
+                    return;
+                }
+
+                const response = await fetch(`/api/plans?projectId=${projectId}`);
+                const result = await response.json();
+
+                if (result.success && result.plans && result.plans.length > 0) {
+                    const activities = result.plans.map(plan => ({
+                        id: plan.id,
+                        username: plan.uploadedBy || 'Unknown User',
+                        action: 'uploaded',
+                        fileName: plan.name || plan.sheetNumber || 'Untitled',
+                        folderName: plan.folder || 'All Plans',
+                        timestamp: plan.createdAt,
+                        preview: plan.preview
+                    }));
+
+                    updateFilterCounts(activities);
+                    updateStatistics(activities);
+                    const filteredActivities = filterActivitiesByTime(activities);
+                    renderActivities(filteredActivities);
+                } else {
+                    showEmptyActivityState('No uploads yet');
+                    updateFilterCounts([]);
+                    updateStatistics([]);
+                }
+            } catch (error) {
+                console.error('Error loading activity:', error);
+                showEmptyActivityState('Error loading activity');
+            }
+        }
+
+        // Update filter counts
+        function updateFilterCounts(activities) {
+            const now = new Date();
+
+            document.getElementById('filterCountAll').textContent = activities.length;
+
+            const todayCount = activities.filter(a => {
+                const diff = (now - new Date(a.timestamp)) / (1000 * 60 * 60 * 24);
+                return diff < 1;
+            }).length;
+            document.getElementById('filterCountToday').textContent = todayCount;
+
+            const weekCount = activities.filter(a => {
+                const diff = (now - new Date(a.timestamp)) / (1000 * 60 * 60 * 24);
+                return diff < 7;
+            }).length;
+            document.getElementById('filterCountWeek').textContent = weekCount;
+
+            const monthCount = activities.filter(a => {
+                const diff = (now - new Date(a.timestamp)) / (1000 * 60 * 60 * 24);
+                return diff < 30;
+            }).length;
+            document.getElementById('filterCountMonth').textContent = monthCount;
+        }
+
+        // Update statistics
+        function updateStatistics(activities) {
+            document.getElementById('totalUploads').textContent = activities.length;
+
+            const uniqueUsers = [...new Set(activities.map(a => a.username))].length;
+            document.getElementById('activeUsers').textContent = uniqueUsers;
+
+            const uniqueFolders = [...new Set(activities.map(a => a.folderName))].length;
+            document.getElementById('foldersUsed').textContent = uniqueFolders;
+        }
+
+        // Filter activities by time period
+        function filterActivitiesByTime(activities) {
+            const now = new Date();
+
+            if (currentActivityFilter === 'all') {
+                return activities;
+            }
+
+            return activities.filter(activity => {
+                const activityDate = new Date(activity.timestamp);
+                const diffInMs = now - activityDate;
+                const diffInDays = diffInMs / (1000 * 60 * 60 * 24);
+
+                if (currentActivityFilter === 'today') {
+                    return diffInDays < 1;
+                } else if (currentActivityFilter === 'week') {
+                    return diffInDays < 7;
+                } else if (currentActivityFilter === 'month') {
+                    return diffInDays < 30;
+                }
+
+                return true;
+            });
+        }
+
+        // Render activities grouped by date
+        function renderActivities(activities) {
+            const activityBody = document.getElementById('recentActivityBody');
+
+            if (activities.length === 0) {
+                showEmptyActivityState('No activity found for this period');
+                return;
+            }
+
+            // Group activities by date
+            const groupedActivities = groupActivitiesByDate(activities);
+
+            let html = '';
+
+            for (const [dateLabel, items] of Object.entries(groupedActivities)) {
+                html += `
+                    <div class="activity-date-group">
+                        <div class="activity-date-header">${dateLabel}</div>
+                `;
+
+                items.forEach(activity => {
+                    const userInitial = activity.username.charAt(0).toUpperCase();
+                    const timeStr = formatTime(activity.timestamp);
+                    const dateStr = formatDate(activity.timestamp);
+                    const relativeTime = getRelativeTime(activity.timestamp);
+
+                    html += `
+                        <div class="activity-item">
+                            <div class="activity-user-avatar">${userInitial}</div>
+
+                            <div class="activity-details">
+                                <div class="activity-user-name">${activity.username}</div>
+                                <div class="activity-action">
+                                    ${activity.action} <strong>${activity.fileName}</strong>
+                                </div>
+
+                                <div class="activity-meta">
+                                    <div class="activity-meta-item">
+                                        <i class="fas fa-clock"></i>
+                                        ${timeStr} • ${dateStr}
+                                    </div>
+                                    <div class="activity-folder-badge">
+                                        <i class="fas fa-folder"></i>
+                                        ${activity.folderName}
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="activity-thumbnail">
+                                ${activity.preview && activity.preview.startsWith('data:application/pdf') ?
+                                    `<canvas id="pdf-thumb-${activity.id}" style="width: 100%; height: 100%; display: block;"></canvas>` :
+                                    activity.preview ?
+                                    `<img src="${activity.preview}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">` :
+                                    `<i class="fas fa-file-pdf"></i>`
+                                }
+                            </div>
+
+                            <div class="activity-time-badge">${relativeTime}</div>
+                        </div>
+                    `;
+                });
+
+                html += `</div>`;
+            }
+
+            activityBody.innerHTML = html;
+
+            // Generate PDF thumbnails after rendering
+            activities.forEach(activity => {
+                if (activity.preview && activity.preview.startsWith('data:application/pdf')) {
+                    setTimeout(() => {
+                        generatePDFThumbnail(activity.preview, `pdf-thumb-${activity.id}`);
+                    }, 100);
+                }
+            });
+        }
+
+        // Group activities by date
+        function groupActivitiesByDate(activities) {
+            const groups = {};
+
+            // Get today's date normalized to midnight (local timezone)
+            const today = new Date();
+            today.setHours(0, 0, 0, 0);
+
+            // Get yesterday's date normalized to midnight (local timezone)
+            const yesterday = new Date(today);
+            yesterday.setDate(yesterday.getDate() - 1);
+
+            activities.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+
+            activities.forEach(activity => {
+                const activityDate = new Date(activity.timestamp);
+                // Normalize activity date to midnight for accurate day comparison
+                const normalizedActivityDate = new Date(activityDate);
+                normalizedActivityDate.setHours(0, 0, 0, 0);
+
+                // Calculate days difference using normalized dates
+                const diffInDays = Math.floor((today - normalizedActivityDate) / (1000 * 60 * 60 * 24));
+
+                let label;
+                if (diffInDays === 0) {
+                    label = 'Today';
+                } else if (diffInDays === 1) {
+                    label = 'Yesterday';
+                } else if (diffInDays < 7) {
+                    label = `${diffInDays} days ago`;
+                } else {
+                    label = activityDate.toLocaleDateString('en-US', {
+                        month: 'long',
+                        day: 'numeric',
+                        year: 'numeric'
+                    });
+                }
+
+                if (!groups[label]) {
+                    groups[label] = [];
+                }
+                groups[label].push(activity);
+            });
+
+            return groups;
+        }
+
+        // Show empty state
+        function showEmptyActivityState(message) {
+            const activityBody = document.getElementById('recentActivityBody');
+            activityBody.innerHTML = `
+                <div class="activity-empty-state">
+                    <div class="activity-empty-icon">
+                        <i class="fas fa-inbox"></i>
+                    </div>
+                    <div class="activity-empty-title">${message}</div>
+                    <div class="activity-empty-description">
+                        Upload activity will appear here once files are added
+                    </div>
+                </div>
+            `;
+        }
+
+        // Format time (HH:MM AM/PM)
+        function formatTime(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleTimeString('en-US', {
+                hour: '2-digit',
+                minute: '2-digit',
+                hour12: true
+            });
+        }
+
+        // Format date (MMM DD, YYYY)
+        function formatDate(timestamp) {
+            const date = new Date(timestamp);
+            return date.toLocaleDateString('en-US', {
+                month: 'short',
+                day: 'numeric',
+                year: 'numeric'
+            });
+        }
+
+        // Get relative time (e.g., "2 hours ago")
+        function getRelativeTime(timestamp) {
+            const now = new Date();
+            const past = new Date(timestamp);
+            const diffInSeconds = Math.floor((now - past) / 1000);
+
+            if (diffInSeconds < 60) {
+                return 'Just now';
+            } else if (diffInSeconds < 3600) {
+                const minutes = Math.floor(diffInSeconds / 60);
+                return `${minutes}m ago`;
+            } else if (diffInSeconds < 86400) {
+                const hours = Math.floor(diffInSeconds / 3600);
+                return `${hours}h ago`;
+            } else if (diffInSeconds < 604800) {
+                const days = Math.floor(diffInSeconds / 86400);
+                return `${days}d ago`;
+            } else {
+                return formatDate(timestamp);
+            }
+        }
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('recentActivityModal');
+            const content = document.querySelector('.recent-activity-content');
+
+            if (modal && e.target === modal && !content.contains(e.target)) {
+                closeRecentActivityModal();
+            }
+        });
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const modal = document.getElementById('recentActivityModal');
+                if (modal && modal.classList.contains('show')) {
+                    closeRecentActivityModal();
+                }
+            }
+        });
     </script>
 
     <!-- PDF VIEWER MODAL -->
@@ -7483,12 +8895,12 @@
                             </button>
 
                             <div class="pdf-actions-item-with-submenu">
-                                <button class="pdf-actions-item" id="rotateSheetBtn" onclick="toggleRotateSubmenu(event)">
+                                <button class="pdf-actions-item" onmouseenter="showRotateSubmenu()" onmouseleave="hideRotateSubmenu()">
                                     Rotate sheet
                                     <i class="fas fa-chevron-right" style="margin-left: auto; font-size: 11px;"></i>
                                 </button>
                                 <!-- Rotation Submenu -->
-                                <div class="pdf-rotate-submenu" id="rotateSubmenu">
+                                <div class="pdf-rotate-submenu" id="rotateSubmenu" onmouseenter="showRotateSubmenu()" onmouseleave="hideRotateSubmenu()">
                                     <button class="pdf-rotate-option" onclick="rotatePDFSheet(-90)">
                                         -90°
                                     </button>
@@ -7554,13 +8966,13 @@
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
                 </button>
 
-                <!-- Add -->
-                <button class="pdf-tool-btn" data-tool="add" title="Add">
+                <!-- Zoom In -->
+                <button class="pdf-tool-btn" id="pdfZoomInBtn" title="Zoom In (+)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
 
-                <!-- Remove -->
-                <button class="pdf-tool-btn" data-tool="remove" title="Remove">
+                <!-- Zoom Out -->
+                <button class="pdf-tool-btn" id="pdfZoomOutBtn" title="Zoom Out (-)">
                     <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
                 </button>
 
@@ -7721,16 +9133,16 @@
                 <div class="pdf-tasks-header">
                     <h3 class="pdf-tasks-title">Tasks</h3>
                     <div class="pdf-tasks-header-actions">
-                        <button class="pdf-tasks-add-btn" title="Add new task">
-                            <i class="fas fa-plus"></i>
-                        </button>
                         <button class="pdf-tasks-close-btn" onclick="toggleTasksPanel()">
                             <i class="fas fa-times"></i>
                         </button>
                     </div>
                 </div>
                 <div class="pdf-tasks-content">
-                    <p>No tasks yet</p>
+                    <button class="pdf-tasks-new-text-btn" onclick="openTaskCreationModal()">
+                        <i class="fas fa-plus"></i>
+                        <span>New task</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -7799,5 +9211,584 @@
         </div>
     </div>
 
+    <!-- Recent Activity Modal - ENTERPRISE ULTIMATE EDITION -->
+    <div id="recentActivityModal" class="recent-activity-modal">
+        <div class="recent-activity-content">
+            <!-- Modern Professional Header with Gradient -->
+            <div class="recent-activity-header">
+                <div class="header-content">
+                    <div class="header-icon-wrapper">
+                        <i class="fas fa-history"></i>
+                    </div>
+                    <div class="header-text">
+                        <h2 class="recent-activity-title">Upload Activity Timeline</h2>
+                        <p class="header-subtitle">Real-time document tracking and monitoring</p>
+                    </div>
+                </div>
+                <button class="recent-activity-close" onclick="closeRecentActivityModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Advanced Filter Bar -->
+            <div class="recent-activity-filters">
+                <div class="filter-section">
+                    <div class="filter-label">Time Period</div>
+                    <div class="filter-buttons">
+                        <button class="activity-filter-btn active" onclick="filterActivity('all')">
+                            <i class="fas fa-globe"></i>
+                            <span>All Time</span>
+                            <span class="filter-count" id="filterCountAll">0</span>
+                        </button>
+                        <button class="activity-filter-btn" onclick="filterActivity('today')">
+                            <i class="fas fa-sun"></i>
+                            <span>Today</span>
+                            <span class="filter-count" id="filterCountToday">0</span>
+                        </button>
+                        <button class="activity-filter-btn" onclick="filterActivity('week')">
+                            <i class="fas fa-calendar-week"></i>
+                            <span>This Week</span>
+                            <span class="filter-count" id="filterCountWeek">0</span>
+                        </button>
+                        <button class="activity-filter-btn" onclick="filterActivity('month')">
+                            <i class="fas fa-calendar-alt"></i>
+                            <span>This Month</span>
+                            <span class="filter-count" id="filterCountMonth">0</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Search and Sort Controls -->
+                <div class="filter-controls">
+                    <div class="search-wrapper">
+                        <i class="fas fa-search"></i>
+                        <input type="text" placeholder="Search activity..." class="activity-search" id="activitySearch">
+                    </div>
+                    <select class="sort-dropdown">
+                        <option value="newest">Newest First</option>
+                        <option value="oldest">Oldest First</option>
+                        <option value="name">By Name</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Activity Timeline Body -->
+            <div class="recent-activity-body" id="recentActivityBody">
+                <!-- Activity items will be loaded here -->
+            </div>
+
+            <!-- Statistics Footer -->
+            <div class="activity-footer">
+                <div class="footer-stats">
+                    <div class="stat-item">
+                        <i class="fas fa-upload"></i>
+                        <span id="totalUploads">0</span>
+                        <span class="stat-label">Total Uploads</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <i class="fas fa-user"></i>
+                        <span id="activeUsers">0</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                    <div class="stat-divider"></div>
+                    <div class="stat-item">
+                        <i class="fas fa-folder"></i>
+                        <span id="foldersUsed">0</span>
+                        <span class="stat-label">Folders</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- PDF Zoom Control System with Centered Zoom + Drag to Pan -->
+    <script>
+        // Track zoom levels per plan
+        const planZoomLevels = {};
+        const ZOOM_MIN = 100;
+        const ZOOM_MAX = 300;
+        const ZOOM_INCREMENT = 25;
+
+        // Drag-to-pan state
+        let isPanning = false;
+        let startX = 0;
+        let startY = 0;
+        let scrollLeft = 0;
+        let scrollTop = 0;
+
+        // Zoom In - increase by 25%
+        function zoomInPDF() {
+            const container = document.getElementById('pdfDocumentContent');
+            if (!container) return;
+
+            const plan = plans[currentPlanIndex];
+            if (!plan) return;
+
+            const currentZoom = planZoomLevels[plan.id] || ZOOM_MIN;
+            const newZoom = Math.min(currentZoom + ZOOM_INCREMENT, ZOOM_MAX);
+
+            if (newZoom === currentZoom) return;
+
+            planZoomLevels[plan.id] = newZoom;
+            applyZoomToPDF(newZoom, container);
+            console.log(`✅ Zoomed in: ${newZoom}%`);
+        }
+
+        // Zoom Out - decrease by 25%
+        function zoomOutPDF() {
+            const container = document.getElementById('pdfDocumentContent');
+            if (!container) return;
+
+            const plan = plans[currentPlanIndex];
+            if (!plan) return;
+
+            const currentZoom = planZoomLevels[plan.id] || ZOOM_MIN;
+            const newZoom = Math.max(currentZoom - ZOOM_INCREMENT, ZOOM_MIN);
+
+            if (newZoom === currentZoom) return;
+
+            planZoomLevels[plan.id] = newZoom;
+            applyZoomToPDF(newZoom, container);
+            console.log(`✅ Zoomed out: ${newZoom}%`);
+        }
+
+        // Apply zoom transformation to PDF - CENTERED ZOOM WITH FULL SCROLLABLE AREA
+        function applyZoomToPDF(zoomLevel, container) {
+            const zoomMultiplier = zoomLevel / ZOOM_MIN;
+            const documentArea = document.querySelector('.pdf-document-area');
+
+            // Calculate how much extra space we need
+            const extraPadding = (zoomMultiplier - 1) * 100; // percentage
+
+            // Add padding to container so entire PDF is scrollable
+            container.style.padding = `${extraPadding * 5}px`;
+            container.style.transform = `scale(${zoomMultiplier})`;
+            container.style.transformOrigin = 'center center';
+            container.style.transition = 'transform 0.2s ease-out, padding 0.2s ease-out';
+
+            // Enable scrolling when zoomed
+            if (documentArea) {
+                documentArea.style.overflow = 'auto';
+
+                // Scroll to center after zoom
+                setTimeout(() => {
+                    const scrollX = (documentArea.scrollWidth - documentArea.clientWidth) / 2;
+                    const scrollY = (documentArea.scrollHeight - documentArea.clientHeight) / 2;
+                    documentArea.scrollLeft = scrollX;
+                    documentArea.scrollTop = scrollY;
+                }, 50);
+            }
+
+            console.log(`✅ Applied zoom: ${zoomLevel}% with padding: ${extraPadding * 5}px`);
+        }
+
+        // Reset zoom to default 100% when opening new plan
+        function resetPDFZoom(planId) {
+            planZoomLevels[planId] = ZOOM_MIN;
+            const container = document.getElementById('pdfDocumentContent');
+            if (container) {
+                container.style.transform = 'scale(1)';
+                container.style.transformOrigin = 'center center';
+                container.style.padding = '0'; // ✅ ADDED: Remove extra padding
+                container.style.transition = 'transform 0.2s ease-out, padding 0.2s ease-out';
+            }
+            console.log('✅ PDF zoom reset to 100%');
+        }
+
+        // 🖐️ DRAG TO PAN FUNCTIONALITY - FIXED VERSION
+        function initializePDFDragToPan() {
+            const documentArea = document.querySelector('.pdf-document-area');
+
+            if (!documentArea) {
+                console.log('❌ PDF document area not found');
+                return;
+            }
+
+            console.log('✅ Initializing drag-to-pan');
+
+            // Remove old listeners to prevent duplicates
+            documentArea.onmousedown = null;
+            documentArea.onmousemove = null;
+            documentArea.onmouseup = null;
+            documentArea.onmouseleave = null;
+
+            // Mouse down - start dragging
+            documentArea.addEventListener('mousedown', function(e) {
+                const plan = plans[currentPlanIndex];
+                if (!plan) return;
+
+                const currentZoom = planZoomLevels[plan.id] || ZOOM_MIN;
+
+                // Only allow panning if zoomed in
+                if (currentZoom > ZOOM_MIN) {
+                    isPanning = true;
+                    startX = e.pageX;
+                    startY = e.pageY;
+                    scrollLeft = documentArea.scrollLeft;
+                    scrollTop = documentArea.scrollTop;
+
+                    documentArea.classList.add('grabbing');
+                    e.preventDefault();
+                    console.log('🖐️ Started panning');
+                }
+            });
+
+            // Mouse move - pan the PDF
+            documentArea.addEventListener('mousemove', function(e) {
+                if (!isPanning) return;
+
+                e.preventDefault();
+                const dx = e.pageX - startX;
+                const dy = e.pageY - startY;
+
+                documentArea.scrollLeft = scrollLeft - dx;
+                documentArea.scrollTop = scrollTop - dy;
+            });
+
+            // Mouse up - stop dragging
+            documentArea.addEventListener('mouseup', function() {
+                if (isPanning) {
+                    isPanning = false;
+                    documentArea.classList.remove('grabbing');
+                    updateCursor();
+                    console.log('🖐️ Stopped panning');
+                }
+            });
+
+            // Mouse leave - stop dragging
+            documentArea.addEventListener('mouseleave', function() {
+                if (isPanning) {
+                    isPanning = false;
+                    documentArea.classList.remove('grabbing');
+                    updateCursor();
+                }
+            });
+
+            // Update cursor based on zoom level
+            function updateCursor() {
+                const plan = plans[currentPlanIndex];
+                if (!plan) return;
+
+                const currentZoom = planZoomLevels[plan.id] || ZOOM_MIN;
+                documentArea.style.cursor = currentZoom > ZOOM_MIN ? 'grab' : 'default';
+            }
+
+            // Initial cursor update
+            updateCursor();
+        }
+
+        // Initialize drag-to-pan when PDF viewer opens
+        const pdfViewerModal = document.getElementById('pdfViewerModal');
+        if (pdfViewerModal) {
+            const observer = new MutationObserver(() => {
+                if (pdfViewerModal.classList.contains('show')) {
+                    setTimeout(initializePDFDragToPan, 500);
+                }
+            });
+            observer.observe(pdfViewerModal, { attributes: true });
+        }
+
+        // Keyboard shortcuts for zoom
+        document.addEventListener('keydown', function(e) {
+            const pdfModal = document.getElementById('pdfViewerModal');
+            if (!pdfModal || !pdfModal.classList.contains('show')) return;
+
+            if ((e.ctrlKey || e.metaKey) && (e.key === '+' || e.key === '=')) {
+                e.preventDefault();
+                zoomInPDF();
+            } else if ((e.ctrlKey || e.metaKey) && e.key === '-') {
+                e.preventDefault();
+                zoomOutPDF();
+            } else if ((e.ctrlKey || e.metaKey) && e.key === '0') {
+                e.preventDefault();
+                const plan = plans[currentPlanIndex];
+                if (plan) resetPDFZoom(plan.id);
+            }
+        });
+
+        // ===== TASK CREATION MODAL FUNCTIONS =====
+        // Open task creation modal
+        function openTaskCreationModal() {
+            const modal = document.getElementById('taskCreationModal');
+            if (modal) {
+                modal.classList.add('show');
+
+                // Load current plan thumbnail if viewing a PDF
+                const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+                if (planIndex !== -1 && plans && plans[planIndex]) {
+                    const plan = plans[planIndex];
+                    if (plan.preview) {
+                        setTimeout(() => {
+                            const canvas = document.getElementById('taskPlanThumbnail');
+                            if (canvas) {
+                                const base64Data = plan.preview.split(',')[1] || plan.preview;
+                                generatePDFThumbnail(base64Data, 'taskPlanThumbnail');
+                            }
+                        }, 100);
+                    }
+
+                    // Update task metadata dynamically
+                    const taskNumberElement = document.querySelector('.task-number');
+                    if (taskNumberElement) {
+                        // Get task number (count existing tasks + 1)
+                        const taskCount = (JSON.parse(localStorage.getItem('tasks') || '[]')).length + 1;
+
+                        // Get user abbreviation from username
+                        const userElement = document.querySelector('.user-dropdown span');
+                        let userAbbr = 'GUEST';
+                        if (userElement) {
+                            const username = userElement.textContent.trim();
+                            userAbbr = username.split(' ').map(n => n.charAt(0)).join('').toUpperCase();
+                        }
+
+                        // Get PDF name
+                        const pdfName = plan.name || 'Document.pdf';
+
+                        // Update the task-number span
+                        taskNumberElement.textContent = `#${taskCount} | @${userAbbr} | ${pdfName}`;
+                    }
+                }
+            }
+        }
+
+        // Close task creation modal
+        function closeTaskCreationModal() {
+            const modal = document.getElementById('taskCreationModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Update the existing "+ New task" button click handler
+        document.addEventListener('DOMContentLoaded', function() {
+            // Find and update the "+ New task" button in tasks panel
+            const tasksAddBtn = document.querySelector('.pdf-tasks-add-btn');
+            if (tasksAddBtn) {
+                tasksAddBtn.onclick = openTaskCreationModal;
+            }
+        });
+
+        // Close modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const taskModal = document.getElementById('taskCreationModal');
+            const taskContent = document.querySelector('.task-creation-content');
+
+            if (taskModal && e.target === taskModal && !taskContent.contains(e.target)) {
+                closeTaskCreationModal();
+            }
+        });
+
+        // Close modal with ESC key
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'Escape') {
+                const taskModal = document.getElementById('taskCreationModal');
+                if (taskModal && taskModal.classList.contains('show')) {
+                    closeTaskCreationModal();
+                }
+            }
+        });
+    </script>
+
+    <!-- Task Creation Modal -->
+    <div id="taskCreationModal" class="task-creation-modal">
+        <div class="task-creation-content">
+            <!-- Header -->
+            <div class="task-creation-header">
+                <div class="task-header-left">
+                    <div class="task-icon-square"></div>
+                    <div class="task-header-text">
+                        <span class="task-number">#3 | @SAN | desa wire</span>
+                        <div class="task-title-edit">
+                            <input type="text" class="task-title-input" placeholder="Enter title" value="">
+                            <i class="fas fa-pen task-title-icon"></i>
+                        </div>
+                    </div>
+                </div>
+                <button class="task-close-btn" onclick="closeTaskCreationModal()">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+
+            <!-- Main Content Area -->
+            <div class="task-creation-body">
+                <!-- Left Side - Related Tasks & Checklist -->
+                <div class="task-left-section">
+                    <div class="task-section">
+                        <label class="task-section-label">Related Tasks:</label>
+                        <div class="task-links">
+                            <button class="task-link-btn">+ New task</button>
+                            <span class="task-separator">|</span>
+                            <button class="task-link-btn">+ Existing task</button>
+                        </div>
+                    </div>
+
+                    <div class="task-section">
+                        <label class="task-section-label">Checklist:</label>
+                        <div class="task-links">
+                            <button class="task-link-btn">+ New item</button>
+                            <span class="task-separator">|</span>
+                            <button class="task-link-btn dropdown-trigger">
+                                + Add checklist
+                                <i class="fas fa-caret-down"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Right Side - Task Attributes -->
+                <div class="task-right-section">
+                    <div class="task-attributes-header">
+                        <span>Task Attributes</span>
+                    </div>
+
+                    <!-- Status -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="fas fa-circle-notch"></i>
+                            <span>Status</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <select class="task-select">
+                                <option>Priority 2</option>
+                                <option>Priority 1</option>
+                                <option>Priority 3</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Category -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="fas fa-th"></i>
+                            <span>Category</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <select class="task-select">
+                                <option value="">--</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Assignee -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="fas fa-user"></i>
+                            <span>Assignee</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <select class="task-select">
+                                <option>Stephen</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Plan Attachment Area -->
+                    <div class="task-plan-attachment">
+                        <div class="task-attachment-preview">
+                            <canvas id="taskPlanThumbnail" width="200" height="280"></canvas>
+                            <button class="task-attachment-edit">
+                                <i class="fas fa-pen"></i>
+                            </button>
+                        </div>
+                        <div class="task-attachment-name">desa wire</div>
+                    </div>
+
+                    <!-- Location -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="fas fa-map-marker-alt"></i>
+                            <span>Location</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <input type="text" class="task-input" placeholder="--">
+                        </div>
+                    </div>
+
+                    <!-- Start Date -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="far fa-calendar"></i>
+                            <span>Start date</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <input type="date" class="task-input">
+                        </div>
+                    </div>
+
+                    <!-- End Date -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="far fa-calendar"></i>
+                            <span>End date</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <input type="date" class="task-input">
+                        </div>
+                    </div>
+
+                    <!-- Manpower -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="fas fa-users"></i>
+                            <span>Manpower</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <input type="text" class="task-input" placeholder="--">
+                        </div>
+                    </div>
+
+                    <!-- Cost -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="fas fa-dollar-sign"></i>
+                            <span>Cost</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <input type="text" class="task-input" placeholder="--">
+                        </div>
+                    </div>
+
+                    <!-- Tags -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="fas fa-tag"></i>
+                            <span>Tags</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <input type="text" class="task-input" placeholder="--">
+                        </div>
+                    </div>
+
+                    <!-- Watchers -->
+                    <div class="task-attribute-row">
+                        <div class="task-attribute-label">
+                            <i class="far fa-eye"></i>
+                            <span>Watchers</span>
+                        </div>
+                        <div class="task-attribute-value">
+                            <input type="text" class="task-input" placeholder="SAN" value="SAN">
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Footer -->
+            <div class="task-creation-footer">
+                <div class="task-footer-left">
+                    <button class="task-attach-btn">
+                        <i class="fas fa-paperclip"></i>
+                    </button>
+                    <input type="text" class="task-message-input" placeholder="Enter message here...">
+                </div>
+                <button class="task-share-btn">
+                    Share
+                    <i class="fas fa-caret-down"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+
 </body>
 </html>
+

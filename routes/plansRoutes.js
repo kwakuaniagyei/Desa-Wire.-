@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const { plansDB, foldersDB, specificationsDB } = require('../database/db');
+const { plansDB, foldersDB, specificationsDB, usersDB } = require('../database/db');
 
 // Configure multer for memory storage (files stored in memory as Buffer)
 const storage = multer.memoryStorage();
@@ -34,14 +34,45 @@ router.get('/api/plans', requireAuth, (req, res) => {
             plans = plansDB.getAll();
         }
 
+        // Enrich plans with user information
+        const enrichedPlans = plans.map(plan => {
+            let uploadedByName = 'Unknown User';
+
+            // Try to find user by userId
+            if (plan.userId) {
+                try {
+                    const user = usersDB.findById(plan.userId);
+                    if (user) {
+                        if (user.username && user.username.trim()) {
+                            uploadedByName = user.username;
+                        } else if (user.email && user.email.trim()) {
+                            uploadedByName = user.email;
+                        }
+                    }
+                } catch (e) {
+                    console.error(`Error looking up user ${plan.userId}:`, e);
+                }
+            }
+
+            // Fallback: use uploadedBy field if it exists
+            if (uploadedByName === 'Unknown User' && plan.uploadedBy && plan.uploadedBy.trim()) {
+                uploadedByName = plan.uploadedBy;
+            }
+
+            return {
+                ...plan,
+                uploadedBy: uploadedByName
+            };
+        });
+
         // Debug: log what's being returned
         console.log(`GET /api/plans - ProjectId: ${projectId}, FolderId: ${folderId}`);
-        console.log(`Found ${plans ? plans.length : 0} plans`);
-        if (plans && plans.length > 0) {
-            console.log(`First plan has preview: ${!!plans[0].preview}, preview length: ${plans[0].preview ? plans[0].preview.length : 0}`);
+        console.log(`Found ${enrichedPlans ? enrichedPlans.length : 0} plans`);
+        if (enrichedPlans && enrichedPlans.length > 0) {
+            console.log(`First plan has preview: ${!!enrichedPlans[0].preview}, preview length: ${enrichedPlans[0].preview ? enrichedPlans[0].preview.length : 0}`);
         }
 
-        res.json({ success: true, plans });
+        res.json({ success: true, plans: enrichedPlans });
     } catch (error) {
         console.error('Error fetching plans:', error);
         res.status(500).json({ error: 'Failed to fetch plans' });
@@ -115,12 +146,15 @@ router.post('/api/plans/upload', requireAuth, upload.array('plans', 20), (req, r
 
         const { projectId, folderId, folder } = req.body;
         const userId = req.session.userId;
+        const userName = req.session.userName || req.session.userEmail || 'Unknown User';
 
         // Debug logging
         console.log('=== UPLOAD REQUEST ===');
         console.log('Project ID:', projectId);
         console.log('Folder ID:', folderId);
         console.log('Folder Name:', folder);
+        console.log('User ID:', userId);
+        console.log('User Name:', userName);
         console.log('Request body:', req.body);
         console.log('======================');
 
@@ -193,6 +227,7 @@ router.post('/api/plans/upload', requireAuth, upload.array('plans', 20), (req, r
                 folder: targetFolder ? targetFolder.name : null, // Also store folder name for reference
                 projectId: projectId,
                 userId: userId,
+                uploadedBy: userName, // Store username directly for faster access
                 createdAt: new Date().toISOString()
             };
 
