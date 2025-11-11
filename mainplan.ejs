@@ -449,6 +449,98 @@
             padding: 32px 40px;
         }
 
+        /* QR Code Modal - Positioned inside PDF Viewer */
+        .pdf-qr-code-modal {
+            position: fixed;
+            top: 60px;
+            left: 280px;
+            right: 0;
+            bottom: 0;
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10001;
+        }
+
+        .pdf-qr-code-modal.show {
+            display: flex;
+        }
+
+        .pdf-qr-code-overlay {
+            position: fixed;
+            top: 60px;
+            left: 280px;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 10001;
+        }
+
+        .pdf-qr-code-content {
+            position: relative;
+            background: white;
+            border-radius: 12px;
+            width: 95%;
+            max-width: 500px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: qrModalSlideIn 0.3s ease;
+            z-index: 10002;
+        }
+
+        @keyframes qrModalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        .pdf-qr-code-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .pdf-qr-code-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .pdf-qr-code-close {
+            background: none;
+            border: none;
+            font-size: 28px;
+            color: #6b7280;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+        }
+
+        .pdf-qr-code-close:hover {
+            background-color: #f3f4f6;
+            color: #1f2937;
+        }
+
+        .pdf-qr-code-body {
+            padding: 32px;
+            text-align: center;
+        }
+
         .upload-dropzone {
             border: 2px dashed #d1d5db;
             border-radius: 8px;
@@ -8291,12 +8383,13 @@
             });
         }
 
-        // Close QR modal when clicking outside
+        // Close QR modal when clicking outside (on overlay)
         document.addEventListener('click', function(e) {
             const modal = document.getElementById('qrCodeModal');
-            const content = modal?.querySelector('.upload-modal-content');
+            const overlay = modal?.querySelector('.pdf-qr-code-overlay');
+            const content = modal?.querySelector('.pdf-qr-code-content');
 
-            if (modal && e.target === modal && !content?.contains(e.target)) {
+            if (modal && overlay && e.target === overlay && !content?.contains(e.target)) {
                 closeQRCodeModal();
             }
         });
@@ -9306,6 +9399,42 @@
                 <span>Document.pdf</span>
             </div>
         </div>
+
+        <!-- QR Code Export Modal - Inside PDF Viewer -->
+        <div id="qrCodeModal" class="pdf-qr-code-modal">
+            <div class="pdf-qr-code-overlay"></div>
+            <div class="pdf-qr-code-content">
+                <div class="pdf-qr-code-header">
+                    <h2 class="pdf-qr-code-title">Plan QR Code</h2>
+                    <button class="pdf-qr-code-close" onclick="closeQRCodeModal()">×</button>
+                </div>
+                <div class="pdf-qr-code-body">
+                    <!-- Success Icon -->
+                    <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-check" style="font-size: 40px; color: #0284c7;"></i>
+                    </div>
+
+                    <!-- Success Message -->
+                    <h3 style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 8px;">
+                        Your QR code has been generated!
+                    </h3>
+                    <p style="font-size: 14px; color: #6b7280; margin-bottom: 32px;">
+                        Click below if it hasn't started downloading yet.
+                    </p>
+
+                    <!-- QR Code Container -->
+                    <div id="qrCodeContainer" style="display: inline-block; padding: 24px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 24px;">
+                        <!-- QR code will be generated here -->
+                    </div>
+
+                    <!-- Download Button -->
+                    <button class="btn-primary" onclick="downloadQRCode()" style="width: 100%; max-width: 300px; margin: 0 auto; justify-content: center;">
+                        <i class="fas fa-download"></i>
+                        <span>Download</span>
+                    </button>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Plan Details Modal -->
@@ -9923,41 +10052,6 @@
                 <button class="task-share-btn">
                     Share
                     <i class="fas fa-caret-down"></i>
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- QR Code Export Modal -->
-    <div id="qrCodeModal" class="upload-modal">
-        <div class="upload-modal-content" style="max-width: 500px;">
-            <div class="upload-modal-header">
-                <h2 class="upload-modal-title">Plan QR Code</h2>
-                <button class="upload-modal-close" onclick="closeQRCodeModal()">×</button>
-            </div>
-            <div class="upload-modal-body" style="text-align: center; padding: 40px;">
-                <!-- Success Icon -->
-                <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                    <i class="fas fa-check" style="font-size: 40px; color: #0284c7;"></i>
-                </div>
-
-                <!-- Success Message -->
-                <h3 style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 8px;">
-                    Your QR code has been generated!
-                </h3>
-                <p style="font-size: 14px; color: #6b7280; margin-bottom: 32px;">
-                    Click below if it hasn't started downloading yet.
-                </p>
-
-                <!-- QR Code Container -->
-                <div id="qrCodeContainer" style="display: inline-block; padding: 24px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 24px;">
-                    <!-- QR code will be generated here -->
-                </div>
-
-                <!-- Download Button -->
-                <button class="btn-primary" onclick="downloadQRCode()" style="width: 100%; max-width: 300px; margin: 0 auto; justify-content: center;">
-                    <i class="fas fa-download"></i>
-                    <span>Download</span>
                 </button>
             </div>
         </div>
