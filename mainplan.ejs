@@ -8371,7 +8371,7 @@
             }
         }
 
-        // Download QR Code as Image - FIXED VERSION
+        // Download QR Code as Image - OPTIMIZED VERSION FOR CLARITY
         function downloadQRCode() {
             const wrapper = document.getElementById('qrDownloadWrapper');
             if (!wrapper) {
@@ -8398,22 +8398,33 @@
             const projectName = '<%= projectName %>' || 'Project';
             const fileName = `${projectName}-${plan.name || 'QR'}.png`;
 
-            // Use html2canvas to capture the QR wrapper
+            // Use html2canvas to capture the QR wrapper with optimized settings
             html2canvas(wrapper, {
-                backgroundColor: '#ffffff',
-                scale: 3,
-                logging: true, // Enable logging for debugging
+                backgroundColor: null, // Use null to respect DOM styling (white background with padding)
+                scale: 4, // Higher scale for maximum clarity and scanability
+                logging: false, // Disable logging for cleaner output
                 useCORS: true,
                 allowTaint: true,
+                imageTimeout: 5000, // Wait up to 5 seconds for images to load
+                canvasWidth: 1024, // Set explicit dimensions for consistency
+                canvasHeight: 1024,
+                windowWidth: wrapper.scrollWidth,
+                windowHeight: wrapper.scrollHeight,
                 onclone: function(clonedDoc) {
-                    // Ensure cloned document has the QR code
+                    // Ensure cloned document preserves styling
                     const clonedWrapper = clonedDoc.getElementById('qrDownloadWrapper');
-                    console.log('Cloned wrapper:', clonedWrapper);
+                    if (clonedWrapper) {
+                        // Force white background in cloned document
+                        clonedWrapper.style.backgroundColor = '#ffffff';
+                        clonedWrapper.style.display = 'inline-block';
+                    }
+                    console.log('✅ Document cloned with styling preserved');
                 }
             }).then(canvas => {
                 console.log('✅ Canvas created:', canvas.width, 'x', canvas.height);
+                console.log('✅ Canvas resolution: ' + (canvas.width * canvas.height) + ' pixels');
 
-                // Convert canvas to blob
+                // Convert canvas to blob with maximum quality
                 canvas.toBlob(blob => {
                     if (!blob) {
                         console.error('Failed to create blob');
@@ -8421,7 +8432,7 @@
                         return;
                     }
 
-                    console.log('✅ Blob created, size:', blob.size);
+                    console.log('✅ Blob created, size:', (blob.size / 1024).toFixed(2) + ' KB');
 
                     // Create download link
                     const url = URL.createObjectURL(blob);
@@ -8433,9 +8444,9 @@
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
 
-                    console.log('✅ Download triggered');
-                    showNotification('✅ QR code downloaded successfully!', 'success');
-                }, 'image/png', 1.0);
+                    console.log('✅ Download triggered - File: ' + fileName);
+                    showNotification('✅ QR code downloaded successfully!\n\nFile: ' + fileName, 'success');
+                }, 'image/png', 1.0); // Maximum quality PNG
             }).catch(error => {
                 console.error('❌ Error downloading QR code:', error);
                 showNotification('Error downloading QR code: ' + error.message, 'error');
