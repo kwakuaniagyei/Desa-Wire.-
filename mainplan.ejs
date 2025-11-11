@@ -7,6 +7,7 @@
     <link rel="icon" type="image/webp" href="/img/img.webp">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <script src="/js/notifications.js?v=<%= Date.now() %>"></script>
     <script src="/js/chat-widget.js?v=<%= Date.now() %>"></script>
     <style>
@@ -8156,11 +8157,149 @@
         }
 
         // 8. Export QR code
-        function exportQRCode() {
+        async function exportQRCode() {
             console.log('Export QR code clicked');
-            showNotification('📱 Export QR code feature coming soon', 'info');
+
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+
+            if (planIndex === -1 || !plans || !plans[planIndex]) {
+                showNotification('Please open a plan first', 'error');
+                togglePDFActionsDropdown();
+                return;
+            }
+
+            const plan = plans[planIndex];
+            const projectName = '<%= projectName %>' || 'Project';
+
+            // Close actions dropdown
             togglePDFActionsDropdown();
+
+            // Generate QR code URL (you can customize this URL to your needs)
+            const qrCodeURL = `${window.location.origin}/plan/${plan.id}`;
+
+            // Show the QR modal
+            openQRCodeModal(plan, projectName, qrCodeURL);
         }
+
+        // Open QR Code Modal
+        function openQRCodeModal(plan, projectName, qrCodeURL) {
+            const modal = document.getElementById('qrCodeModal');
+            const container = document.getElementById('qrCodeContainer');
+
+            if (!modal || !container) {
+                console.error('QR modal elements not found');
+                return;
+            }
+
+            // Clear previous QR code
+            container.innerHTML = '';
+
+            // Add project info above QR code
+            const infoDiv = document.createElement('div');
+            infoDiv.style.cssText = 'text-align: center; margin-bottom: 16px;';
+            infoDiv.innerHTML = `
+                <div style="font-size: 14px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">
+                    ${projectName}
+                </div>
+                <div style="font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 8px;">
+                    ${plan.name || plan.sheetNumber || 'Document'}
+                </div>
+            `;
+
+            // Create QR code wrapper
+            const qrWrapper = document.createElement('div');
+            qrWrapper.id = 'qrCodeImage';
+            qrWrapper.style.cssText = 'display: inline-block; padding: 16px; background: white;';
+
+            // Add Fieldwire-style branding
+            const brandingDiv = document.createElement('div');
+            brandingDiv.style.cssText = 'display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px;';
+            brandingDiv.innerHTML = `
+                <img src="/img/img.webp" alt="Logo" style="width: 24px; height: 24px;">
+                <span style="font-size: 12px; font-weight: 600; color: #374151;">DESA Wire</span>
+            `;
+
+            container.appendChild(infoDiv);
+            container.appendChild(qrWrapper);
+            container.appendChild(brandingDiv);
+
+            // Generate QR code using QRCode.js
+            try {
+                new QRCode(qrWrapper, {
+                    text: qrCodeURL,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                // Show modal
+                modal.classList.add('show');
+
+                // Auto-download after a short delay
+                setTimeout(() => {
+                    downloadQRCode();
+                }, 500);
+
+            } catch (error) {
+                console.error('Error generating QR code:', error);
+                showNotification('Error generating QR code', 'error');
+            }
+        }
+
+        // Close QR Code Modal
+        function closeQRCodeModal() {
+            const modal = document.getElementById('qrCodeModal');
+            if (modal) {
+                modal.classList.remove('show');
+            }
+        }
+
+        // Download QR Code as Image
+        function downloadQRCode() {
+            const container = document.getElementById('qrCodeContainer');
+            if (!container) return;
+
+            const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
+            const plan = plans[planIndex];
+            const projectName = '<%= projectName %>' || 'Project';
+            const fileName = `${projectName}-${plan.name || 'QR'}.png`;
+
+            // Use html2canvas to capture the entire QR container with branding
+            html2canvas(container, {
+                backgroundColor: '#ffffff',
+                scale: 2
+            }).then(canvas => {
+                // Convert canvas to blob
+                canvas.toBlob(blob => {
+                    // Create download link
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
+
+                    showNotification('✅ QR code downloaded successfully!', 'success');
+                }, 'image/png');
+            }).catch(error => {
+                console.error('Error downloading QR code:', error);
+                showNotification('Error downloading QR code', 'error');
+            });
+        }
+
+        // Close QR modal when clicking outside
+        document.addEventListener('click', function(e) {
+            const modal = document.getElementById('qrCodeModal');
+            const content = modal?.querySelector('.upload-modal-content');
+
+            if (modal && e.target === modal && !content?.contains(e.target)) {
+                closeQRCodeModal();
+            }
+        });
 
         // 9. Delete plan
         async function deletePDFPlan() {
@@ -9788,6 +9927,43 @@
             </div>
         </div>
     </div>
+
+    <!-- QR Code Export Modal -->
+    <div id="qrCodeModal" class="upload-modal">
+        <div class="upload-modal-content" style="max-width: 500px;">
+            <div class="upload-modal-header">
+                <h2 class="upload-modal-title">Plan QR Code</h2>
+                <button class="upload-modal-close" onclick="closeQRCodeModal()">×</button>
+            </div>
+            <div class="upload-modal-body" style="text-align: center; padding: 40px;">
+                <!-- Success Icon -->
+                <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                    <i class="fas fa-check" style="font-size: 40px; color: #0284c7;"></i>
+                </div>
+
+                <!-- Success Message -->
+                <h3 style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 8px;">
+                    Your QR code has been generated!
+                </h3>
+                <p style="font-size: 14px; color: #6b7280; margin-bottom: 32px;">
+                    Click below if it hasn't started downloading yet.
+                </p>
+
+                <!-- QR Code Container -->
+                <div id="qrCodeContainer" style="display: inline-block; padding: 24px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 24px;">
+                    <!-- QR code will be generated here -->
+                </div>
+
+                <!-- Download Button -->
+                <button class="btn-primary" onclick="downloadQRCode()" style="width: 100%; max-width: 300px; margin: 0 auto; justify-content: center;">
+                    <i class="fas fa-download"></i>
+                    <span>Download</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 
 </body>
 </html>

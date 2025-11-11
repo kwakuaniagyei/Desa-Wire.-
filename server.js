@@ -76,7 +76,7 @@ const plansRoutes = require('./routes/plansRoutes');
 const integrationRoutes = require('./routes/integrationRoutes');
 const projectsController = require('./controllers/projectsController');
 const accountController = require('./controllers/accountController');
-const { plansDB } = require('./database/db');
+const { plansDB, usersDB } = require('./database/db');
 
 // Define specific routes BEFORE the catch-all projects routes
 app.get('/login', (req, res) => {
@@ -621,6 +621,17 @@ app.post('/api/plans/:id/versions', (req, res) => {
             return res.status(404).json({ success: false, error: 'Plan not found' });
         }
 
+        // Get current user's name for version
+        let currentUserName = 'Unknown User';
+        if (req.session && req.session.userId) {
+            const user = usersDB.findById(req.session.userId);
+            if (user && user.username) {
+                currentUserName = user.username;
+            } else if (user && user.email) {
+                currentUserName = user.email;
+            }
+        }
+
         // Create version entry
         const newVersion = {
             id: Date.now().toString(),
@@ -629,7 +640,7 @@ app.post('/api/plans/:id/versions', (req, res) => {
             description: description || new Date().toISOString().split('T')[0],
             notes: notes || '--',
             preview: plan.preview || '/img/pdf-placeholder.png',
-            uploadedBy: 'User',
+            uploadedBy: currentUserName,
             createdAt: new Date().toISOString()
         };
 
@@ -740,6 +751,29 @@ app.delete('/api/plans/:id/versions/:versionId', (req, res) => {
     } catch (error) {
         console.error('❌ Error deleting version:', error);
         res.status(500).json({ success: false, error: error.message });
+    }
+});
+
+// QR Code Plan Route - Handle QR code links
+app.get('/plan/:planId', async (req, res) => {
+    try {
+        const planId = req.params.planId;
+
+        // Fetch plan from database
+        const { plansDB } = require('./database/db');
+        const plan = plansDB.getById(planId);
+
+        if (!plan) {
+            return res.status(404).send('Plan not found');
+        }
+
+        // Redirect to mainplan page with the plan selected
+        const projectId = plan.projectId;
+        res.redirect(`/mainplan?projectId=${projectId}&planId=${planId}`);
+
+    } catch (error) {
+        console.error('Error loading plan:', error);
+        res.status(500).send('Error loading plan');
     }
 });
 
