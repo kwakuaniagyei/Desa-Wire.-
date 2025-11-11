@@ -8273,7 +8273,7 @@
             openQRCodeModal(plan, projectName, qrCodeURL);
         }
 
-        // Open QR Code Modal - UPDATED VERSION
+        // Open QR Code Modal - FIXED VERSION
         function openQRCodeModal(plan, projectName, qrCodeURL) {
             const modal = document.getElementById('qrCodeModal');
             const container = document.getElementById('qrCodeContainer');
@@ -8324,7 +8324,8 @@
 
             // Generate QR code using QRCode.js
             try {
-                new QRCode(qrWrapper, {
+                // Create QR code instance
+                const qrcode = new QRCode(qrWrapper, {
                     text: qrCodeURL,
                     width: 256,
                     height: 256,
@@ -8333,13 +8334,28 @@
                     correctLevel: QRCode.CorrectLevel.H
                 });
 
+                console.log('✅ QR code generated');
+
                 // Show modal
                 modal.classList.add('show');
 
-                // Wait for QR code to render, then auto-download
+                // CRITICAL: Wait for QR code to ACTUALLY render in DOM
+                // We need to wait for the canvas/img element to be created
                 setTimeout(() => {
-                    downloadQRCode();
-                }, 800); // Increased delay to ensure QR code is fully rendered
+                    const qrCanvas = qrWrapper.querySelector('canvas');
+                    const qrImg = qrWrapper.querySelector('img');
+
+                    if (qrCanvas || qrImg) {
+                        console.log('✅ QR code element found:', qrCanvas ? 'canvas' : 'img');
+                        // Wait a bit more for rendering to complete
+                        setTimeout(() => {
+                            downloadQRCode();
+                        }, 500);
+                    } else {
+                        console.error('❌ QR code element not found');
+                        showNotification('Error: QR code not rendered', 'error');
+                    }
+                }, 1000); // Wait 1 second for QR code to render
 
             } catch (error) {
                 console.error('Error generating QR code:', error);
@@ -8355,7 +8371,7 @@
             }
         }
 
-        // Download QR Code as Image - UPDATED VERSION
+        // Download QR Code as Image - FIXED VERSION
         function downloadQRCode() {
             const wrapper = document.getElementById('qrDownloadWrapper');
             if (!wrapper) {
@@ -8364,19 +8380,39 @@
                 return;
             }
 
+            // Verify QR code is actually rendered
+            const qrWrapper = document.getElementById('qrCodeImage');
+            const qrCanvas = qrWrapper?.querySelector('canvas');
+            const qrImg = qrWrapper?.querySelector('img');
+
+            if (!qrCanvas && !qrImg) {
+                console.error('❌ QR code not rendered yet');
+                showNotification('QR code still loading, please try again', 'error');
+                return;
+            }
+
+            console.log('✅ Starting download...');
+
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
             const plan = plans[planIndex];
             const projectName = '<%= projectName %>' || 'Project';
             const fileName = `${projectName}-${plan.name || 'QR'}.png`;
 
-            // Use html2canvas to capture the QR wrapper with all content
+            // Use html2canvas to capture the QR wrapper
             html2canvas(wrapper, {
                 backgroundColor: '#ffffff',
-                scale: 3, // Higher scale for better quality
-                logging: false,
+                scale: 3,
+                logging: true, // Enable logging for debugging
                 useCORS: true,
-                allowTaint: true
+                allowTaint: true,
+                onclone: function(clonedDoc) {
+                    // Ensure cloned document has the QR code
+                    const clonedWrapper = clonedDoc.getElementById('qrDownloadWrapper');
+                    console.log('Cloned wrapper:', clonedWrapper);
+                }
             }).then(canvas => {
+                console.log('✅ Canvas created:', canvas.width, 'x', canvas.height);
+
                 // Convert canvas to blob
                 canvas.toBlob(blob => {
                     if (!blob) {
@@ -8384,6 +8420,8 @@
                         showNotification('Error downloading QR code', 'error');
                         return;
                     }
+
+                    console.log('✅ Blob created, size:', blob.size);
 
                     // Create download link
                     const url = URL.createObjectURL(blob);
@@ -8395,11 +8433,12 @@
                     document.body.removeChild(link);
                     URL.revokeObjectURL(url);
 
+                    console.log('✅ Download triggered');
                     showNotification('✅ QR code downloaded successfully!', 'success');
-                }, 'image/png', 1.0); // Maximum quality
+                }, 'image/png', 1.0);
             }).catch(error => {
-                console.error('Error downloading QR code:', error);
-                showNotification('Error downloading QR code', 'error');
+                console.error('❌ Error downloading QR code:', error);
+                showNotification('Error downloading QR code: ' + error.message, 'error');
             });
         }
 
