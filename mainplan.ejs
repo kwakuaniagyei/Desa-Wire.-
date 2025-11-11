@@ -8273,7 +8273,7 @@
             openQRCodeModal(plan, projectName, qrCodeURL);
         }
 
-        // Open QR Code Modal
+        // Open QR Code Modal - UPDATED VERSION
         function openQRCodeModal(plan, projectName, qrCodeURL) {
             const modal = document.getElementById('qrCodeModal');
             const container = document.getElementById('qrCodeContainer');
@@ -8285,6 +8285,11 @@
 
             // Clear previous QR code
             container.innerHTML = '';
+
+            // Create a wrapper div for all content (for downloading)
+            const downloadWrapper = document.createElement('div');
+            downloadWrapper.id = 'qrDownloadWrapper';
+            downloadWrapper.style.cssText = 'display: inline-block; background: white; padding: 24px; border-radius: 8px;';
 
             // Add project info above QR code
             const infoDiv = document.createElement('div');
@@ -8301,7 +8306,7 @@
             // Create QR code wrapper
             const qrWrapper = document.createElement('div');
             qrWrapper.id = 'qrCodeImage';
-            qrWrapper.style.cssText = 'display: inline-block; padding: 16px; background: white;';
+            qrWrapper.style.cssText = 'display: inline-block; padding: 16px; background: white; margin-bottom: 12px;';
 
             // Add Fieldwire-style branding
             const brandingDiv = document.createElement('div');
@@ -8311,9 +8316,11 @@
                 <span style="font-size: 12px; font-weight: 600; color: #374151;">DESA Wire</span>
             `;
 
-            container.appendChild(infoDiv);
-            container.appendChild(qrWrapper);
-            container.appendChild(brandingDiv);
+            // Assemble the download wrapper
+            downloadWrapper.appendChild(infoDiv);
+            downloadWrapper.appendChild(qrWrapper);
+            downloadWrapper.appendChild(brandingDiv);
+            container.appendChild(downloadWrapper);
 
             // Generate QR code using QRCode.js
             try {
@@ -8329,10 +8336,10 @@
                 // Show modal
                 modal.classList.add('show');
 
-                // Auto-download after a short delay
+                // Wait for QR code to render, then auto-download
                 setTimeout(() => {
                     downloadQRCode();
-                }, 500);
+                }, 800); // Increased delay to ensure QR code is fully rendered
 
             } catch (error) {
                 console.error('Error generating QR code:', error);
@@ -8348,23 +8355,36 @@
             }
         }
 
-        // Download QR Code as Image
+        // Download QR Code as Image - UPDATED VERSION
         function downloadQRCode() {
-            const container = document.getElementById('qrCodeContainer');
-            if (!container) return;
+            const wrapper = document.getElementById('qrDownloadWrapper');
+            if (!wrapper) {
+                console.error('QR download wrapper not found');
+                showNotification('Error: QR code not ready', 'error');
+                return;
+            }
 
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
             const plan = plans[planIndex];
             const projectName = '<%= projectName %>' || 'Project';
             const fileName = `${projectName}-${plan.name || 'QR'}.png`;
 
-            // Use html2canvas to capture the entire QR container with branding
-            html2canvas(container, {
+            // Use html2canvas to capture the QR wrapper with all content
+            html2canvas(wrapper, {
                 backgroundColor: '#ffffff',
-                scale: 2
+                scale: 3, // Higher scale for better quality
+                logging: false,
+                useCORS: true,
+                allowTaint: true
             }).then(canvas => {
                 // Convert canvas to blob
                 canvas.toBlob(blob => {
+                    if (!blob) {
+                        console.error('Failed to create blob');
+                        showNotification('Error downloading QR code', 'error');
+                        return;
+                    }
+
                     // Create download link
                     const url = URL.createObjectURL(blob);
                     const link = document.createElement('a');
@@ -8376,7 +8396,7 @@
                     URL.revokeObjectURL(url);
 
                     showNotification('✅ QR code downloaded successfully!', 'success');
-                }, 'image/png');
+                }, 'image/png', 1.0); // Maximum quality
             }).catch(error => {
                 console.error('Error downloading QR code:', error);
                 showNotification('Error downloading QR code', 'error');
