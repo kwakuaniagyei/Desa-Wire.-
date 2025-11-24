@@ -6205,6 +6205,11 @@
         let notifications = [];
         let currentFilter = 'all';
 
+        // Request queue for controlling concurrent PDF preview fetches
+        let previewRequestQueue = [];
+        let activePreviewRequests = 0;
+        const MAX_CONCURRENT_PREVIEWS = 3;
+
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
             loadPlans();
@@ -6271,6 +6276,29 @@
             return projectId ? `project_${projectId}_${key}` : key;
         }
 
+        // Queue PDF preview requests to avoid overwhelming the browser
+        function queuePreviewRequest(previewUrl, containerId) {
+            return new Promise((resolve) => {
+                previewRequestQueue.push({ previewUrl, containerId, resolve });
+                processPreviewQueue();
+            });
+        }
+
+        // Process queued preview requests
+        function processPreviewQueue() {
+            while (activePreviewRequests < MAX_CONCURRENT_PREVIEWS && previewRequestQueue.length > 0) {
+                const { previewUrl, containerId, resolve } = previewRequestQueue.shift();
+                activePreviewRequests++;
+
+                generatePDFPreviewFromURL(previewUrl, containerId)
+                    .finally(() => {
+                        activePreviewRequests--;
+                        resolve();
+                        processPreviewQueue();
+                    });
+            }
+        }
+
         // Load plans from database (project-specific)
         async function loadPlans() {
             const projectId = getCurrentProjectId();
@@ -6283,12 +6311,13 @@
             }
 
             try {
-                // Fetch plans from database for this project
-                const plansResponse = await fetch(`/api/plans?projectId=${projectId}`);
-                const plansResult = await plansResponse.json();
+                // Fetch plans and folders in parallel for faster loading
+                const [plansResponse, foldersResponse] = await Promise.all([
+                    fetch(`/api/plans?projectId=${projectId}`),
+                    fetch(`/api/folders?projectId=${projectId}`)
+                ]);
 
-                // Fetch folders separately
-                const foldersResponse = await fetch(`/api/folders?projectId=${projectId}`);
+                const plansResult = await plansResponse.json();
                 const foldersResult = await foldersResponse.json();
 
                 if (plansResult.success) {
@@ -6455,6 +6484,34 @@
                 </div>
             `;
             grid.appendChild(newPlanCard);
+
+            // Setup lazy loading for plan previews using Intersection Observer
+            setupPreviewLazyLoading();
+        }
+
+        // Setup lazy loading for plan previews
+        function setupPreviewLazyLoading() {
+            const cards = document.querySelectorAll('.plan-card');
+
+            // Only load first 6 cards immediately, others on demand
+            cards.forEach((card, index) => {
+                if (index < 6) {
+                    // Load first 6 cards immediately
+                    loadPlanPreview(card);
+                } else {
+                    // Use Intersection Observer for remaining cards
+                    const observer = new IntersectionObserver((entries) => {
+                        entries.forEach(entry => {
+                            if (entry.isIntersecting) {
+                                loadPlanPreview(entry.target);
+                                observer.unobserve(entry.target); // Stop observing after load
+                            }
+                        });
+                    }, { rootMargin: '100px' }); // Start loading 100px before card is visible
+
+                    observer.observe(card);
+                }
+            });
         }
 
         // Create plan card with PDF preview
@@ -6486,21 +6543,35 @@
             card.appendChild(thumbnail);
             card.appendChild(info);
 
-            // Generate PDF preview
-            if (plan.preview && plan.type) {
-                if (plan.type.includes('pdf')) {
-                    // Fetch PDF from preview endpoint
-                    generatePDFPreviewFromURL(plan.preview, thumbnailId);
-                } else if (plan.type.includes('image')) {
-                    // Show image preview directly
-                    const container = document.getElementById(thumbnailId);
-                    if (container) {
-                        container.innerHTML = `<img src="${plan.preview}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">`;
-                    }
-                }
-            }
+            // Store preview data for lazy loading
+            card.dataset.previewUrl = plan.preview || '';
+            card.dataset.previewType = plan.type || '';
+            card.dataset.thumbnailId = thumbnailId;
 
             return card;
+        }
+
+        // Load preview for a plan card (called when card becomes visible)
+        function loadPlanPreview(card) {
+            const previewUrl = card.dataset.previewUrl;
+            const previewType = card.dataset.previewType;
+            const thumbnailId = card.dataset.thumbnailId;
+
+            if (!previewUrl || card.dataset.previewLoaded === 'true') {
+                return; // Already loaded or no preview
+            }
+
+            card.dataset.previewLoaded = 'true';
+
+            if (previewType.includes('pdf')) {
+                // Use request queue to limit concurrent PDF loads
+                queuePreviewRequest(previewUrl, thumbnailId);
+            } else if (previewType.includes('image')) {
+                const container = document.getElementById(thumbnailId);
+                if (container) {
+                    container.innerHTML = `<img src="${previewUrl}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">`;
+                }
+            }
         }
 
         // Generate PDF preview from URL endpoint
