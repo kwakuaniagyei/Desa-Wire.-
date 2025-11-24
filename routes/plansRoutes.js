@@ -59,18 +59,17 @@ router.get('/api/plans', requireAuth, (req, res) => {
                 uploadedByName = plan.uploadedBy;
             }
 
+            // Return preview as URL endpoint instead of full base64 data to reduce payload
             return {
                 ...plan,
-                uploadedBy: uploadedByName
+                uploadedBy: uploadedByName,
+                preview: plan.preview ? `/api/plans/${plan.id}/preview` : null
             };
         });
 
         // Debug: log what's being returned
         console.log(`GET /api/plans - ProjectId: ${projectId}, FolderId: ${folderId}`);
         console.log(`Found ${enrichedPlans ? enrichedPlans.length : 0} plans`);
-        if (enrichedPlans && enrichedPlans.length > 0) {
-            console.log(`First plan has preview: ${!!enrichedPlans[0].preview}, preview length: ${enrichedPlans[0].preview ? enrichedPlans[0].preview.length : 0}`);
-        }
 
         res.json({ success: true, plans: enrichedPlans });
     } catch (error) {
@@ -249,6 +248,45 @@ router.post('/api/plans/upload', requireAuth, upload.array('plans', 20), (req, r
     } catch (error) {
         console.error('Error uploading plans:', error);
         res.status(500).json({ error: 'Failed to upload plans' });
+    }
+});
+
+// Get a specific plan's preview image
+router.get('/api/plans/:id/preview', requireAuth, (req, res) => {
+    try {
+        console.log(`📥 Preview request for plan: ${req.params.id}`);
+        const plan = plansDB.findById(req.params.id);
+
+        if (!plan) {
+            console.error(`❌ Plan not found: ${req.params.id}`);
+            return res.status(404).json({ error: 'Plan not found' });
+        }
+
+        if (!plan.preview) {
+            console.error(`❌ No preview for plan: ${req.params.id}`);
+            return res.status(404).json({ error: 'No preview available' });
+        }
+
+        // If preview is a data URL, convert it back and send as appropriate content type
+        if (plan.preview.startsWith('data:')) {
+            const matches = plan.preview.match(/^data:([^;]+);base64,(.+)$/);
+            if (matches) {
+                const mimeType = matches[1];
+                const base64Data = matches[2];
+                const buffer = Buffer.from(base64Data, 'base64');
+
+                console.log(`✅ Sending preview: ${mimeType}, size: ${buffer.length} bytes`);
+                res.setHeader('Content-Type', mimeType);
+                res.setHeader('Cache-Control', 'public, max-age=31536000'); // Cache for 1 year
+                return res.send(buffer);
+            }
+        }
+
+        console.error(`❌ Invalid preview format for plan: ${req.params.id}`);
+        res.status(400).json({ error: 'Invalid preview format' });
+    } catch (error) {
+        console.error('Error fetching plan preview:', error);
+        res.status(500).json({ error: 'Failed to fetch preview' });
     }
 });
 
