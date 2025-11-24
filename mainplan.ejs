@@ -6208,7 +6208,7 @@
         // Request queue for controlling concurrent PDF preview fetches
         let previewRequestQueue = [];
         let activePreviewRequests = 0;
-        const MAX_CONCURRENT_PREVIEWS = 3;
+        const MAX_CONCURRENT_PREVIEWS = 6; // Increased for faster loading of all files
 
         // Initialize
         document.addEventListener('DOMContentLoaded', function() {
@@ -6449,6 +6449,9 @@
                 // Render folders
                 renderFolders();
 
+                // Load all previews in batches (for both All Plans and Folder sections)
+                setupPreviewLazyLoading();
+
                 statusText.textContent = `${plans.length} ${plans.length === 1 ? 'plan' : 'plans'}`;
             }
         }
@@ -6484,34 +6487,43 @@
                 </div>
             `;
             grid.appendChild(newPlanCard);
-
-            // Setup lazy loading for plan previews using Intersection Observer
-            setupPreviewLazyLoading();
         }
 
-        // Setup lazy loading for plan previews
+        // Setup preview loading for all plan cards
         function setupPreviewLazyLoading() {
             const cards = document.querySelectorAll('.plan-card');
 
-            // Only load first 6 cards immediately, others on demand
-            cards.forEach((card, index) => {
-                if (index < 6) {
-                    // Load first 6 cards immediately
-                    loadPlanPreview(card);
-                } else {
-                    // Use Intersection Observer for remaining cards
-                    const observer = new IntersectionObserver((entries) => {
-                        entries.forEach(entry => {
-                            if (entry.isIntersecting) {
-                                loadPlanPreview(entry.target);
-                                observer.unobserve(entry.target); // Stop observing after load
-                            }
-                        });
-                    }, { rootMargin: '100px' }); // Start loading 100px before card is visible
+            // Load all cards in batches for optimal performance
+            // Use requestIdleCallback if available for non-blocking loading
+            let cardIndex = 0;
+            const batchSize = 20; // Larger batches for faster processing
+            const batchInterval = 50; // Shorter interval between batches
 
-                    observer.observe(card);
+            function processBatch() {
+                const startTime = performance.now();
+                const endIndex = Math.min(cardIndex + batchSize, cards.length);
+
+                for (let i = cardIndex; i < endIndex; i++) {
+                    loadPlanPreview(cards[i]);
                 }
-            });
+
+                cardIndex = endIndex;
+
+                // If more cards to process, schedule next batch
+                if (cardIndex < cards.length) {
+                    // Use requestIdleCallback if available, otherwise use setTimeout
+                    if ('requestIdleCallback' in window) {
+                        requestIdleCallback(() => processBatch(), { timeout: 100 });
+                    } else {
+                        requestAnimationFrame(() => {
+                            setTimeout(processBatch, batchInterval);
+                        });
+                    }
+                }
+            }
+
+            // Start processing batches immediately
+            processBatch();
         }
 
         // Create plan card with PDF preview
