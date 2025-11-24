@@ -10486,7 +10486,18 @@
                         }
                         const arrayBuffer = await response.arrayBuffer();
                         console.log(`✅ Received PDF data: ${arrayBuffer.byteLength} bytes for ${activity.id}`);
-                        const base64Data = btoa(String.fromCharCode.apply(null, new Uint8Array(arrayBuffer)));
+
+                        // Convert ArrayBuffer to base64 in chunks to avoid call stack size exceeded
+                        const bytes = new Uint8Array(arrayBuffer);
+                        let binary = '';
+                        const chunkSize = 65536; // 64KB chunks
+                        for (let i = 0; i < bytes.length; i += chunkSize) {
+                            const chunk = bytes.subarray(i, i + chunkSize);
+                            binary += String.fromCharCode.apply(null, chunk);
+                        }
+                        const base64Data = btoa(binary);
+                        console.log(`✅ Converted to base64: ${base64Data.length} chars`);
+
                         // Pass just the base64 data (without the data: prefix)
                         generatePDFThumbnail(base64Data, `pdf-thumb-${activity.id}`);
                     } catch (error) {
