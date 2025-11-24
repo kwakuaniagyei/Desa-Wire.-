@@ -6487,13 +6487,49 @@
             card.appendChild(info);
 
             // Generate PDF preview
-            if (plan.preview) {
-                // Extract base64 data from data URL
-                const base64Data = plan.preview.split(',')[1] || plan.preview;
-                generatePDFPreview(base64Data, thumbnailId);
+            if (plan.preview && plan.type) {
+                if (plan.type.includes('pdf')) {
+                    // Fetch PDF from preview endpoint
+                    generatePDFPreviewFromURL(plan.preview, thumbnailId);
+                } else if (plan.type.includes('image')) {
+                    // Show image preview directly
+                    const container = document.getElementById(thumbnailId);
+                    if (container) {
+                        container.innerHTML = `<img src="${plan.preview}" alt="Preview" style="width: 100%; height: 100%; object-fit: cover;">`;
+                    }
+                }
             }
 
             return card;
+        }
+
+        // Generate PDF preview from URL endpoint
+        async function generatePDFPreviewFromURL(previewUrl, containerId) {
+            try {
+                // Fetch PDF data from preview endpoint
+                const response = await fetch(previewUrl);
+                if (!response.ok) {
+                    console.error(`Failed to fetch preview: ${response.status}`);
+                    return;
+                }
+
+                const arrayBuffer = await response.arrayBuffer();
+
+                // Convert ArrayBuffer to base64 in chunks
+                const bytes = new Uint8Array(arrayBuffer);
+                let binary = '';
+                const chunkSize = 65536;
+                for (let i = 0; i < bytes.length; i += chunkSize) {
+                    const chunk = bytes.subarray(i, i + chunkSize);
+                    binary += String.fromCharCode.apply(null, chunk);
+                }
+                const base64Data = btoa(binary);
+
+                // Now use the existing function with base64 data
+                await generatePDFPreview(base64Data, containerId);
+            } catch (error) {
+                console.error('Error loading PDF preview from URL:', error);
+            }
         }
 
         // Generate PDF preview using PDF.js
