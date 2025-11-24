@@ -1947,6 +1947,7 @@
             visibility: hidden;
             opacity: 0;
             transition: left 0.3s ease;
+            overflow: visible;
         }
 
         .pdf-viewer-modal.show {
@@ -3220,6 +3221,12 @@
             width: 100%;
             height: 100%;
             min-height: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .pdf-viewer-main-wrapper > * {
+            pointer-events: auto;
         }
 
         /* ===== PDF TOOLBAR STYLES ===== */
@@ -3234,24 +3241,20 @@
             width: auto;
             height: auto;
             position: fixed;
-            left: calc(var(--sidebar-width) + 20px);
-            top: calc(var(--action-bar-height) + 20px);
+            left: 20px;
+            top: 80px;
             z-index: 10001;
             min-width: auto;
             max-width: none;
             border-right: none;
             overflow: visible;
             flex-shrink: 1;
+            pointer-events: auto;
         }
 
         /* Show toolbar only when PDF viewer is open */
         .pdf-viewer-modal.show .pdf-left-sidebar {
             display: flex;
-        }
-
-        /* Adjust toolbar position when sidebar is collapsed */
-        .sidebar.collapsed ~ .pdf-viewer-modal .pdf-left-sidebar {
-            left: calc(var(--sidebar-collapsed-width) + 20px);
         }
 
         .pdf-tool-btn {
