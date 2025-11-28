@@ -11,47 +11,46 @@
     <script src="/js/notifications.js?v=<%= Date.now() %>"></script>
     <script src="/js/chat-widget.js?v=<%= Date.now() %>"></script>
     <style>
+        /* 80% ZOOM FIX - Makes 100% zoom look like 80% zoom */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
-        /* Root font size - base for rem units */
         :root {
-            font-size: 16px; /* Base font size */
+            /* Base scaling factor - makes 100% zoom look like 80% zoom */
+            --scale-factor: 0.8;
 
-            /* Layout dimensions */
-            --action-bar-height: 3.75rem;
-            --sidebar-width: 16.25rem;
-            --sidebar-collapsed-width: 5rem;
-            --toolbar-width: 3.75rem;
+            /* Scaled dimensions (all values multiplied by 0.8) */
+            --action-bar-height: 48px; /* 60px * 0.8 */
+            --sidebar-width: 208px; /* 260px * 0.8 */
+            --sidebar-collapsed-width: 64px; /* 80px * 0.8 */
+            --toolbar-width: 48px; /* 60px * 0.8 */
+            --toolbar-offset: 10px;
+            --pdf-padding-vertical: 19px;
+            --pdf-padding-horizontal: 13px;
+            --pdf-padding-bottom: 80px;
+            --dropdown-top-offset: 48px;
+            --fullscreen-padding-offset: 24px;
 
-            /* Responsive spacing */
-            --sp-xs: clamp(0.25rem, 0.5vh, 0.375rem);
-            --sp-sm: clamp(0.375rem, 1vh, 0.5rem);
-            --sp-md: clamp(0.625rem, 1.5vh, 0.75rem);
-            --sp-lg: clamp(1rem, 2.5vh, 1.25rem);
-            --sp-xl: clamp(1.5rem, 4vh, 2rem);
-            --sp-2xl: clamp(2rem, 5vh, 2.5rem);
+            /* Fixed spacing (80% scaled) */
+            --sp-xs: 2px;
+            --sp-sm: 4px;
+            --sp-md: 8px;
+            --sp-lg: 10px;
+            --sp-xl: 13px;
+            --sp-2xl: 16px;
 
-            /* Responsive sizing */
-            --sz-sm: clamp(0.75rem, 1.5vw, 0.875rem);
-            --sz-md: clamp(1rem, 2.5vw, 1.25rem);
-            --sz-lg: clamp(1.25rem, 3vw, 1.5rem);
+            /* Fixed sizing (80% scaled) */
+            --sz-sm: 11px; /* 14px * 0.8 */
+            --sz-md: 13px; /* 16px * 0.8 */
+            --sz-lg: 14px; /* 18px * 0.8 */
 
-            /* Responsive widths */
-            --wd-sm: clamp(1rem, 2vw, 1.5rem);
-            --wd-md: clamp(1.75rem, 4vw, 2rem);
-            --wd-lg: clamp(4rem, 12vw, 5rem);
-
-            /* PDF and positioning */
-            --toolbar-offset: clamp(0.75rem, 2vw, 1.5rem);
-            --pdf-padding-vertical: clamp(1.5rem, 4vh, 3.75rem);
-            --pdf-padding-horizontal: clamp(1rem, 2vw, 2.5rem);
-            --pdf-padding-bottom: clamp(6.25rem, 15vh, 12.5rem);
-            --dropdown-top-offset: clamp(3.75rem, 8vh, 6.25rem);
-            --fullscreen-padding-offset: clamp(1.875rem, 4vh, 3.125rem);
+            /* Fixed widths (80% scaled) */
+            --wd-sm: 8px;
+            --wd-md: 14px; /* 18px * 0.8 */
+            --wd-lg: 32px; /* 40px * 0.8 */
 
             /* Colors */
             --col-border: #e5e7eb;
@@ -64,17 +63,12 @@
             --col-shadow: rgba(0, 0, 0, 0.1);
         }
 
-        /* Responsive font scaling for different screen sizes */
-        @media screen and (max-width: 1600px) {
-            :root {
-                font-size: 14px; /* Smaller base for laptops */
-            }
-        }
-
-        @media screen and (min-width: 2400px) {
-            :root {
-                font-size: 18px; /* Larger base for big monitors */
-            }
+        body {
+            /* Scale down to 80% */
+            transform: scale(var(--scale-factor));
+            transform-origin: top left;
+            width: 125%; /* 100% / 0.8 = 125% to compensate */
+            height: 125%;
         }
 
         /* Utility base styles */
@@ -12302,27 +12296,31 @@
         }
     }
 
-    // Dynamic viewport adjustment for responsive CSS
-    function adjustForViewport() {
-        const vw = window.innerWidth;
-        const vh = window.innerHeight;
+    // ===== 80% ZOOM FIX - Makes 100% zoom look like 80% zoom =====
+    (function() {
+        'use strict';
 
-        // Adjust root font size based on viewport width
-        if (vw < 1600) {
-            document.documentElement.style.fontSize = '14px';
-        } else if (vw >= 2400) {
-            document.documentElement.style.fontSize = '18px';
-        } else {
-            document.documentElement.style.fontSize = '16px';
+        // Apply 80% scaling to body
+        function applyScaling() {
+            document.body.style.transform = 'scale(0.8)';
+            document.body.style.transformOrigin = 'top left';
+            document.body.style.width = '125%'; // Compensate for scaling
+            document.body.style.height = '125%';
+
+            console.log('✅ 80% scaling applied - interface now matches your preferred view');
         }
 
-        console.log('Viewport adjusted:', vw, 'x', vh, '- Font size:', document.documentElement.style.fontSize);
-    }
+        // Apply on page load
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', applyScaling);
+        } else {
+            applyScaling();
+        }
 
-    // Run on load and resize events
-    window.addEventListener('load', adjustForViewport);
-    window.addEventListener('resize', adjustForViewport);
-    adjustForViewport();
+        // Reapply after dynamic content loads
+        setTimeout(applyScaling, 100);
+        setTimeout(applyScaling, 500);
+    })();
     </script>
 
 </body>
