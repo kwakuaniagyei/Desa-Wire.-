@@ -17,17 +17,40 @@
             box-sizing: border-box;
         }
 
+        /* Root font size - base for rem units */
         :root {
-            --action-bar-height: 60px;
-            --sidebar-width: 260px;
-            --sidebar-collapsed-width: 80px;
-            --toolbar-width: 60px;
+            font-size: 16px; /* Base font size */
+
+            --action-bar-height: 3.75rem;
+            --sidebar-width: 16.25rem;
+            --sidebar-collapsed-width: 5rem;
+            --toolbar-width: 3.75rem;
+            --toolbar-offset: clamp(0.75rem, 2vw, 1.5rem);
+            --pdf-padding-vertical: clamp(1.5rem, 4vh, 3.75rem);
+            --pdf-padding-horizontal: clamp(1rem, 2vw, 2.5rem);
+            --pdf-padding-bottom: clamp(6.25rem, 15vh, 12.5rem);
+            --dropdown-top-offset: clamp(3.75rem, 8vh, 6.25rem);
+            --fullscreen-padding-offset: clamp(1.875rem, 4vh, 3.125rem);
+        }
+
+        /* Responsive font scaling for different screen sizes */
+        @media screen and (max-width: 1600px) {
+            :root {
+                font-size: 14px; /* Smaller base for laptops */
+            }
+        }
+
+        @media screen and (min-width: 2400px) {
+            :root {
+                font-size: 18px; /* Larger base for big monitors */
+            }
         }
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             background-color: #f5f5f5;
             overflow: hidden;
+            font-size: 1rem;
         }
 
         .container {
@@ -46,45 +69,44 @@
             overflow: hidden;
         }
 
-        /* Top Action Bar */
+        /* Top Action Bar - RESPONSIVE */
         .action-bar {
             background: white;
-            padding: 16px 24px;
+            padding: clamp(0.75rem, 2vh, 1rem) clamp(1rem, 3vw, 1.5rem);
             border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: 12px;
+            gap: 0.75rem;
             flex-wrap: wrap;
             min-height: auto;
             overflow-y: auto;
         }
 
-        .action-bar-left {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-
+        .action-bar-left,
         .action-bar-right {
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: 0.75rem;
+        }
+
+        .btn-primary,
+        .btn-secondary {
+            padding: 0.5rem 1rem;
+            border-radius: 0.375rem;
+            font-size: clamp(0.875rem, 1.5vw, 1.0625rem);
+            font-weight: 500;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            transition: all 0.2s;
+            border: none;
         }
 
         .btn-primary {
             background-color: #3b82f6;
             color: white;
-            border: none;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 17px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
         }
 
         .btn-primary:hover {
@@ -95,15 +117,6 @@
             background-color: white;
             color: #374151;
             border: 1px solid #d1d5db;
-            padding: 8px 16px;
-            border-radius: 6px;
-            font-size: 17px;
-            font-weight: 500;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.2s;
         }
 
         .btn-secondary:hover {
@@ -115,10 +128,10 @@
             flex: 1;
             min-height: 0;
             overflow-y: auto;
-            padding: 24px;
+            padding: clamp(1rem, 3vh, 1.5rem);
         }
 
-        /* Empty State */
+        /* Empty State - RESPONSIVE */
         .empty-state {
             display: flex;
             flex-direction: column;
@@ -129,14 +142,14 @@
         }
 
         .empty-state-icon {
-            width: 160px;
-            height: 120px;
-            margin-bottom: 24px;
+            width: clamp(8rem, 15vw, 10rem);
+            height: clamp(6rem, 12vh, 7.5rem);
+            margin-bottom: clamp(1rem, 3vh, 1.5rem);
             display: flex;
             align-items: center;
             justify-content: center;
             background: #f3f4f6;
-            border-radius: 12px;
+            border-radius: 0.75rem;
             position: relative;
         }
 
@@ -170,32 +183,32 @@
         }
 
         .empty-state-title {
-            font-size: 20px;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
             font-weight: 600;
             color: #1f2937;
-            margin-bottom: 12px;
+            margin-bottom: 0.75rem;
         }
 
         .empty-state-description {
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
             color: #6b7280;
-            max-width: 400px;
+            max-width: 25rem;
             line-height: 1.5;
         }
 
-        /* Folder Section */
+        /* Folder Section - RESPONSIVE */
         .folder-section {
-            margin-bottom: 32px;
+            margin-bottom: clamp(1.5rem, 4vh, 2rem);
         }
 
         .folder-header {
             display: flex;
             align-items: center;
-            gap: 12px;
-            margin-bottom: 16px;
-            padding: 8px 12px;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+            padding: 0.5rem 0.75rem;
             background: white;
-            border-radius: 8px;
+            border-radius: 0.5rem;
             border: 1px solid #e5e7eb;
             overflow: visible;
             position: relative;
@@ -214,7 +227,7 @@
 
         .folder-name {
             flex: 1;
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
             font-weight: 500;
             color: #1f2937;
         }
@@ -281,50 +294,48 @@
             background: #fef2f2;
         }
 
-        /* Plans Grid */
-        .plans-grid {
+        /* Plans Grid - RESPONSIVE */
+        .plans-grid,
+        .folder-plans-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-            padding: 0 12px;
+            grid-template-columns: repeat(auto-fill, minmax(clamp(14rem, 20vw, 17.5rem), 1fr));
+            gap: clamp(1rem, 2vw, 1.5rem);
+            padding: 0 0.75rem;
         }
 
         .folder-plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
-            gap: 24px;
-            padding: 12px 12px;
             background: #fafbfc;
-            border-radius: 8px;
+            border-radius: 0.5rem;
             border: 1px solid #e5e7eb;
-            min-height: 50px;
+            padding: 0.75rem;
         }
 
+        /* Plan Card - RESPONSIVE */
         .plan-card {
             background: white;
             border: 1px solid #e5e7eb;
-            border-radius: 12px;
+            border-radius: 0.75rem;
             overflow: hidden;
             cursor: pointer;
             transition: all 0.3s ease;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.08);
         }
 
         .plan-card:hover {
-            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
-            transform: translateY(-4px);
+            box-shadow: 0 0.5rem 1.25rem rgba(0, 0, 0, 0.12);
+            transform: translateY(-0.25rem);
         }
 
         .plan-thumbnail {
             width: 100%;
-            height: 250px;
+            height: clamp(12rem, 18vh, 15.625rem);
             background: #f9fafb;
             display: flex;
             align-items: center;
             justify-content: center;
             position: relative;
             overflow: hidden;
-            border-radius: 12px 12px 0 0;
+            border-radius: 0.75rem 0.75rem 0 0;
         }
 
         .plan-thumbnail canvas {
@@ -335,29 +346,28 @@
         }
 
         .plan-info {
-            padding: 16px;
+            padding: 1rem;
             background: white;
         }
 
         .plan-name {
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
             font-weight: 600;
             color: #1f2937;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            letter-spacing: 0.3px;
         }
 
-        /* New Plan Card */
+        /* New Plan Card - RESPONSIVE */
         .new-plan-card {
             background: transparent;
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
+            border: 0.125rem dashed #d1d5db;
+            border-radius: 0.5rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: 200px;
+            min-height: clamp(12rem, 25vh, 20rem);
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -373,17 +383,17 @@
         }
 
         .new-plan-content i {
-            font-size: 24px;
-            margin-bottom: 8px;
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            margin-bottom: clamp(0.375rem, 1vh, 0.5rem);
         }
 
         .new-plan-content span {
             display: block;
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
             font-weight: 500;
         }
 
-        /* Upload Modal */
+        /* Upload Modal - RESPONSIVE */
         .upload-modal {
             position: fixed;
             top: 0;
@@ -403,19 +413,19 @@
 
         .upload-modal-content {
             background: white;
-            border-radius: 12px;
+            border-radius: 0.75rem;
             width: 95%;
-            max-width: 600px;
+            max-width: clamp(20rem, 70vw, 37.5rem);
             max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.2);
             animation: modalSlideIn 0.3s ease;
         }
 
         @keyframes modalSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-30px);
+                transform: translateY(-1.875rem);
             }
             to {
                 opacity: 1;
@@ -424,15 +434,15 @@
         }
 
         .upload-modal-header {
-            padding: 32px 40px;
-            border-bottom: 1px solid #e5e7eb;
+            padding: clamp(1.5rem, 4vh, 2rem) clamp(1.5rem, 3vw, 2.5rem);
+            border-bottom: 0.0625rem solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
         .upload-modal-title {
-            font-size: 24px;
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
             font-weight: 600;
             color: #1f2937;
         }
@@ -440,16 +450,16 @@
         .upload-modal-close {
             background: none;
             border: none;
-            font-size: 28px;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
             color: #9ca3af;
             cursor: pointer;
             padding: 0;
-            width: 32px;
-            height: 32px;
+            width: clamp(1.75rem, 4vw, 2rem);
+            height: clamp(1.75rem, 4vw, 2rem);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
+            border-radius: 0.375rem;
             transition: all 0.2s;
             line-height: 1;
         }
@@ -460,7 +470,7 @@
         }
 
         .upload-modal-body {
-            padding: 32px 40px;
+            padding: clamp(1.5rem, 4vh, 2rem) clamp(1.5rem, 3vw, 2.5rem);
         }
 
         /* QR Code Modal - Positioned inside PDF Viewer */
@@ -501,12 +511,12 @@
         .pdf-qr-code-content {
             position: relative;
             background: white;
-            border-radius: 12px;
+            border-radius: 0.75rem;
             width: 95%;
-            max-width: 500px;
+            max-width: clamp(18rem, 65vw, 31.25rem);
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.3);
             animation: qrModalSlideIn 0.3s ease;
             z-index: 10002;
         }
@@ -514,7 +524,7 @@
         @keyframes qrModalSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-30px) scale(0.95);
+                transform: translateY(-1.875rem) scale(0.95);
             }
             to {
                 opacity: 1;
@@ -523,15 +533,15 @@
         }
 
         .pdf-qr-code-header {
-            padding: 24px 32px;
-            border-bottom: 1px solid #e5e7eb;
+            padding: clamp(1.25rem, 3vh, 1.5rem) clamp(1.5rem, 3vw, 2rem);
+            border-bottom: 0.0625rem solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
         .pdf-qr-code-title {
-            font-size: 20px;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
             font-weight: 600;
             color: #1f2937;
             margin: 0;
@@ -540,16 +550,16 @@
         .pdf-qr-code-close {
             background: none;
             border: none;
-            font-size: 28px;
+            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
             color: #6b7280;
             cursor: pointer;
             padding: 0;
-            width: 40px;
-            height: 40px;
+            width: clamp(2rem, 4vw, 2.5rem);
+            height: clamp(2rem, 4vw, 2.5rem);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
+            border-radius: 0.375rem;
             transition: all 0.2s ease;
         }
 
@@ -559,14 +569,14 @@
         }
 
         .pdf-qr-code-body {
-            padding: 32px;
+            padding: clamp(1.5rem, 4vh, 2rem);
             text-align: center;
         }
 
         .upload-dropzone {
-            border: 2px dashed #d1d5db;
-            border-radius: 8px;
-            padding: 60px 40px;
+            border: 0.125rem dashed #d1d5db;
+            border-radius: 0.5rem;
+            padding: clamp(2rem, 8vh, 3.75rem) clamp(1.5rem, 3vw, 2.5rem);
             text-align: center;
             background-color: #f9fafb;
             transition: all 0.3s ease;
@@ -583,11 +593,11 @@
             background-color: #dbeafe;
         }
 
-        /* Drag and drop visual feedback */
+        /* Drag and drop visual feedback - RESPONSIVE */
         .folder-section.drag-over {
             background-color: #dbeafe;
             border-color: #3b82f6;
-            border: 2px dashed #3b82f6;
+            border: 0.125rem dashed #3b82f6;
             transition: all 0.2s ease;
         }
 
@@ -602,11 +612,11 @@
         }
 
         .plan-card.drag-over {
-            border: 2px dashed #3b82f6;
+            border: 0.125rem dashed #3b82f6;
             background-color: #eff6ff;
         }
 
-        /* Loading spinner for drag and drop operations */
+        /* Loading spinner for drag and drop operations - RESPONSIVE */
         .drag-drop-loading-overlay {
             position: fixed;
             top: 0;
@@ -623,20 +633,20 @@
 
         .drag-drop-spinner-container {
             background: white;
-            padding: 40px;
-            border-radius: 12px;
-            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: clamp(1.5rem, 4vh, 2.5rem);
+            border-radius: 0.75rem;
+            box-shadow: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 20px;
+            gap: clamp(1rem, 2vh, 1.25rem);
             animation: scaleUp 0.3s ease-out;
         }
 
         .drag-drop-spinner {
-            width: 60px;
-            height: 60px;
-            border: 4px solid #e5e7eb;
+            width: clamp(2.5rem, 6vw, 3.75rem);
+            height: clamp(2.5rem, 6vw, 3.75rem);
+            border: 0.25rem solid #e5e7eb;
             border-top-color: #3b82f6;
             border-right-color: #2563eb;
             border-radius: 50%;
@@ -644,14 +654,14 @@
         }
 
         .drag-drop-loading-text {
-            font-size: 16px;
+            font-size: clamp(0.875rem, 2vw, 1rem);
             font-weight: 500;
             color: #1f2937;
             text-align: center;
         }
 
         .drag-drop-loading-subtext {
-            font-size: 13px;
+            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
             color: #6b7280;
         }
 
@@ -680,34 +690,34 @@
         }
 
         .upload-icon-wrapper {
-            margin: 0 auto 20px;
-            width: 80px;
-            height: 80px;
+            margin: 0 auto clamp(1rem, 3vh, 1.25rem);
+            width: clamp(4rem, 12vw, 5rem);
+            height: clamp(4rem, 12vw, 5rem);
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .upload-icon-box {
-            width: 56px;
-            height: 48px;
-            border: 2px solid #9ca3af;
-            border-radius: 4px;
+            width: clamp(2.75rem, 8vw, 3.5rem);
+            height: clamp(2.25rem, 6vw, 3rem);
+            border: 0.125rem solid #9ca3af;
+            border-radius: 0.25rem;
             position: relative;
             background: white;
         }
 
         .upload-icon-lines {
             position: absolute;
-            top: 8px;
-            left: 8px;
-            right: 8px;
+            top: clamp(0.375rem, 1vh, 0.5rem);
+            left: clamp(0.375rem, 1vh, 0.5rem);
+            right: clamp(0.375rem, 1vh, 0.5rem);
         }
 
         .upload-icon-line {
-            height: 2px;
+            height: 0.125rem;
             background-color: #d1d5db;
-            margin-bottom: 6px;
+            margin-bottom: clamp(0.25rem, 0.75vh, 0.375rem);
         }
 
         .upload-icon-line:last-child {
@@ -716,23 +726,23 @@
         }
 
         .upload-text {
-            font-size: 15px;
+            font-size: clamp(0.75rem, 1.75vw, 0.9375rem);
             color: #6b7280;
-            margin-bottom: 8px;
+            margin-bottom: clamp(0.375rem, 1vh, 0.5rem);
         }
 
         .upload-or {
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
             color: #9ca3af;
-            margin: 16px 0;
+            margin: clamp(0.75rem, 2vh, 1rem) 0;
         }
 
         .upload-select-btn {
             background-color: #3b82f6;
             color: white;
             border: none;
-            padding: 10px 24px;
-            border-radius: 6px;
+            padding: clamp(0.5rem, 1vh, 0.625rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 0.375rem;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
@@ -744,7 +754,7 @@
         }
 
         .upload-file-list {
-            margin-top: 24px;
+            margin-top: clamp(1rem, 3vh, 1.5rem);
             display: none;
         }
 
@@ -755,23 +765,23 @@
         .upload-file-item {
             display: flex;
             align-items: center;
-            gap: 12px;
-            padding: 12px;
+            gap: clamp(0.625rem, 1.5vw, 0.75rem);
+            padding: clamp(0.625rem, 1.5vh, 0.75rem);
             background: #f9fafb;
-            border-radius: 6px;
-            margin-bottom: 8px;
+            border-radius: 0.375rem;
+            margin-bottom: clamp(0.375rem, 1vh, 0.5rem);
         }
 
         .upload-file-icon {
-            width: 32px;
-            height: 32px;
+            width: clamp(1.75rem, 4vw, 2rem);
+            height: clamp(1.75rem, 4vw, 2rem);
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
+            border: 0.0625rem solid #e5e7eb;
+            border-radius: 0.25rem;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 12px;
+            font-size: clamp(0.625rem, 1vw, 0.75rem);
             color: #6b7280;
         }
 
@@ -780,14 +790,14 @@
         }
 
         .upload-file-name {
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             color: #1f2937;
             font-weight: 500;
-            margin-bottom: 2px;
+            margin-bottom: 0.125rem;
         }
 
         .upload-file-size {
-            font-size: 12px;
+            font-size: clamp(0.625rem, 1.25vw, 0.75rem);
             color: #9ca3af;
         }
 
@@ -796,8 +806,8 @@
             border: none;
             color: #9ca3af;
             cursor: pointer;
-            padding: 4px;
-            font-size: 16px;
+            padding: clamp(0.2rem, 0.5vh, 0.25rem);
+            font-size: clamp(0.875rem, 2vw, 1rem);
             transition: all 0.2s;
         }
 
@@ -806,28 +816,28 @@
         }
 
         .upload-integration-section {
-            margin-top: 32px;
+            margin-top: clamp(1.5rem, 4vh, 2rem);
         }
 
         .upload-integration-text {
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             color: #6b7280;
-            margin-bottom: 16px;
+            margin-bottom: clamp(0.75rem, 2vh, 1rem);
             text-align: center;
         }
 
         .upload-integration-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 12px;
-            margin-bottom: 16px;
+            gap: clamp(0.625rem, 1.5vw, 0.75rem);
+            margin-bottom: clamp(0.75rem, 2vh, 1rem);
         }
 
         .upload-integration-btn {
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 16px 12px;
+            border: 0.0625rem solid #e5e7eb;
+            border-radius: 0.5rem;
+            padding: clamp(0.75rem, 2vh, 1rem) clamp(0.625rem, 1.5vw, 0.75rem);
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -842,12 +852,12 @@
         }
 
         .upload-integration-icon {
-            width: 28px;
-            height: 28px;
+            width: clamp(1.5rem, 3.5vw, 1.75rem);
+            height: clamp(1.5rem, 3.5vw, 1.75rem);
         }
 
         .upload-integration-name {
-            font-size: 12px;
+            font-size: clamp(0.625rem, 1.25vw, 0.75rem);
             color: #6b7280;
             text-align: center;
         }
@@ -855,15 +865,15 @@
         .upload-more-options {
             width: 100%;
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 6px;
-            padding: 10px 16px;
+            border: 0.0625rem solid #e5e7eb;
+            border-radius: 0.375rem;
+            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(0.75rem, 1.5vw, 1rem);
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            font-size: 14px;
+            gap: clamp(0.375rem, 1vw, 0.5rem);
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             color: #6b7280;
             transition: all 0.2s;
         }
@@ -877,16 +887,16 @@
             background-color: #3b82f6;
             color: white;
             border: none;
-            padding: 12px 24px;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 0.375rem;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: 8px;
-            margin-top: 24px;
+            gap: clamp(0.375rem, 1vw, 0.5rem);
+            margin-top: clamp(1rem, 3vh, 1.5rem);
             transition: all 0.2s;
         }
 
@@ -899,63 +909,63 @@
             cursor: not-allowed;
         }
 
-        /* Upload Progress Bar */
+        /* Upload Progress Bar - RESPONSIVE */
         .upload-progress-container {
             width: 100%;
-            margin: 24px 0;
-            padding: 20px;
+            margin: clamp(1rem, 3vh, 1.5rem) 0;
+            padding: clamp(1rem, 2.5vh, 1.25rem);
             background: #f9fafb;
-            border-radius: 8px;
-            border: 1px solid #e5e7eb;
+            border-radius: 0.5rem;
+            border: 0.0625rem solid #e5e7eb;
         }
 
         .upload-progress-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: 12px;
+            margin-bottom: clamp(0.625rem, 1.5vh, 0.75rem);
         }
 
         .upload-progress-text {
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             font-weight: 500;
             color: #374151;
         }
 
         .upload-progress-percent {
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             font-weight: 600;
             color: #3b82f6;
         }
 
         .upload-progress-bar-wrapper {
             width: 100%;
-            height: 8px;
+            height: clamp(0.4rem, 1vh, 0.5rem);
             background: #e5e7eb;
-            border-radius: 4px;
+            border-radius: 0.25rem;
             overflow: hidden;
-            margin-bottom: 12px;
+            margin-bottom: clamp(0.625rem, 1.5vh, 0.75rem);
         }
 
         .upload-progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
-            border-radius: 4px;
+            border-radius: 0.25rem;
             width: 0%;
             transition: width 0.3s ease;
-            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 0.625rem rgba(59, 130, 246, 0.5);
         }
 
         .upload-progress-status {
-            font-size: 12px;
+            font-size: clamp(0.625rem, 1.25vw, 0.75rem);
             color: #6b7280;
             text-align: center;
         }
 
-        /* Upload Success Message */
+        /* Upload Success Message - RESPONSIVE */
         .upload-success-container {
             width: 100%;
-            padding: 40px 20px;
+            padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1rem, 2vw, 1.25rem);
             text-align: center;
             animation: slideIn 0.4s ease;
         }
@@ -964,52 +974,52 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: 16px;
+            gap: clamp(0.75rem, 2vh, 1rem);
         }
 
         .upload-success-checkmark {
-            width: 80px;
-            height: 80px;
+            width: clamp(4rem, 12vw, 5rem);
+            height: clamp(4rem, 12vw, 5rem);
             background: #10b981;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 40px;
+            font-size: clamp(1.75rem, 5vw, 2.5rem);
             color: white;
             animation: scaleIn 0.5s ease cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .upload-success-title {
-            font-size: 20px;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
             font-weight: 600;
             color: #1f2937;
             margin: 0;
         }
 
         .upload-success-message {
-            font-size: 14px;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             color: #6b7280;
             margin: 0;
         }
 
         .upload-success-btn {
-            padding: 10px 24px;
+            padding: clamp(0.5rem, 1vh, 0.625rem) clamp(1rem, 2vw, 1.5rem);
             background: #10b981;
             color: white;
             border: none;
-            border-radius: 6px;
-            font-size: 14px;
+            border-radius: 0.375rem;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
-            margin-top: 12px;
+            margin-top: clamp(0.625rem, 1.5vh, 0.75rem);
         }
 
         .upload-success-btn:hover {
             background: #059669;
-            transform: translateY(-2px);
-            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
+            transform: translateY(-0.125rem);
+            box-shadow: 0 0.25rem 0.75rem rgba(16, 185, 129, 0.3);
         }
 
         /* Animations */
@@ -1024,7 +1034,7 @@
             }
         }
 
-        /* Create Folder Modal */
+        /* Create Folder Modal - RESPONSIVE */
         .create-folder-modal {
             position: fixed;
             top: 0;
@@ -1044,22 +1054,22 @@
 
         .create-folder-content {
             background: white;
-            border-radius: 12px;
+            border-radius: 0.75rem;
             width: 90%;
-            max-width: 400px;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+            max-width: clamp(18rem, 60vw, 25rem);
+            box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.2);
             animation: modalSlideIn 0.3s ease;
         }
 
         .create-folder-header {
-            padding: 24px 24px 16px;
+            padding: clamp(1rem, 2.5vh, 1.5rem) clamp(1rem, 2.5vh, 1.5rem) clamp(0.75rem, 2vh, 1rem);
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
         .create-folder-title {
-            font-size: 20px;
+            font-size: clamp(1rem, 2.5vw, 1.25rem);
             font-weight: 600;
             color: #1f2937;
         }
@@ -1067,16 +1077,16 @@
         .create-folder-close {
             background: none;
             border: none;
-            font-size: 24px;
+            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
             color: #9ca3af;
             cursor: pointer;
             padding: 0;
-            width: 28px;
-            height: 28px;
+            width: clamp(1.5rem, 3vw, 1.75rem);
+            height: clamp(1.5rem, 3vw, 1.75rem);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 4px;
+            border-radius: 0.25rem;
             transition: all 0.2s;
         }
 
@@ -1086,23 +1096,23 @@
         }
 
         .create-folder-body {
-            padding: 0 24px 24px;
+            padding: 0 clamp(1rem, 2.5vh, 1.5rem) clamp(1rem, 2.5vh, 1.5rem);
         }
 
         .create-folder-input {
             width: 100%;
-            padding: 10px 12px;
-            border: 1px solid #d1d5db;
-            border-radius: 6px;
-            font-size: 14px;
-            margin-bottom: 16px;
+            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(0.625rem, 1.5vw, 0.75rem);
+            border: 0.0625rem solid #d1d5db;
+            border-radius: 0.375rem;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            margin-bottom: clamp(0.75rem, 2vh, 1rem);
             transition: all 0.2s;
         }
 
         .create-folder-input:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 0.1875rem rgba(59, 130, 246, 0.1);
         }
 
         .create-folder-btn {
@@ -1110,9 +1120,9 @@
             background-color: #3b82f6;
             color: white;
             border: none;
-            padding: 10px 24px;
-            border-radius: 6px;
-            font-size: 14px;
+            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(1rem, 2vw, 1.5rem);
+            border-radius: 0.375rem;
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -1127,7 +1137,7 @@
             cursor: not-allowed;
         }
 
-        /* Loading Overlay */
+        /* Loading Overlay - RESPONSIVE */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -1147,32 +1157,32 @@
 
         .loading-spinner {
             background: white;
-            padding: 32px 48px;
-            border-radius: 12px;
+            padding: clamp(1.5rem, 4vh, 2.5rem) clamp(2rem, 5vw, 3rem);
+            border-radius: 0.75rem;
             text-align: center;
         }
 
         .loading-spinner i {
-            font-size: 48px;
+            font-size: clamp(2.5rem, 7vw, 3rem);
             color: #3b82f6;
-            margin-bottom: 16px;
+            margin-bottom: clamp(0.75rem, 2vh, 1rem);
         }
 
         .loading-spinner p {
-            font-size: 16px;
+            font-size: clamp(0.875rem, 2vw, 1rem);
             color: #6b7280;
         }
 
-        /* Bottom status bar */
+        /* Bottom status bar - RESPONSIVE */
         .status-bar {
             background: white;
-            border-top: 1px solid #e5e7eb;
-            padding: 8px 24px;
-            font-size: 13px;
+            border-top: 0.0625rem solid #e5e7eb;
+            padding: clamp(0.375rem, 1vh, 0.5rem) clamp(1rem, 2vw, 1.5rem);
+            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
             color: #6b7280;
         }
 
-        /* Sidebar */
+        /* Sidebar - RESPONSIVE */
         .sidebar {
             width: var(--sidebar-width);
             background-color: #2c3e50;
@@ -1208,15 +1218,15 @@
         }
 
         .sidebar.collapsed .tasks-section {
-            margin-top: 10px;
-            padding-top: 10px;
-            padding-bottom: 10px;
+            margin-top: clamp(0.5rem, 1vh, 0.625rem);
+            padding-top: clamp(0.5rem, 1vh, 0.625rem);
+            padding-bottom: clamp(0.5rem, 1vh, 0.625rem);
         }
 
         .sidebar.collapsed .task-item {
-            padding: 8px 12px;
+            padding: clamp(0.375rem, 1vh, 0.5rem) clamp(0.625rem, 1.5vw, 0.75rem);
             justify-content: center;
-            margin-bottom: 5px;
+            margin-bottom: clamp(0.25rem, 0.75vh, 0.3125rem);
         }
 
         .sidebar.collapsed .task-item .badge {
@@ -1225,7 +1235,7 @@
 
         .sidebar.collapsed .task-item i {
             width: auto;
-            font-size: 16px;
+            font-size: clamp(0.875rem, 2vw, 1rem);
         }
 
         /* Hide main content panels when sidebar is collapsed in PDF viewer context */
@@ -1242,33 +1252,33 @@
         }
 
         .logo {
-            padding: 15px 20px;
+            padding: clamp(0.75rem, 2vh, 1rem) clamp(1rem, 2vw, 1.25rem);
             display: flex;
             align-items: center;
-            gap: 10px;
-            border-bottom: 1px solid #34495e;
+            gap: clamp(0.5rem, 1.5vw, 0.625rem);
+            border-bottom: 0.0625rem solid #34495e;
         }
 
         .logo-img {
-            width: 44px;
-            height: 44px;
+            width: clamp(2.5rem, 5vw, 2.75rem);
+            height: clamp(2.5rem, 5vw, 2.75rem);
             object-fit: contain;
         }
 
         .logo i {
             color: #3498db;
-            font-size: 24px;
+            font-size: clamp(1.25rem, 3vw, 1.5rem);
         }
 
         .logo span {
             font-weight: 700;
-            font-size: 18px;
+            font-size: clamp(0.875rem, 2vw, 1.125rem);
             color: #ecf0f1;
         }
 
         .logo .dropdown-icon {
             margin-left: auto;
-            font-size: 12px;
+            font-size: clamp(0.625rem, 1.5vw, 0.75rem);
             cursor: pointer;
             transition: transform 0.3s ease;
         }
@@ -1277,18 +1287,18 @@
             transform: rotate(180deg);
         }
 
-        /* Sidebar Project Dropdown */
+        /* Sidebar Project Dropdown - RESPONSIVE */
         .sidebar-project-dropdown {
             position: absolute;
-            top: 65px;
-            left: 20px;
+            top: clamp(3rem, 8vh, 4rem);
+            left: clamp(1rem, 2vw, 1.25rem);
             background: white;
-            border: 1px solid #ddd;
-            border-radius: 8px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-            width: calc(100% - 40px);
-            min-width: 200px;
-            max-height: 350px;
+            border: 0.0625rem solid #ddd;
+            border-radius: 0.5rem;
+            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
+            width: calc(100% - clamp(2rem, 4vw, 2.5rem));
+            min-width: clamp(11rem, 25vw, 12.5rem);
+            max-height: clamp(17rem, 50vh, 21.875rem);
             overflow-y: auto;
             display: none;
             z-index: 1000;
@@ -1299,16 +1309,16 @@
         }
 
         .sidebar-project-search {
-            padding: 10px 12px;
-            border-bottom: 1px solid #f0f0f0;
+            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(0.625rem, 1.5vw, 0.75rem);
+            border-bottom: 0.0625rem solid #f0f0f0;
         }
 
         .sidebar-project-search input {
             width: 100%;
-            padding: 8px 12px;
-            border: 1px solid #ddd;
-            border-radius: 4px;
-            font-size: 13px;
+            padding: clamp(0.4rem, 1vh, 0.5rem) clamp(0.625rem, 1.5vw, 0.75rem);
+            border: 0.0625rem solid #ddd;
+            border-radius: 0.25rem;
+            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
             outline: none;
             transition: border-color 0.2s;
         }
@@ -1318,14 +1328,14 @@
         }
 
         .sidebar-project-item {
-            padding: 12px 16px;
+            padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(0.75rem, 2vw, 1rem);
             cursor: pointer;
             transition: all 0.2s ease;
-            border-left: 3px solid transparent;
+            border-left: 0.1875rem solid transparent;
             display: flex;
             align-items: center;
-            gap: 10px;
-            font-size: 14px;
+            gap: clamp(0.5rem, 1.5vw, 0.625rem);
+            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
             color: #333;
         }
 
@@ -1342,14 +1352,14 @@
         }
 
         .sidebar-project-icon {
-            width: 24px;
-            height: 24px;
-            border-radius: 4px;
+            width: clamp(1.25rem, 3vw, 1.5rem);
+            height: clamp(1.25rem, 3vw, 1.5rem);
+            border-radius: 0.25rem;
             background-color: #3498db;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 11px;
+            font-size: clamp(0.625rem, 1.25vw, 0.6875rem);
             color: white;
             font-weight: bold;
             flex-shrink: 0;
@@ -1362,27 +1372,27 @@
             text-overflow: ellipsis;
         }
 
-        /* Sidebar Dropdown Header with Home and Create buttons */
+        /* Sidebar Dropdown Header with Home and Create buttons - RESPONSIVE */
         .sidebar-project-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: 12px 16px;
-            border-bottom: 1px solid #f0f0f0;
-            gap: 8px;
+            padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(0.75rem, 2vw, 1rem);
+            border-bottom: 0.0625rem solid #f0f0f0;
+            gap: clamp(0.375rem, 1vh, 0.5rem);
         }
 
         .sidebar-home-btn {
             display: flex;
             align-items: center;
-            gap: 8px;
+            gap: clamp(0.375rem, 1vw, 0.5rem);
             flex: 1;
-            padding: 8px 12px;
+            padding: clamp(0.4rem, 1vh, 0.5rem) clamp(0.625rem, 1.5vw, 0.75rem);
             background-color: transparent;
-            border: 1.5px solid #FFD700;
-            border-radius: 4px;
+            border: 0.09375rem solid #FFD700;
+            border-radius: 0.25rem;
             cursor: pointer;
-            font-size: 13px;
+            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
             color: #FFD700;
             transition: all 0.2s ease;
             white-space: nowrap;
@@ -1391,27 +1401,27 @@
 
         .sidebar-home-btn i {
             color: #FFD700;
-            font-size: 14px;
+            font-size: clamp(0.875rem, 2vw, 0.9375rem);
         }
 
         .sidebar-home-btn:hover {
             background-color: rgba(255, 215, 0, 0.15);
             border-color: #FFD700;
-            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 0.5rem rgba(255, 215, 0, 0.3);
         }
 
         .sidebar-create-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: 36px;
-            height: 36px;
+            width: clamp(1.75rem, 4vw, 2.25rem);
+            height: clamp(1.75rem, 4vw, 2.25rem);
             background-color: #FF6B6B;
             border: none;
-            border-radius: 4px;
+            border-radius: 0.25rem;
             cursor: pointer;
             color: white;
-            font-size: 18px;
+            font-size: clamp(0.9rem, 2vw, 1.125rem);
             transition: all 0.2s ease;
             flex-shrink: 0;
             font-weight: bold;
@@ -1424,7 +1434,7 @@
         .sidebar-create-btn:hover {
             background-color: #FF5252;
             transform: scale(1.1);
-            box-shadow: 0 0 12px rgba(255, 107, 107, 0.4);
+            box-shadow: 0 0 0.75rem rgba(255, 107, 107, 0.4);
         }
 
         .sidebar-create-btn:active {
@@ -1432,23 +1442,23 @@
         }
 
         .section-title {
-            padding: 8px 16px 15px;
-            font-size: 13px;
+            padding: clamp(0.375rem, 1vh, 0.5rem) clamp(0.75rem, 2vw, 1rem) clamp(0.75rem, 2vh, 0.9375rem);
+            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
             text-transform: uppercase;
             color: #3498db;
-            letter-spacing: 1.5px;
+            letter-spacing: clamp(0.08rem, 0.15vw, 0.09375rem);
             font-weight: 800;
             opacity: 0.95;
         }
 
         .menu-item {
-            padding: 12px 20px;
+            padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(1rem, 2vw, 1.25rem);
             display: flex;
             align-items: center;
-            gap: 12px;
+            gap: clamp(0.625rem, 1.5vw, 0.75rem);
             cursor: pointer;
             transition: background-color 0.2s;
-            font-size: 19px;
+            font-size: clamp(0.9rem, 2vw, 1.1875rem);
             color: #ecf0f1;
         }
 
@@ -1462,30 +1472,30 @@
         }
 
         .menu-item i {
-            width: 20px;
+            width: clamp(0.9rem, 2vw, 1.25rem);
             text-align: center;
-            font-size: 18px;
+            font-size: clamp(0.9rem, 2vw, 1.125rem);
         }
 
         .tasks-section {
-            margin-top: 30px;
-            border-top: 2px solid rgba(52, 152, 219, 0.4);
-            padding-top: 18px;
-            padding-bottom: 15px;
+            margin-top: clamp(1.5rem, 4vh, 1.875rem);
+            border-top: 0.125rem solid rgba(52, 152, 219, 0.4);
+            padding-top: clamp(0.75rem, 2vh, 0.9375rem);
+            padding-bottom: clamp(0.75rem, 2vh, 0.9375rem);
             flex-shrink: 0;
         }
 
         .task-item {
-            padding: 11px 16px;
+            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(0.75rem, 2vw, 1rem);
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
             transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            font-size: 18px;
+            font-size: clamp(0.9rem, 2vw, 1.125rem);
             color: #ffffff;
-            border-radius: 8px;
-            margin-bottom: 7px;
+            border-radius: 0.5rem;
+            margin-bottom: clamp(0.3rem, 0.75vh, 0.4375rem);
             position: relative;
             overflow: hidden;
         }
@@ -1496,7 +1506,7 @@
             left: 0;
             top: 0;
             height: 100%;
-            width: 3px;
+            width: 0.1875rem;
             background-color: transparent;
             transition: background-color 0.3s ease;
         }
@@ -1504,8 +1514,8 @@
         .task-item:hover {
             background-color: rgba(52, 152, 219, 0.12);
             color: #ffffff;
-            transform: translateX(3px);
-            box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.2);
+            transform: translateX(0.1875rem);
+            box-shadow: inset 0 0 0 0.0625rem rgba(52, 152, 219, 0.2);
         }
 
         .task-item:hover::before {
@@ -1516,43 +1526,43 @@
             background-color: rgba(52, 152, 219, 0.2);
             color: #ffffff;
             font-weight: 600;
-            letter-spacing: 0.3px;
-            box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.3);
+            letter-spacing: clamp(0.015rem, 0.05vw, 0.01875rem);
+            box-shadow: inset 0 0 0 0.0625rem rgba(52, 152, 219, 0.3);
         }
 
         .task-item.active::before {
             background-color: #3498db;
-            width: 4px;
+            width: 0.25rem;
         }
 
         .task-item .left {
             display: flex;
             align-items: center;
-            gap: 10px;
+            gap: clamp(0.5rem, 1.5vw, 0.625rem);
         }
 
         .task-item .badge {
             background-color: #3498db;
             color: white;
-            padding: 4px 9px;
-            border-radius: 14px;
-            font-size: 11px;
+            padding: clamp(0.2rem, 0.5vh, 0.25rem) clamp(0.375rem, 1vw, 0.5625rem);
+            border-radius: clamp(0.75rem, 2vh, 0.875rem);
+            font-size: clamp(0.625rem, 1.25vw, 0.6875rem);
             font-weight: 800;
-            min-width: 22px;
+            min-width: clamp(1rem, 2vw, 1.375rem);
             text-align: center;
-            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
+            box-shadow: 0 0.125rem 0.25rem rgba(52, 152, 219, 0.3);
             transition: all 0.3s ease;
         }
 
         .task-item:hover .badge {
             transform: scale(1.1);
-            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
+            box-shadow: 0 0.25rem 0.5rem rgba(52, 152, 219, 0.4);
         }
 
         .task-item i {
-            width: 20px;
+            width: clamp(0.9rem, 2vw, 1.25rem);
             text-align: center;
-            font-size: 18px;
+            font-size: clamp(0.9rem, 2vw, 1.125rem);
             opacity: 0.9;
             transition: opacity 0.3s ease;
         }
@@ -1562,10 +1572,10 @@
         }
 
         .sidebar-footer {
-            padding: 15px 20px;
+            padding: clamp(0.75rem, 2vh, 0.9375rem) clamp(1rem, 2vw, 1.25rem);
             display: flex;
-            gap: 20px;
-            border-top: 2px solid rgba(52, 152, 219, 0.3);
+            gap: clamp(1rem, 2vw, 1.25rem);
+            border-top: 0.125rem solid rgba(52, 152, 219, 0.3);
             margin-top: auto;
             justify-content: center;
         }
@@ -1574,14 +1584,14 @@
             cursor: pointer;
             color: #7f8c8d;
             transition: all 0.3s ease;
-            font-size: 20px;
-            width: 28px;
-            height: 28px;
+            font-size: clamp(1rem, 2vw, 1.25rem);
+            width: clamp(1.5rem, 3vw, 1.75rem);
+            height: clamp(1.5rem, 3vw, 1.75rem);
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 6px;
-            padding: 6px;
+            border-radius: 0.375rem;
+            padding: clamp(0.25rem, 0.75vh, 0.375rem);
         }
 
         .footer-icon:hover {
@@ -1947,7 +1957,7 @@
             visibility: hidden;
             opacity: 0;
             transition: left 0.3s ease;
-            overflow: visible;
+            overflow: hidden;
         }
 
         .pdf-viewer-modal.show {
@@ -2013,8 +2023,8 @@
             opacity: 1;
             transition: opacity 0.3s ease;
             position: fixed !important;
-            left: 20px !important;
-            top: 20px !important;
+            left: var(--toolbar-offset) !important;
+            top: var(--toolbar-offset) !important;
             z-index: 100000 !important;
         }
 
@@ -2026,19 +2036,19 @@
         .pdf-viewer-modal.fullscreen-mode .pdf-center-content {
             width: 100% !important;
             margin-left: 0 !important;
-            padding-left: calc(var(--toolbar-width) + 40px) !important;
+            padding-left: calc(var(--toolbar-width) + var(--fullscreen-padding-offset)) !important;
         }
 
         .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
             width: 100% !important;
             max-width: 100% !important;
-            padding: 40px 10px 10px 10px !important;
+            padding: var(--fullscreen-padding-offset) clamp(8px, 1vw, 16px) clamp(8px, 1vh, 16px) clamp(8px, 1vw, 16px) !important;
             display: flex !important;
             align-items: center !important;
             justify-content: center !important;
             overflow: auto !important;
             background: #ffffff !important;
-            height: calc(100vh - 40px) !important;
+            height: calc(100vh - var(--fullscreen-padding-offset)) !important;
             border: none !important;
         }
 
@@ -2086,8 +2096,8 @@
         /* Eye dropdown in fullscreen mode */
         .pdf-viewer-modal.fullscreen-mode .eye-dropdown-menu {
             position: fixed !important;
-            top: 70px !important;
-            right: 20px !important;
+            top: var(--dropdown-top-offset) !important;
+            right: var(--toolbar-offset) !important;
             z-index: 100001 !important;
         }
 
@@ -3241,14 +3251,14 @@
             width: auto;
             height: auto;
             position: absolute;
-            left: 20px;
-            top: 20px;
+            left: 12px;
+            top: 12px;
             z-index: 10001;
             min-width: auto;
             max-width: none;
             border-right: none;
             overflow: visible;
-            flex-shrink: 1;
+            flex-shrink: 0;
             pointer-events: auto;
         }
 
@@ -3381,7 +3391,7 @@
             flex: 1;
             overflow: auto;
             background: #f5f5f5;
-            padding: 40px 24px 150px 24px;
+            padding: var(--pdf-padding-vertical) var(--pdf-padding-horizontal) var(--pdf-padding-bottom) var(--pdf-padding-horizontal);
             position: relative;
             display: flex;
             align-items: center; /* ✅ CHANGED: center instead of flex-start */
@@ -3452,11 +3462,19 @@
             filter: none !important;
         }
 
+        /* PDF Top Right Controls - In Header */
+        .pdf-top-right-controls-header {
+            display: flex;
+            gap: 8px;
+            align-items: center;
+            position: relative;
+        }
+
         /* PDF Top Right Controls */
         .pdf-top-right-controls {
-            position: fixed;
-            top: 120px;
-            right: 500px;
+            position: absolute;
+            top: 12px;
+            right: 12px;
             display: flex;
             gap: 8px;
             z-index: 10001;
@@ -3488,9 +3506,9 @@
 
         /* Eye Dropdown Menu */
         .eye-dropdown-menu {
-            position: fixed;
-            top: 160px;
-            right: 500px;
+            position: absolute;
+            top: 60px;
+            right: 20px;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
@@ -3562,10 +3580,10 @@
 
         /* PDF Name Display at Bottom */
         .pdf-bottom-name-bar {
-            position: fixed;
+            position: absolute;
             bottom: 0;
-            left: var(--sidebar-width);
-            right: 320px;
+            left: 0;
+            right: 0;
             background: white;
             padding: 12px 24px;
             display: flex;
@@ -3778,9 +3796,9 @@
 
         /* ===== PDF BOTTOM PANELS ===== */
         .pdf-bottom-panel {
-            position: fixed;
-            bottom: 70px;
-            right: 500px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
             background: white;
             border: 1px solid #e5e7eb;
             border-radius: 8px;
@@ -5831,6 +5849,49 @@
         }
 
     </style>
+    <script>
+        // Detect and adjust layout for browser zoom changes
+        function adjustForZoom() {
+            const zoom = window.devicePixelRatio || 1;
+            const root = document.documentElement;
+
+            // Update CSS variables based on zoom level
+            if (zoom > 1.2) {
+                // High zoom (125%+): tighter spacing
+                root.style.setProperty('--toolbar-offset', 'clamp(8px, 1.5vw, 16px)');
+                root.style.setProperty('--pdf-padding-vertical', 'clamp(16px, 3vh, 40px)');
+                root.style.setProperty('--pdf-padding-horizontal', 'clamp(12px, 1.5vw, 30px)');
+                root.style.setProperty('--pdf-padding-bottom', 'clamp(80px, 12vh, 150px)');
+                root.style.setProperty('--dropdown-top-offset', 'clamp(50px, 7vh, 80px)');
+                root.style.setProperty('--fullscreen-padding-offset', 'clamp(24px, 3vh, 40px)');
+            } else if (zoom > 1.0) {
+                // Normal to high zoom (100-125%): medium spacing
+                root.style.setProperty('--toolbar-offset', 'clamp(10px, 2vw, 20px)');
+                root.style.setProperty('--pdf-padding-vertical', 'clamp(20px, 4vh, 50px)');
+                root.style.setProperty('--pdf-padding-horizontal', 'clamp(14px, 2vw, 35px)');
+                root.style.setProperty('--pdf-padding-bottom', 'clamp(90px, 14vh, 180px)');
+                root.style.setProperty('--dropdown-top-offset', 'clamp(55px, 8vh, 90px)');
+                root.style.setProperty('--fullscreen-padding-offset', 'clamp(28px, 4vh, 45px)');
+            } else {
+                // Low zoom (< 100%): normal spacing
+                root.style.setProperty('--toolbar-offset', 'clamp(12px, 2vw, 24px)');
+                root.style.setProperty('--pdf-padding-vertical', 'clamp(24px, 4vh, 60px)');
+                root.style.setProperty('--pdf-padding-horizontal', 'clamp(16px, 2vw, 40px)');
+                root.style.setProperty('--pdf-padding-bottom', 'clamp(100px, 15vh, 200px)');
+                root.style.setProperty('--dropdown-top-offset', 'clamp(60px, 8vh, 100px)');
+                root.style.setProperty('--fullscreen-padding-offset', 'clamp(30px, 4vh, 50px)');
+            }
+        }
+
+        // Call on page load
+        window.addEventListener('load', adjustForZoom);
+
+        // Call when window resizes (zoom changes trigger resize)
+        window.addEventListener('resize', adjustForZoom);
+
+        // Initial call
+        adjustForZoom();
+    </script>
 </head>
 <body>
     <div class="container">
@@ -10950,169 +11011,169 @@
 
         <!-- Main Content Wrapper -->
         <div class="pdf-viewer-main-wrapper">
-            <!-- Left Sidebar with Tools -->
-            <div class="pdf-left-sidebar">
-                <!-- Fullscreen -->
-                <button class="pdf-tool-btn" data-tool="fullscreen" title="Fullscreen">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
-                </button>
-
-                <!-- Zoom In -->
-                <button class="pdf-tool-btn" id="pdfZoomInBtn" title="Zoom In (+)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </button>
-
-                <!-- Zoom Out -->
-                <button class="pdf-tool-btn" id="pdfZoomOutBtn" title="Zoom Out (-)">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
-                </button>
-
-                <!-- Add Task -->
-                <button class="pdf-tool-btn" data-tool="addtask" title="Add task (⇧+T)" onclick="initAddTaskMode()">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-                </button>
-
-                <!-- Link -->
-                <button class="pdf-tool-btn" data-tool="link" title="Link">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
-                </button>
-
-                <!-- Draw -->
-                <button class="pdf-tool-btn" data-tool="draw" title="Draw">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
-                </button>
-
-                <!-- Duplicate -->
-                <button class="pdf-tool-btn" data-tool="duplicate" title="Duplicate">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
-                </button>
-
-                <!-- Shape -->
-                <button class="pdf-tool-btn" data-tool="shape" title="Shape">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
-                </button>
-
-                <!-- Text -->
-                <button class="pdf-tool-btn" data-tool="text" title="Text">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
-                </button>
-
-                <!-- Tag -->
-                <button class="pdf-tool-btn" data-tool="tag" title="Tag">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
-                </button>
-
-                <!-- Divider -->
-                <div class="pdf-tool-separator"></div>
-
-                <!-- Record Button -->
-                <button class="pdf-tool-btn record" id="pdfRecordBtn" title="Record">
-                    <div class="record-icon"></div>
-                </button>
-
-                <!-- Cursor -->
-                <button class="pdf-tool-btn" data-tool="cursor" title="Cursor">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></svg>
-                </button>
-
-                <!-- Undo Button -->
-                <button class="pdf-tool-btn" id="pdfUndoBtn" title="Undo">
-                    <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
-                </button>
-
-                <!-- Navigation Arrows -->
-                <div class="nav-arrows-container">
-                    <button class="nav-btn" id="prevBtn" title="Previous Page">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
-                    </button>
-                    <button class="nav-btn" id="nextBtn" title="Next Page">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
-                    </button>
-                </div>
-            </div>
-
             <!-- Center Content Area -->
             <div class="pdf-center-content">
-                <!-- Top Right Controls (Search and Eye) -->
-                <div class="pdf-top-right-controls">
-                    <button class="pdf-control-icon" title="Search" onclick="togglePDFSearch()">
-                        <i class="fas fa-search"></i>
-                    </button>
-                    <button class="pdf-control-icon" title="View Options" onclick="toggleEyeDropdown()" id="eyeDropdownBtn">
-                        <i class="fas fa-eye"></i>
-                    </button>
-
-                    <!-- Eye Dropdown Menu (content below) -->
-                    <div class="eye-dropdown-menu" id="eyeDropdownMenu">
-                        <div class="eye-dropdown-header">Show</div>
-
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label">
-                                <input type="checkbox" checked> All layers
-                            </label>
-                        </div>
-
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label">
-                                <input type="checkbox" checked> Tasks
-                            </label>
-                            <div style="padding-left: 26px;">
-                                <label class="eye-dropdown-label">
-                                    <input type="checkbox" checked> Filtered tasks
-                                </label>
-                                <label class="eye-dropdown-label">
-                                    <input type="checkbox" checked> Other tasks
-                                </label>
-                            </div>
-                        </div>
-
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label">
-                                <input type="checkbox" checked> Markups
-                            </label>
-                            <div class="eye-dropdown-colors">
-                                <div class="eye-color-circle selected" style="background: #dc2626;"><i class="fas fa-check"></i></div>
-                                <div class="eye-color-circle selected" style="background: #2563eb;"><i class="fas fa-check"></i></div>
-                                <div class="eye-color-circle selected" style="background: #f59e0b;"><i class="fas fa-check"></i></div>
-                                <div class="eye-color-circle selected" style="background: #16a34a;"><i class="fas fa-check"></i></div>
-                                <div class="eye-color-circle selected" style="background: #d946ef;"><i class="fas fa-check"></i></div>
-                                <div class="eye-color-circle selected" style="background: #06b6d4;"><i class="fas fa-check"></i></div>
-                                <div class="eye-color-circle selected" style="background: #eab308;"><i class="fas fa-check"></i></div>
-                                <div class="eye-color-circle selected" style="background: #22c55e;"><i class="fas fa-check"></i></div>
-                                <div class="eye-color-circle selected" style="background: #fff; border: 1px solid #e5e7eb;"><i class="fas fa-check" style="color: #000;"></i></div>
-                                <div class="eye-color-circle selected" style="background: #000;"><i class="fas fa-check"></i></div>
-                            </div>
-                            <label class="eye-dropdown-label" style="margin-top: 8px;">
-                                <input type="checkbox" checked> <span style="color: #9333ea;">● Private</span>
-                            </label>
-                        </div>
-
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label"><input type="checkbox" checked> Attachments</label>
-                        </div>
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label"><input type="checkbox" checked> Plan links</label>
-                        </div>
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label"><input type="checkbox" checked> Form Links</label>
-                        </div>
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label"><input type="checkbox" checked> Photos</label>
-                        </div>
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label"><input type="checkbox" checked> RFIs</label>
-                        </div>
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label"><input type="checkbox" checked> Specifications</label>
-                        </div>
-                        <div class="eye-dropdown-section">
-                            <label class="eye-dropdown-label"><input type="checkbox" checked> Submittals</label>
-                        </div>
-                    </div>
-                </div>
-
                 <!-- Document Display Area -->
                 <div class="pdf-document-area">
+                    <!-- Left Sidebar with Tools - Inside PDF Area -->
+                    <div class="pdf-left-sidebar">
+                        <!-- Fullscreen -->
+                        <button class="pdf-tool-btn" data-tool="fullscreen" title="Fullscreen">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 3H5a2 2 0 0 0-2 2v3m18 0V5a2 2 0 0 0-2-2h-3m0 18h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+                        </button>
+
+                        <!-- Zoom In -->
+                        <button class="pdf-tool-btn" id="pdfZoomInBtn" title="Zoom In (+)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+
+                        <!-- Zoom Out -->
+                        <button class="pdf-tool-btn" id="pdfZoomOutBtn" title="Zoom Out (-)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/></svg>
+                        </button>
+
+                        <!-- Add Task -->
+                        <button class="pdf-tool-btn" data-tool="addtask" title="Add task (⇧+T)" onclick="initAddTaskMode()">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+                        </button>
+
+                        <!-- Link -->
+                        <button class="pdf-tool-btn" data-tool="link" title="Link">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg>
+                        </button>
+
+                        <!-- Draw -->
+                        <button class="pdf-tool-btn" data-tool="draw" title="Draw">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.85 2.83 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5Z"/><path d="m15 5 4 4"/></svg>
+                        </button>
+
+                        <!-- Duplicate -->
+                        <button class="pdf-tool-btn" data-tool="duplicate" title="Duplicate">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"/><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"/></svg>
+                        </button>
+
+                        <!-- Shape -->
+                        <button class="pdf-tool-btn" data-tool="shape" title="Shape">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2" ry="2"/></svg>
+                        </button>
+
+                        <!-- Text -->
+                        <button class="pdf-tool-btn" data-tool="text" title="Text">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 7 4 4 20 4 20 7"/><line x1="9" y1="20" x2="15" y2="20"/><line x1="12" y1="4" x2="12" y2="20"/></svg>
+                        </button>
+
+                        <!-- Tag -->
+                        <button class="pdf-tool-btn" data-tool="tag" title="Tag">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20.59 13.41l-7.17 7.17a2 2 0 0 1-2.83 0L2 12V2h10l8.59 8.59a2 2 0 0 1 0 2.82z"/><line x1="7" y1="7" x2="7.01" y2="7"/></svg>
+                        </button>
+
+                        <!-- Divider -->
+                        <div class="pdf-tool-separator"></div>
+
+                        <!-- Record Button -->
+                        <button class="pdf-tool-btn record" id="pdfRecordBtn" title="Record">
+                            <div class="record-icon"></div>
+                        </button>
+
+                        <!-- Cursor -->
+                        <button class="pdf-tool-btn" data-tool="cursor" title="Cursor">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m3 3 7.07 16.97 2.51-7.39 7.39-2.51L3 3z"/><path d="m13 13 6 6"/></svg>
+                        </button>
+
+                        <!-- Undo Button -->
+                        <button class="pdf-tool-btn" id="pdfUndoBtn" title="Undo">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 7v6h6"/><path d="M21 17a9 9 0 0 0-9-9 9 9 0 0 0-6 2.3L3 13"/></svg>
+                        </button>
+
+                        <!-- Navigation Arrows -->
+                        <div class="nav-arrows-container">
+                            <button class="nav-btn" id="prevBtn" title="Previous Page">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                            </button>
+                            <button class="nav-btn" id="nextBtn" title="Next Page">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="9 18 15 12 9 6"></polyline></svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Top Right Controls (Search and Eye) - Over PDF -->
+                    <div class="pdf-top-right-controls">
+                        <button class="pdf-control-icon" title="Search" onclick="togglePDFSearch()">
+                            <i class="fas fa-search"></i>
+                        </button>
+                        <button class="pdf-control-icon" title="View Options" onclick="toggleEyeDropdown()" id="eyeDropdownBtn">
+                            <i class="fas fa-eye"></i>
+                        </button>
+
+                        <!-- Eye Dropdown Menu -->
+                        <div class="eye-dropdown-menu" id="eyeDropdownMenu">
+                            <div class="eye-dropdown-header">Show</div>
+
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label">
+                                    <input type="checkbox" checked> All layers
+                                </label>
+                            </div>
+
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label">
+                                    <input type="checkbox" checked> Tasks
+                                </label>
+                                <div style="padding-left: 26px;">
+                                    <label class="eye-dropdown-label">
+                                        <input type="checkbox" checked> Filtered tasks
+                                    </label>
+                                    <label class="eye-dropdown-label">
+                                        <input type="checkbox" checked> Other tasks
+                                    </label>
+                                </div>
+                            </div>
+
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label">
+                                    <input type="checkbox" checked> Markups
+                                </label>
+                                <div class="eye-dropdown-colors">
+                                    <div class="eye-color-circle selected" style="background: #dc2626;"><i class="fas fa-check"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #2563eb;"><i class="fas fa-check"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #f59e0b;"><i class="fas fa-check"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #16a34a;"><i class="fas fa-check"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #d946ef;"><i class="fas fa-check"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #06b6d4;"><i class="fas fa-check"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #eab308;"><i class="fas fa-check"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #22c55e;"><i class="fas fa-check"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #fff; border: 1px solid #e5e7eb;"><i class="fas fa-check" style="color: #000;"></i></div>
+                                    <div class="eye-color-circle selected" style="background: #000;"><i class="fas fa-check"></i></div>
+                                </div>
+                                <label class="eye-dropdown-label" style="margin-top: 8px;">
+                                    <input type="checkbox" checked> <span style="color: #9333ea;">● Private</span>
+                                </label>
+                            </div>
+
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label"><input type="checkbox" checked> Attachments</label>
+                            </div>
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label"><input type="checkbox" checked> Plan links</label>
+                            </div>
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label"><input type="checkbox" checked> Form Links</label>
+                            </div>
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label"><input type="checkbox" checked> Photos</label>
+                            </div>
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label"><input type="checkbox" checked> RFIs</label>
+                            </div>
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label"><input type="checkbox" checked> Specifications</label>
+                            </div>
+                            <div class="eye-dropdown-section">
+                                <label class="eye-dropdown-label"><input type="checkbox" checked> Submittals</label>
+                            </div>
+                        </div>
+                    </div>
+
                     <div id="pdfDocumentContent">
                         <!-- Document content loads here -->
                     </div>
@@ -12181,6 +12242,28 @@
             showNotification('This is the last task', 'info');
         }
     }
+
+    // Dynamic viewport adjustment for responsive CSS
+    function adjustForViewport() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+
+        // Adjust root font size based on viewport width
+        if (vw < 1600) {
+            document.documentElement.style.fontSize = '14px';
+        } else if (vw >= 2400) {
+            document.documentElement.style.fontSize = '18px';
+        } else {
+            document.documentElement.style.fontSize = '16px';
+        }
+
+        console.log('Viewport adjusted:', vw, 'x', vh, '- Font size:', document.documentElement.style.fontSize);
+    }
+
+    // Run on load and resize events
+    window.addEventListener('load', adjustForViewport);
+    window.addEventListener('resize', adjustForViewport);
+    adjustForViewport();
     </script>
 
 </body>
