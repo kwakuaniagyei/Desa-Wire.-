@@ -11,131 +11,52 @@
     <script src="/js/notifications.js?v=<%= Date.now() %>"></script>
     <script src="/js/chat-widget.js?v=<%= Date.now() %>"></script>
     <style>
-        /* 80% ZOOM FIX - Makes 100% zoom look like 80% zoom */
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
         }
 
+        /* Root font size - base for rem units - FIXED FOR 100% ZOOM */
         :root {
-            /* Base scaling factor - makes 100% zoom look like 80% zoom */
-            --scale-factor: 0.8;
+            font-size: 14px; /* Reduced from 16px - this makes everything proportionally smaller */
 
-            /* Scaled dimensions (all values multiplied by 0.8) */
-            --action-bar-height: 48px; /* 60px * 0.8 */
-            --sidebar-width: 208px; /* 260px * 0.8 */
-            --sidebar-collapsed-width: 64px; /* 80px * 0.8 */
-            --toolbar-width: 48px; /* 60px * 0.8 */
-            --toolbar-offset: 10px;
-            --pdf-padding-vertical: 19px;
-            --pdf-padding-horizontal: 13px;
-            --pdf-padding-bottom: 80px;
-            --dropdown-top-offset: 48px;
-            --fullscreen-padding-offset: 24px;
-
-            /* Fixed spacing (80% scaled) */
-            --sp-xs: 2px;
-            --sp-sm: 4px;
-            --sp-md: 8px;
-            --sp-lg: 10px;
-            --sp-xl: 13px;
-            --sp-2xl: 16px;
-
-            /* Fixed sizing (80% scaled) */
-            --sz-sm: 11px; /* 14px * 0.8 */
-            --sz-md: 13px; /* 16px * 0.8 */
-            --sz-lg: 14px; /* 18px * 0.8 */
-
-            /* Fixed widths (80% scaled) */
-            --wd-sm: 8px;
-            --wd-md: 14px; /* 18px * 0.8 */
-            --wd-lg: 32px; /* 40px * 0.8 */
-
-            /* Colors */
-            --col-border: #e5e7eb;
-            --col-text-light: #6b7280;
-            --col-text-dark: #1f2937;
-            --col-bg-light: #f9fafb;
-            --col-hover: #f3f4f6;
-            --col-primary: #3b82f6;
-            --col-primary-dark: #2563eb;
-            --col-shadow: rgba(0, 0, 0, 0.1);
+            --action-bar-height: 3.75rem;
+            --sidebar-width: 16.25rem;
+            --sidebar-collapsed-width: 5rem;
+            --toolbar-width: 3.75rem;
+            --toolbar-offset: clamp(0.75rem, 2vw, 1.5rem);
+            --pdf-padding-vertical: clamp(1.5rem, 4vh, 3.75rem);
+            --pdf-padding-horizontal: clamp(1rem, 2vw, 2.5rem);
+            --pdf-padding-bottom: clamp(6.25rem, 15vh, 12.5rem);
+            --dropdown-top-offset: clamp(3.75rem, 8vh, 6.25rem);
+            --fullscreen-padding-offset: clamp(1.875rem, 4vh, 3.125rem);
         }
 
-        body {
-            /* Scale down to 80% */
-            transform: scale(var(--scale-factor));
-            transform-origin: top left;
-            width: 125%; /* 100% / 0.8 = 125% to compensate */
-            height: 125%;
+        /* Responsive font scaling for different screen sizes - OPTIMIZED */
+        @media screen and (max-width: 1400px) {
+            :root {
+                font-size: 12px; /* Smaller for laptops */
+            }
         }
 
-        /* Utility base styles */
-        .modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: rgba(0, 0, 0, 0.5);
-            display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 9999;
+        @media screen and (min-width: 1401px) and (max-width: 1920px) {
+            :root {
+                font-size: 13px; /* Standard monitors */
+            }
         }
 
-        .modal.show {
-            display: flex;
+        @media screen and (min-width: 1921px) and (max-width: 2560px) {
+            :root {
+                font-size: 14px; /* Large monitors */
+            }
         }
 
-        .modal-content {
-            background: white;
-            border-radius: 0.75rem;
-            box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.2);
-            animation: modalSlideIn 0.3s ease;
+        @media screen and (min-width: 2561px) {
+            :root {
+                font-size: 16px; /* Ultra-wide/4K monitors */
+            }
         }
-
-        .modal-header {
-            padding: var(--sp-xl);
-            border-bottom: 0.0625rem solid var(--col-border);
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .modal-body {
-            padding: var(--sp-xl);
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            font-size: var(--sz-lg);
-            color: var(--col-text-light);
-            cursor: pointer;
-            padding: 0;
-            width: var(--wd-md);
-            height: var(--wd-md);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 0.375rem;
-            transition: all 0.2s;
-            line-height: 1;
-        }
-
-        .modal-close:hover {
-            background-color: var(--col-hover);
-            color: var(--col-text-dark);
-        }
-
-        /* Shared animations */
-        /* modalSlideIn animation defined in utility section */
-
-        /* fadeIn and scaleUp animations defined in utility section */
-
-        /* scaleIn animation defined in utility section */
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
@@ -163,12 +84,12 @@
         /* Top Action Bar - RESPONSIVE */
         .action-bar {
             background: white;
-            padding: var(--sp-lg) var(--sp-xl);
-            border-bottom: 0.0625rem solid var(--col-border);
+            padding: clamp(0.75rem, 2vh, 1rem) clamp(1rem, 3vw, 1.5rem);
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            gap: var(--sp-md);
+            gap: 0.75rem;
             flex-wrap: wrap;
             min-height: auto;
             overflow-y: auto;
@@ -178,40 +99,40 @@
         .action-bar-right {
             display: flex;
             align-items: center;
-            gap: var(--sp-md);
+            gap: 0.75rem;
         }
 
         .btn-primary,
         .btn-secondary {
-            padding: var(--sp-sm) var(--sp-lg);
+            padding: 0.5rem 1rem;
             border-radius: 0.375rem;
-            font-size: var(--sz-sm);
+            font-size: clamp(0.875rem, 1.5vw, 1.0625rem);
             font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
-            gap: var(--sp-sm);
+            gap: 0.5rem;
             transition: all 0.2s;
             border: none;
         }
 
         .btn-primary {
-            background-color: var(--col-primary);
+            background-color: #3b82f6;
             color: white;
         }
 
         .btn-primary:hover {
-            background-color: var(--col-primary-dark);
+            background-color: #2563eb;
         }
 
         .btn-secondary {
             background-color: white;
             color: #374151;
-            border: 0.0625rem solid #d1d5db;
+            border: 1px solid #d1d5db;
         }
 
         .btn-secondary:hover {
-            background-color: var(--col-bg-light);
+            background-color: #f9fafb;
         }
 
         /* Plans Content Area */
@@ -265,7 +186,7 @@
             align-items: center;
             justify-content: center;
             color: white;
-            font-size: 20px;
+            font-size: 1.25rem;
         }
 
         .empty-state-play::before {
@@ -301,8 +222,6 @@
             background: white;
             border-radius: 0.5rem;
             border: 1px solid #e5e7eb;
-            overflow: visible;
-            position: relative;
         }
 
         .folder-checkbox {
@@ -312,7 +231,7 @@
         }
 
         .folder-icon {
-            font-size: 18px;
+            font-size: 1.125rem;
             color: #6b7280;
         }
 
@@ -433,7 +352,7 @@
             max-width: 100%;
             max-height: 100%;
             object-fit: contain;
-            border-radius: 8px;
+            border-radius: 0.5rem;
         }
 
         .plan-info {
@@ -450,15 +369,15 @@
             text-overflow: ellipsis;
         }
 
-        /* New Plan Card - RESPONSIVE */
+        /* New Plan Card */
         .new-plan-card {
             background: transparent;
-            border: 0.125rem dashed #d1d5db;
-            border-radius: 0.5rem;
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
-            min-height: clamp(12rem, 25vh, 20rem);
+            min-height: 200px;
             cursor: pointer;
             transition: all 0.2s;
         }
@@ -474,17 +393,17 @@
         }
 
         .new-plan-content i {
-            font-size: clamp(1.25rem, 3vw, 1.5rem);
-            margin-bottom: clamp(0.375rem, 1vh, 0.5rem);
+            font-size: 24px;
+            margin-bottom: 8px;
         }
 
         .new-plan-content span {
             display: block;
-            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+            font-size: 14px;
             font-weight: 500;
         }
 
-        /* Upload Modal - extends modal utility classes */
+        /* Upload Modal */
         .upload-modal {
             position: fixed;
             top: 0;
@@ -504,53 +423,64 @@
 
         .upload-modal-content {
             background: white;
-            border-radius: 0.75rem;
+            border-radius: 12px;
             width: 95%;
-            max-width: clamp(20rem, 70vw, 37.5rem);
+            max-width: 600px;
             max-height: 85vh;
             overflow-y: auto;
-            box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.2);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             animation: modalSlideIn 0.3s ease;
         }
 
+        @keyframes modalSlideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
         .upload-modal-header {
-            padding: var(--sp-xl) var(--sp-xl);
-            border-bottom: 0.0625rem solid var(--col-border);
+            padding: 32px 40px;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
         .upload-modal-title {
-            font-size: var(--sz-lg);
+            font-size: 24px;
             font-weight: 600;
-            color: var(--col-text-dark);
+            color: #1f2937;
         }
 
         .upload-modal-close {
             background: none;
             border: none;
-            font-size: var(--sz-lg);
-            color: var(--col-text-light);
+            font-size: 28px;
+            color: #9ca3af;
             cursor: pointer;
             padding: 0;
-            width: var(--wd-md);
-            height: var(--wd-md);
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0.375rem;
+            border-radius: 6px;
             transition: all 0.2s;
             line-height: 1;
         }
 
         .upload-modal-close:hover {
-            background-color: var(--col-hover);
-            color: var(--col-text-dark);
+            background-color: #f3f4f6;
+            color: #6b7280;
         }
 
         .upload-modal-body {
-            padding: var(--sp-xl);
+            padding: 32px 40px;
         }
 
         /* QR Code Modal - Positioned inside PDF Viewer */
@@ -591,12 +521,12 @@
         .pdf-qr-code-content {
             position: relative;
             background: white;
-            border-radius: 0.75rem;
+            border-radius: 12px;
             width: 95%;
-            max-width: clamp(18rem, 65vw, 31.25rem);
+            max-width: 500px;
             max-height: 90vh;
             overflow-y: auto;
-            box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.3);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
             animation: qrModalSlideIn 0.3s ease;
             z-index: 10002;
         }
@@ -604,7 +534,7 @@
         @keyframes qrModalSlideIn {
             from {
                 opacity: 0;
-                transform: translateY(-1.875rem) scale(0.95);
+                transform: translateY(-30px) scale(0.95);
             }
             to {
                 opacity: 1;
@@ -613,15 +543,15 @@
         }
 
         .pdf-qr-code-header {
-            padding: clamp(1.25rem, 3vh, 1.5rem) clamp(1.5rem, 3vw, 2rem);
-            border-bottom: 0.0625rem solid #e5e7eb;
+            padding: 24px 32px;
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
         .pdf-qr-code-title {
-            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            font-size: 20px;
             font-weight: 600;
             color: #1f2937;
             margin: 0;
@@ -630,16 +560,16 @@
         .pdf-qr-code-close {
             background: none;
             border: none;
-            font-size: clamp(1.25rem, 2.5vw, 1.75rem);
+            font-size: 28px;
             color: #6b7280;
             cursor: pointer;
             padding: 0;
-            width: clamp(2rem, 4vw, 2.5rem);
-            height: clamp(2rem, 4vw, 2.5rem);
+            width: 40px;
+            height: 40px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0.375rem;
+            border-radius: 6px;
             transition: all 0.2s ease;
         }
 
@@ -649,14 +579,14 @@
         }
 
         .pdf-qr-code-body {
-            padding: clamp(1.5rem, 4vh, 2rem);
+            padding: 32px;
             text-align: center;
         }
 
         .upload-dropzone {
-            border: 0.125rem dashed #d1d5db;
-            border-radius: 0.5rem;
-            padding: clamp(2rem, 8vh, 3.75rem) clamp(1.5rem, 3vw, 2.5rem);
+            border: 2px dashed #d1d5db;
+            border-radius: 8px;
+            padding: 60px 40px;
             text-align: center;
             background-color: #f9fafb;
             transition: all 0.3s ease;
@@ -673,11 +603,11 @@
             background-color: #dbeafe;
         }
 
-        /* Drag and drop visual feedback - RESPONSIVE */
+        /* Drag and drop visual feedback */
         .folder-section.drag-over {
             background-color: #dbeafe;
             border-color: #3b82f6;
-            border: 0.125rem dashed #3b82f6;
+            border: 2px dashed #3b82f6;
             transition: all 0.2s ease;
         }
 
@@ -692,11 +622,11 @@
         }
 
         .plan-card.drag-over {
-            border: 0.125rem dashed #3b82f6;
+            border: 2px dashed #3b82f6;
             background-color: #eff6ff;
         }
 
-        /* Loading spinner for drag and drop operations - RESPONSIVE */
+        /* Loading spinner for drag and drop operations */
         .drag-drop-loading-overlay {
             position: fixed;
             top: 0;
@@ -713,20 +643,20 @@
 
         .drag-drop-spinner-container {
             background: white;
-            padding: clamp(1.5rem, 4vh, 2.5rem);
-            border-radius: 0.75rem;
-            box-shadow: 0 1.25rem 3.75rem rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: clamp(1rem, 2vh, 1.25rem);
+            gap: 20px;
             animation: scaleUp 0.3s ease-out;
         }
 
         .drag-drop-spinner {
-            width: clamp(2.5rem, 6vw, 3.75rem);
-            height: clamp(2.5rem, 6vw, 3.75rem);
-            border: 0.25rem solid #e5e7eb;
+            width: 60px;
+            height: 60px;
+            border: 4px solid #e5e7eb;
             border-top-color: #3b82f6;
             border-right-color: #2563eb;
             border-radius: 50%;
@@ -734,14 +664,14 @@
         }
 
         .drag-drop-loading-text {
-            font-size: clamp(0.875rem, 2vw, 1rem);
+            font-size: 16px;
             font-weight: 500;
             color: #1f2937;
             text-align: center;
         }
 
         .drag-drop-loading-subtext {
-            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
+            font-size: 13px;
             color: #6b7280;
         }
 
@@ -749,37 +679,55 @@
             to { transform: rotate(360deg); }
         }
 
-        /* fadeIn and scaleUp animations defined in utility section */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes scaleUp {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
 
         .upload-icon-wrapper {
-            margin: 0 auto clamp(1rem, 3vh, 1.25rem);
-            width: clamp(4rem, 12vw, 5rem);
-            height: clamp(4rem, 12vw, 5rem);
+            margin: 0 auto 20px;
+            width: 80px;
+            height: 80px;
             display: flex;
             align-items: center;
             justify-content: center;
         }
 
         .upload-icon-box {
-            width: clamp(2.75rem, 8vw, 3.5rem);
-            height: clamp(2.25rem, 6vw, 3rem);
-            border: 0.125rem solid #9ca3af;
-            border-radius: 0.25rem;
+            width: 56px;
+            height: 48px;
+            border: 2px solid #9ca3af;
+            border-radius: 4px;
             position: relative;
             background: white;
         }
 
         .upload-icon-lines {
             position: absolute;
-            top: clamp(0.375rem, 1vh, 0.5rem);
-            left: clamp(0.375rem, 1vh, 0.5rem);
-            right: clamp(0.375rem, 1vh, 0.5rem);
+            top: 8px;
+            left: 8px;
+            right: 8px;
         }
 
         .upload-icon-line {
-            height: 0.125rem;
+            height: 2px;
             background-color: #d1d5db;
-            margin-bottom: clamp(0.25rem, 0.75vh, 0.375rem);
+            margin-bottom: 6px;
         }
 
         .upload-icon-line:last-child {
@@ -788,23 +736,23 @@
         }
 
         .upload-text {
-            font-size: clamp(0.75rem, 1.75vw, 0.9375rem);
+            font-size: 15px;
             color: #6b7280;
-            margin-bottom: clamp(0.375rem, 1vh, 0.5rem);
+            margin-bottom: 8px;
         }
 
         .upload-or {
-            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
+            font-size: 14px;
             color: #9ca3af;
-            margin: clamp(0.75rem, 2vh, 1rem) 0;
+            margin: 16px 0;
         }
 
         .upload-select-btn {
             background-color: #3b82f6;
             color: white;
             border: none;
-            padding: clamp(0.5rem, 1vh, 0.625rem) clamp(1rem, 2vw, 1.5rem);
-            border-radius: 0.375rem;
+            padding: 10px 24px;
+            border-radius: 6px;
             font-size: 14px;
             font-weight: 500;
             cursor: pointer;
@@ -816,7 +764,7 @@
         }
 
         .upload-file-list {
-            margin-top: clamp(1rem, 3vh, 1.5rem);
+            margin-top: 24px;
             display: none;
         }
 
@@ -827,23 +775,23 @@
         .upload-file-item {
             display: flex;
             align-items: center;
-            gap: clamp(0.625rem, 1.5vw, 0.75rem);
-            padding: clamp(0.625rem, 1.5vh, 0.75rem);
+            gap: 12px;
+            padding: 12px;
             background: #f9fafb;
-            border-radius: 0.375rem;
-            margin-bottom: clamp(0.375rem, 1vh, 0.5rem);
+            border-radius: 6px;
+            margin-bottom: 8px;
         }
 
         .upload-file-icon {
-            width: clamp(1.75rem, 4vw, 2rem);
-            height: clamp(1.75rem, 4vw, 2rem);
+            width: 32px;
+            height: 32px;
             background: white;
-            border: 0.0625rem solid #e5e7eb;
-            border-radius: 0.25rem;
+            border: 1px solid #e5e7eb;
+            border-radius: 4px;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.625rem, 1vw, 0.75rem);
+            font-size: 12px;
             color: #6b7280;
         }
 
@@ -852,14 +800,14 @@
         }
 
         .upload-file-name {
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            font-size: 14px;
             color: #1f2937;
             font-weight: 500;
-            margin-bottom: 0.125rem;
+            margin-bottom: 2px;
         }
 
         .upload-file-size {
-            font-size: clamp(0.625rem, 1.25vw, 0.75rem);
+            font-size: 12px;
             color: #9ca3af;
         }
 
@@ -868,8 +816,8 @@
             border: none;
             color: #9ca3af;
             cursor: pointer;
-            padding: clamp(0.2rem, 0.5vh, 0.25rem);
-            font-size: clamp(0.875rem, 2vw, 1rem);
+            padding: 4px;
+            font-size: 16px;
             transition: all 0.2s;
         }
 
@@ -878,28 +826,28 @@
         }
 
         .upload-integration-section {
-            margin-top: clamp(1.5rem, 4vh, 2rem);
+            margin-top: 32px;
         }
 
         .upload-integration-text {
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            font-size: 14px;
             color: #6b7280;
-            margin-bottom: clamp(0.75rem, 2vh, 1rem);
+            margin-bottom: 16px;
             text-align: center;
         }
 
         .upload-integration-grid {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: clamp(0.625rem, 1.5vw, 0.75rem);
-            margin-bottom: clamp(0.75rem, 2vh, 1rem);
+            gap: 12px;
+            margin-bottom: 16px;
         }
 
         .upload-integration-btn {
             background: white;
-            border: 0.0625rem solid #e5e7eb;
-            border-radius: 0.5rem;
-            padding: clamp(0.75rem, 2vh, 1rem) clamp(0.625rem, 1.5vw, 0.75rem);
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            padding: 16px 12px;
             cursor: pointer;
             display: flex;
             flex-direction: column;
@@ -914,12 +862,12 @@
         }
 
         .upload-integration-icon {
-            width: clamp(1.5rem, 3.5vw, 1.75rem);
-            height: clamp(1.5rem, 3.5vw, 1.75rem);
+            width: 28px;
+            height: 28px;
         }
 
         .upload-integration-name {
-            font-size: clamp(0.625rem, 1.25vw, 0.75rem);
+            font-size: 12px;
             color: #6b7280;
             text-align: center;
         }
@@ -927,15 +875,15 @@
         .upload-more-options {
             width: 100%;
             background: white;
-            border: 0.0625rem solid #e5e7eb;
-            border-radius: 0.375rem;
-            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(0.75rem, 1.5vw, 1rem);
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            padding: 10px 16px;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: clamp(0.375rem, 1vw, 0.5rem);
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            gap: 8px;
+            font-size: 14px;
             color: #6b7280;
             transition: all 0.2s;
         }
@@ -949,16 +897,16 @@
             background-color: #3b82f6;
             color: white;
             border: none;
-            padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(1rem, 2vw, 1.5rem);
-            border-radius: 0.375rem;
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            padding: 12px 24px;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             display: flex;
             align-items: center;
             justify-content: center;
-            gap: clamp(0.375rem, 1vw, 0.5rem);
-            margin-top: clamp(1rem, 3vh, 1.5rem);
+            gap: 8px;
+            margin-top: 24px;
             transition: all 0.2s;
         }
 
@@ -971,63 +919,63 @@
             cursor: not-allowed;
         }
 
-        /* Upload Progress Bar - RESPONSIVE */
+        /* Upload Progress Bar */
         .upload-progress-container {
             width: 100%;
-            margin: clamp(1rem, 3vh, 1.5rem) 0;
-            padding: clamp(1rem, 2.5vh, 1.25rem);
+            margin: 24px 0;
+            padding: 20px;
             background: #f9fafb;
-            border-radius: 0.5rem;
-            border: 0.0625rem solid #e5e7eb;
+            border-radius: 8px;
+            border: 1px solid #e5e7eb;
         }
 
         .upload-progress-header {
             display: flex;
             justify-content: space-between;
             align-items: center;
-            margin-bottom: clamp(0.625rem, 1.5vh, 0.75rem);
+            margin-bottom: 12px;
         }
 
         .upload-progress-text {
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            font-size: 14px;
             font-weight: 500;
             color: #374151;
         }
 
         .upload-progress-percent {
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            font-size: 14px;
             font-weight: 600;
             color: #3b82f6;
         }
 
         .upload-progress-bar-wrapper {
             width: 100%;
-            height: clamp(0.4rem, 1vh, 0.5rem);
+            height: 8px;
             background: #e5e7eb;
-            border-radius: 0.25rem;
+            border-radius: 4px;
             overflow: hidden;
-            margin-bottom: clamp(0.625rem, 1.5vh, 0.75rem);
+            margin-bottom: 12px;
         }
 
         .upload-progress-fill {
             height: 100%;
             background: linear-gradient(90deg, #3b82f6 0%, #2563eb 100%);
-            border-radius: 0.25rem;
+            border-radius: 4px;
             width: 0%;
             transition: width 0.3s ease;
-            box-shadow: 0 0 0.625rem rgba(59, 130, 246, 0.5);
+            box-shadow: 0 0 10px rgba(59, 130, 246, 0.5);
         }
 
         .upload-progress-status {
-            font-size: clamp(0.625rem, 1.25vw, 0.75rem);
+            font-size: 12px;
             color: #6b7280;
             text-align: center;
         }
 
-        /* Upload Success Message - RESPONSIVE */
+        /* Upload Success Message */
         .upload-success-container {
             width: 100%;
-            padding: clamp(1.5rem, 4vh, 2.5rem) clamp(1rem, 2vw, 1.25rem);
+            padding: 40px 20px;
             text-align: center;
             animation: slideIn 0.4s ease;
         }
@@ -1036,58 +984,67 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            gap: clamp(0.75rem, 2vh, 1rem);
+            gap: 16px;
         }
 
         .upload-success-checkmark {
-            width: clamp(4rem, 12vw, 5rem);
-            height: clamp(4rem, 12vw, 5rem);
+            width: 80px;
+            height: 80px;
             background: #10b981;
             border-radius: 50%;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(1.75rem, 5vw, 2.5rem);
+            font-size: 40px;
             color: white;
             animation: scaleIn 0.5s ease cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .upload-success-title {
-            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            font-size: 20px;
             font-weight: 600;
             color: #1f2937;
             margin: 0;
         }
 
         .upload-success-message {
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            font-size: 14px;
             color: #6b7280;
             margin: 0;
         }
 
         .upload-success-btn {
-            padding: clamp(0.5rem, 1vh, 0.625rem) clamp(1rem, 2vw, 1.5rem);
+            padding: 10px 24px;
             background: #10b981;
             color: white;
             border: none;
-            border-radius: 0.375rem;
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
-            margin-top: clamp(0.625rem, 1.5vh, 0.75rem);
+            margin-top: 12px;
         }
 
         .upload-success-btn:hover {
             background: #059669;
-            transform: translateY(-0.125rem);
-            box-shadow: 0 0.25rem 0.75rem rgba(16, 185, 129, 0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
         }
 
         /* Animations */
-        /* scaleIn animation defined in utility section */
+        @keyframes scaleIn {
+            from {
+                transform: scale(0);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
 
-        /* Create Folder Modal - RESPONSIVE */
+        /* Create Folder Modal */
         .create-folder-modal {
             position: fixed;
             top: 0;
@@ -1107,22 +1064,22 @@
 
         .create-folder-content {
             background: white;
-            border-radius: 0.75rem;
+            border-radius: 12px;
             width: 90%;
-            max-width: clamp(18rem, 60vw, 25rem);
-            box-shadow: 0 0.625rem 2.5rem rgba(0, 0, 0, 0.2);
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
             animation: modalSlideIn 0.3s ease;
         }
 
         .create-folder-header {
-            padding: clamp(1rem, 2.5vh, 1.5rem) clamp(1rem, 2.5vh, 1.5rem) clamp(0.75rem, 2vh, 1rem);
+            padding: 24px 24px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
         }
 
         .create-folder-title {
-            font-size: clamp(1rem, 2.5vw, 1.25rem);
+            font-size: 20px;
             font-weight: 600;
             color: #1f2937;
         }
@@ -1130,16 +1087,16 @@
         .create-folder-close {
             background: none;
             border: none;
-            font-size: clamp(1.25rem, 2.5vw, 1.5rem);
+            font-size: 24px;
             color: #9ca3af;
             cursor: pointer;
             padding: 0;
-            width: clamp(1.5rem, 3vw, 1.75rem);
-            height: clamp(1.5rem, 3vw, 1.75rem);
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0.25rem;
+            border-radius: 4px;
             transition: all 0.2s;
         }
 
@@ -1149,23 +1106,23 @@
         }
 
         .create-folder-body {
-            padding: 0 clamp(1rem, 2.5vh, 1.5rem) clamp(1rem, 2.5vh, 1.5rem);
+            padding: 0 24px 24px;
         }
 
         .create-folder-input {
             width: 100%;
-            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(0.625rem, 1.5vw, 0.75rem);
-            border: 0.0625rem solid #d1d5db;
-            border-radius: 0.375rem;
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
-            margin-bottom: clamp(0.75rem, 2vh, 1rem);
+            padding: 10px 12px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            margin-bottom: 16px;
             transition: all 0.2s;
         }
 
         .create-folder-input:focus {
             outline: none;
             border-color: #3b82f6;
-            box-shadow: 0 0 0 0.1875rem rgba(59, 130, 246, 0.1);
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
         }
 
         .create-folder-btn {
@@ -1173,9 +1130,9 @@
             background-color: #3b82f6;
             color: white;
             border: none;
-            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(1rem, 2vw, 1.5rem);
-            border-radius: 0.375rem;
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            padding: 10px 24px;
+            border-radius: 6px;
+            font-size: 14px;
             font-weight: 500;
             cursor: pointer;
             transition: all 0.2s;
@@ -1190,7 +1147,7 @@
             cursor: not-allowed;
         }
 
-        /* Loading Overlay - RESPONSIVE */
+        /* Loading Overlay */
         .loading-overlay {
             position: fixed;
             top: 0;
@@ -1210,28 +1167,29 @@
 
         .loading-spinner {
             background: white;
-            padding: clamp(1.5rem, 4vh, 2.5rem) clamp(2rem, 5vw, 3rem);
-            border-radius: 0.75rem;
+            padding: 32px 48px;
+            border-radius: 12px;
             text-align: center;
         }
 
         .loading-spinner i {
-            font-size: clamp(2.5rem, 7vw, 3rem);
+            font-size: 48px;
             color: #3b82f6;
-            margin-bottom: clamp(0.75rem, 2vh, 1rem);
+            margin-bottom: 16px;
         }
 
         .loading-spinner p {
-            font-size: clamp(0.875rem, 2vw, 1rem);
+            font-size: 16px;
             color: #6b7280;
         }
 
-        /* Bottom status bar - RESPONSIVE */
+        /* Bottom status bar */
+        /* Status Bar - RESPONSIVE */
         .status-bar {
             background: white;
-            border-top: 0.0625rem solid #e5e7eb;
-            padding: clamp(0.375rem, 1vh, 0.5rem) clamp(1rem, 2vw, 1.5rem);
-            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
+            border-top: 1px solid #e5e7eb;
+            padding: 0.5rem clamp(1rem, 3vw, 1.5rem);
+            font-size: clamp(0.6875rem, 1.2vw, 0.8125rem);
             color: #6b7280;
         }
 
@@ -1271,15 +1229,15 @@
         }
 
         .sidebar.collapsed .tasks-section {
-            margin-top: clamp(0.5rem, 1vh, 0.625rem);
-            padding-top: clamp(0.5rem, 1vh, 0.625rem);
-            padding-bottom: clamp(0.5rem, 1vh, 0.625rem);
+            margin-top: 10px;
+            padding-top: 10px;
+            padding-bottom: 10px;
         }
 
         .sidebar.collapsed .task-item {
-            padding: clamp(0.375rem, 1vh, 0.5rem) clamp(0.625rem, 1.5vw, 0.75rem);
+            padding: 8px 12px;
             justify-content: center;
-            margin-bottom: clamp(0.25rem, 0.75vh, 0.3125rem);
+            margin-bottom: 5px;
         }
 
         .sidebar.collapsed .task-item .badge {
@@ -1288,7 +1246,7 @@
 
         .sidebar.collapsed .task-item i {
             width: auto;
-            font-size: clamp(0.875rem, 2vw, 1rem);
+            font-size: 16px;
         }
 
         /* Hide main content panels when sidebar is collapsed in PDF viewer context */
@@ -1308,19 +1266,19 @@
             padding: clamp(0.75rem, 2vh, 1rem) clamp(1rem, 2vw, 1.25rem);
             display: flex;
             align-items: center;
-            gap: clamp(0.5rem, 1.5vw, 0.625rem);
-            border-bottom: 0.0625rem solid #34495e;
+            gap: 0.625rem;
+            border-bottom: 1px solid #34495e;
         }
 
         .logo-img {
-            width: clamp(2.5rem, 5vw, 2.75rem);
-            height: clamp(2.5rem, 5vw, 2.75rem);
+            width: clamp(2.25rem, 4vw, 2.75rem);
+            height: clamp(2.25rem, 4vw, 2.75rem);
             object-fit: contain;
         }
 
         .logo i {
             color: #3498db;
-            font-size: clamp(1.25rem, 3vw, 1.5rem);
+            font-size: 1.5rem;
         }
 
         .logo span {
@@ -1331,7 +1289,7 @@
 
         .logo .dropdown-icon {
             margin-left: auto;
-            font-size: clamp(0.625rem, 1.5vw, 0.75rem);
+            font-size: 12px;
             cursor: pointer;
             transition: transform 0.3s ease;
         }
@@ -1340,18 +1298,18 @@
             transform: rotate(180deg);
         }
 
-        /* Sidebar Project Dropdown - RESPONSIVE */
+        /* Sidebar Project Dropdown */
         .sidebar-project-dropdown {
             position: absolute;
-            top: clamp(3rem, 8vh, 4rem);
-            left: clamp(1rem, 2vw, 1.25rem);
+            top: 65px;
+            left: 20px;
             background: white;
-            border: 0.0625rem solid #ddd;
-            border-radius: 0.5rem;
-            box-shadow: 0 0.25rem 0.75rem rgba(0, 0, 0, 0.15);
-            width: calc(100% - clamp(2rem, 4vw, 2.5rem));
-            min-width: clamp(11rem, 25vw, 12.5rem);
-            max-height: clamp(17rem, 50vh, 21.875rem);
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+            width: calc(100% - 40px);
+            min-width: 200px;
+            max-height: 350px;
             overflow-y: auto;
             display: none;
             z-index: 1000;
@@ -1362,16 +1320,16 @@
         }
 
         .sidebar-project-search {
-            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(0.625rem, 1.5vw, 0.75rem);
-            border-bottom: 0.0625rem solid #f0f0f0;
+            padding: 10px 12px;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .sidebar-project-search input {
             width: 100%;
-            padding: clamp(0.4rem, 1vh, 0.5rem) clamp(0.625rem, 1.5vw, 0.75rem);
-            border: 0.0625rem solid #ddd;
-            border-radius: 0.25rem;
-            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 13px;
             outline: none;
             transition: border-color 0.2s;
         }
@@ -1381,14 +1339,14 @@
         }
 
         .sidebar-project-item {
-            padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(0.75rem, 2vw, 1rem);
+            padding: 12px 16px;
             cursor: pointer;
             transition: all 0.2s ease;
-            border-left: 0.1875rem solid transparent;
+            border-left: 3px solid transparent;
             display: flex;
             align-items: center;
-            gap: clamp(0.5rem, 1.5vw, 0.625rem);
-            font-size: clamp(0.75rem, 1.75vw, 0.875rem);
+            gap: 10px;
+            font-size: 14px;
             color: #333;
         }
 
@@ -1405,14 +1363,14 @@
         }
 
         .sidebar-project-icon {
-            width: clamp(1.25rem, 3vw, 1.5rem);
-            height: clamp(1.25rem, 3vw, 1.5rem);
-            border-radius: 0.25rem;
+            width: 24px;
+            height: 24px;
+            border-radius: 4px;
             background-color: #3498db;
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: clamp(0.625rem, 1.25vw, 0.6875rem);
+            font-size: 11px;
             color: white;
             font-weight: bold;
             flex-shrink: 0;
@@ -1425,27 +1383,27 @@
             text-overflow: ellipsis;
         }
 
-        /* Sidebar Dropdown Header with Home and Create buttons - RESPONSIVE */
+        /* Sidebar Dropdown Header with Home and Create buttons */
         .sidebar-project-header {
             display: flex;
             align-items: center;
             justify-content: space-between;
-            padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(0.75rem, 2vw, 1rem);
-            border-bottom: 0.0625rem solid #f0f0f0;
-            gap: clamp(0.375rem, 1vh, 0.5rem);
+            padding: 12px 16px;
+            border-bottom: 1px solid #f0f0f0;
+            gap: 8px;
         }
 
         .sidebar-home-btn {
             display: flex;
             align-items: center;
-            gap: clamp(0.375rem, 1vw, 0.5rem);
+            gap: 8px;
             flex: 1;
-            padding: clamp(0.4rem, 1vh, 0.5rem) clamp(0.625rem, 1.5vw, 0.75rem);
+            padding: 8px 12px;
             background-color: transparent;
-            border: 0.09375rem solid #FFD700;
-            border-radius: 0.25rem;
+            border: 1.5px solid #FFD700;
+            border-radius: 4px;
             cursor: pointer;
-            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
+            font-size: 13px;
             color: #FFD700;
             transition: all 0.2s ease;
             white-space: nowrap;
@@ -1454,27 +1412,27 @@
 
         .sidebar-home-btn i {
             color: #FFD700;
-            font-size: clamp(0.875rem, 2vw, 0.9375rem);
+            font-size: 14px;
         }
 
         .sidebar-home-btn:hover {
             background-color: rgba(255, 215, 0, 0.15);
             border-color: #FFD700;
-            box-shadow: 0 0 0.5rem rgba(255, 215, 0, 0.3);
+            box-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
         }
 
         .sidebar-create-btn {
             display: flex;
             align-items: center;
             justify-content: center;
-            width: clamp(1.75rem, 4vw, 2.25rem);
-            height: clamp(1.75rem, 4vw, 2.25rem);
+            width: 36px;
+            height: 36px;
             background-color: #FF6B6B;
             border: none;
-            border-radius: 0.25rem;
+            border-radius: 4px;
             cursor: pointer;
             color: white;
-            font-size: clamp(0.9rem, 2vw, 1.125rem);
+            font-size: 18px;
             transition: all 0.2s ease;
             flex-shrink: 0;
             font-weight: bold;
@@ -1487,7 +1445,7 @@
         .sidebar-create-btn:hover {
             background-color: #FF5252;
             transform: scale(1.1);
-            box-shadow: 0 0 0.75rem rgba(255, 107, 107, 0.4);
+            box-shadow: 0 0 12px rgba(255, 107, 107, 0.4);
         }
 
         .sidebar-create-btn:active {
@@ -1495,11 +1453,11 @@
         }
 
         .section-title {
-            padding: clamp(0.375rem, 1vh, 0.5rem) clamp(0.75rem, 2vw, 1rem) clamp(0.75rem, 2vh, 0.9375rem);
-            font-size: clamp(0.75rem, 1.5vw, 0.8125rem);
+            padding: 8px 16px 15px;
+            font-size: 13px;
             text-transform: uppercase;
             color: #3498db;
-            letter-spacing: clamp(0.08rem, 0.15vw, 0.09375rem);
+            letter-spacing: 1.5px;
             font-weight: 800;
             opacity: 0.95;
         }
@@ -1508,10 +1466,10 @@
             padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(1rem, 2vw, 1.25rem);
             display: flex;
             align-items: center;
-            gap: clamp(0.625rem, 1.5vw, 0.75rem);
+            gap: 0.75rem;
             cursor: pointer;
             transition: background-color 0.2s;
-            font-size: clamp(0.9rem, 2vw, 1.1875rem);
+            font-size: clamp(0.9375rem, 1.8vw, 1.1875rem);
             color: #ecf0f1;
         }
 
@@ -1525,30 +1483,30 @@
         }
 
         .menu-item i {
-            width: clamp(0.9rem, 2vw, 1.25rem);
+            width: 1.25rem;
             text-align: center;
-            font-size: clamp(0.9rem, 2vw, 1.125rem);
+            font-size: 1.125rem;
         }
 
         .tasks-section {
-            margin-top: clamp(1.5rem, 4vh, 1.875rem);
-            border-top: 0.125rem solid rgba(52, 152, 219, 0.4);
-            padding-top: clamp(0.75rem, 2vh, 0.9375rem);
-            padding-bottom: clamp(0.75rem, 2vh, 0.9375rem);
+            margin-top: 30px;
+            border-top: 2px solid rgba(52, 152, 219, 0.4);
+            padding-top: 18px;
+            padding-bottom: 15px;
             flex-shrink: 0;
         }
 
         .task-item {
-            padding: clamp(0.5rem, 1.25vh, 0.625rem) clamp(0.75rem, 2vw, 1rem);
+            padding: 11px 16px;
             display: flex;
             align-items: center;
             justify-content: space-between;
             cursor: pointer;
             transition: all 0.35s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-            font-size: clamp(0.9rem, 2vw, 1.125rem);
+            font-size: 18px;
             color: #ffffff;
-            border-radius: 0.5rem;
-            margin-bottom: clamp(0.3rem, 0.75vh, 0.4375rem);
+            border-radius: 8px;
+            margin-bottom: 7px;
             position: relative;
             overflow: hidden;
         }
@@ -1559,7 +1517,7 @@
             left: 0;
             top: 0;
             height: 100%;
-            width: 0.1875rem;
+            width: 3px;
             background-color: transparent;
             transition: background-color 0.3s ease;
         }
@@ -1567,8 +1525,8 @@
         .task-item:hover {
             background-color: rgba(52, 152, 219, 0.12);
             color: #ffffff;
-            transform: translateX(0.1875rem);
-            box-shadow: inset 0 0 0 0.0625rem rgba(52, 152, 219, 0.2);
+            transform: translateX(3px);
+            box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.2);
         }
 
         .task-item:hover::before {
@@ -1579,43 +1537,43 @@
             background-color: rgba(52, 152, 219, 0.2);
             color: #ffffff;
             font-weight: 600;
-            letter-spacing: clamp(0.015rem, 0.05vw, 0.01875rem);
-            box-shadow: inset 0 0 0 0.0625rem rgba(52, 152, 219, 0.3);
+            letter-spacing: 0.3px;
+            box-shadow: inset 0 0 0 1px rgba(52, 152, 219, 0.3);
         }
 
         .task-item.active::before {
             background-color: #3498db;
-            width: 0.25rem;
+            width: 4px;
         }
 
         .task-item .left {
             display: flex;
             align-items: center;
-            gap: clamp(0.5rem, 1.5vw, 0.625rem);
+            gap: 10px;
         }
 
         .task-item .badge {
             background-color: #3498db;
             color: white;
-            padding: clamp(0.2rem, 0.5vh, 0.25rem) clamp(0.375rem, 1vw, 0.5625rem);
-            border-radius: clamp(0.75rem, 2vh, 0.875rem);
-            font-size: clamp(0.625rem, 1.25vw, 0.6875rem);
+            padding: 4px 9px;
+            border-radius: 14px;
+            font-size: 11px;
             font-weight: 800;
-            min-width: clamp(1rem, 2vw, 1.375rem);
+            min-width: 22px;
             text-align: center;
-            box-shadow: 0 0.125rem 0.25rem rgba(52, 152, 219, 0.3);
+            box-shadow: 0 2px 4px rgba(52, 152, 219, 0.3);
             transition: all 0.3s ease;
         }
 
         .task-item:hover .badge {
             transform: scale(1.1);
-            box-shadow: 0 0.25rem 0.5rem rgba(52, 152, 219, 0.4);
+            box-shadow: 0 4px 8px rgba(52, 152, 219, 0.4);
         }
 
         .task-item i {
-            width: clamp(0.9rem, 2vw, 1.25rem);
+            width: 20px;
             text-align: center;
-            font-size: clamp(0.9rem, 2vw, 1.125rem);
+            font-size: 18px;
             opacity: 0.9;
             transition: opacity 0.3s ease;
         }
@@ -1625,10 +1583,10 @@
         }
 
         .sidebar-footer {
-            padding: clamp(0.75rem, 2vh, 0.9375rem) clamp(1rem, 2vw, 1.25rem);
+            padding: 15px 20px;
             display: flex;
-            gap: clamp(1rem, 2vw, 1.25rem);
-            border-top: 0.125rem solid rgba(52, 152, 219, 0.3);
+            gap: 20px;
+            border-top: 2px solid rgba(52, 152, 219, 0.3);
             margin-top: auto;
             justify-content: center;
         }
@@ -1637,14 +1595,14 @@
             cursor: pointer;
             color: #7f8c8d;
             transition: all 0.3s ease;
-            font-size: clamp(1rem, 2vw, 1.25rem);
-            width: clamp(1.5rem, 3vw, 1.75rem);
-            height: clamp(1.5rem, 3vw, 1.75rem);
+            font-size: 20px;
+            width: 28px;
+            height: 28px;
             display: flex;
             align-items: center;
             justify-content: center;
-            border-radius: 0.375rem;
-            padding: clamp(0.25rem, 0.75vh, 0.375rem);
+            border-radius: 6px;
+            padding: 6px;
         }
 
         .footer-icon:hover {
@@ -2493,12 +2451,16 @@
             cursor: pointer;
         }
 
+        /* PDF Document Area - RESPONSIVE */
         .pdf-document-area {
             flex: 1;
-            padding: 24px;
-            overflow-y: auto;
+            overflow: auto;
+            background: #f5f5f5;
+            padding: var(--pdf-padding-vertical) var(--pdf-padding-horizontal) var(--pdf-padding-bottom);
             display: flex;
+            align-items: center;
             justify-content: center;
+            border: 1px solid #d1d5db;
         }
 
         .pdf-document-container {
@@ -3292,11 +3254,11 @@
             pointer-events: auto;
         }
 
-        /* ===== PDF TOOLBAR STYLES ===== */
+        /* ===== PDF TOOLBAR STYLES - RESPONSIVE ===== */
         .pdf-left-sidebar {
             background-color: #1f2937;
             border-radius: 0.5rem;
-            box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+            box-shadow: 0 1.25rem 1.5625rem -0.3125rem rgba(0, 0, 0, 0.1);
             padding: 0.5rem;
             display: none;
             flex-direction: column;
@@ -3304,8 +3266,8 @@
             width: auto;
             height: auto;
             position: absolute;
-            left: 12px;
-            top: 12px;
+            left: var(--toolbar-offset);
+            top: var(--toolbar-offset);
             z-index: 10001;
             min-width: auto;
             max-width: none;
@@ -4695,31 +4657,24 @@
             display: flex;
         }
 
+        /* Task Modal - RESPONSIVE */
         .task-creation-content {
-            background: white;
-            width: 95%;
-            max-width: 1100px;
+            background: #fafbfc;
+            width: clamp(85%, 95%, 95%);
+            max-width: 68.75rem;
             max-height: 95vh;
-            border-radius: 8px;
+            border-radius: 0.5rem;
             display: flex;
             flex-direction: column;
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
-            animation: modalSlideIn 0.3s ease;
-            font-size: 17px;
-            font-weight: 500;
-            position: relative;
-            margin: 0 80px;
         }
 
-        /* Header with divider */
         .task-creation-header {
-            padding: 16px 20px;
-            border-bottom: 1px solid #e5e7eb; /* THIN ASH HORIZONTAL LINE */
+            padding: clamp(0.75rem, 2vh, 1rem) clamp(1rem, 2vw, 1.25rem);
+            border-bottom: 1px solid #e5e7eb;
             display: flex;
             align-items: flex-start;
             justify-content: space-between;
-            gap: 20px;
-            background: white;
+            gap: 1.25rem;
         }
 
         .task-header-left {
@@ -5495,45 +5450,40 @@
         }
 
         .task-number {
-            font-size: 17px;
+            font-size: clamp(0.875rem, 1.5vw, 1.0625rem);
             font-weight: 500;
             color: #6b7280;
-            letter-spacing: 0.3px;
         }
 
-        .task-title-input {
-            font-size: 17px;
-            font-weight: 500;
-            color: #1f2937;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 4px;
-            padding: 8px 12px;
+        .task-title-input,
+        .task-select,
+        .task-input {
+            font-size: clamp(0.875rem, 1.5vw, 1.0625rem);
+            padding: clamp(0.375rem, 1vh, 0.5rem) clamp(0.625rem, 1vw, 0.75rem);
         }
 
         .task-section-label {
-            font-size: 17px;
+            font-size: clamp(0.875rem, 1.5vw, 1.0625rem);
             font-weight: 500;
             color: #374151;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .task-link-btn {
-            font-size: 17px;
+            font-size: clamp(0.875rem, 1.5vw, 1.0625rem);
             font-weight: 500;
             color: #2563eb;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
         }
 
         .task-attributes-header {
-            font-size: 17px;
+            font-size: clamp(0.875rem, 1.5vw, 1.0625rem);
             font-weight: 500;
             color: #1f2937;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             background: white;
-            padding: 8px 12px;
-            border-radius: 8px 8px 0 0;
+            padding: clamp(0.375rem, 1vh, 0.5rem) clamp(0.625rem, 1vw, 0.75rem);
+            border-radius: 0.5rem 0.5rem 0 0;
             border: 1px solid #e5e7eb;
             border-bottom: none;
         }
@@ -5899,6 +5849,39 @@
             color: #6b7280;
             margin-left: 36px;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        /* Responsive Typography */
+        h1, h2, h3, h4, h5, h6 {
+            font-size: clamp(1rem, 2.5vw, 1.5rem);
+        }
+
+        p, span, div {
+            font-size: clamp(0.875rem, 1.5vw, 1rem);
+        }
+
+        /* Header - RESPONSIVE */
+        .header {
+            background-color: white;
+            padding: clamp(0.625rem, 1.5vh, 0.75rem) clamp(1.25rem, 3vw, 1.875rem);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            border-bottom: 1px solid #e0e0e0;
+            gap: clamp(0.75rem, 2vw, 1.25rem);
+        }
+
+        .search-box {
+            display: flex;
+            align-items: center;
+            background-color: #f5f5f5;
+            padding: 0.5rem clamp(0.75rem, 1.5vw, 0.9375rem);
+            border-radius: 0.25rem;
+            width: clamp(12.5rem, 25vw, 18.75rem);
+        }
+
+        .search-box input {
+            font-size: clamp(0.75rem, 1.5vw, 0.875rem);
         }
 
     </style>
@@ -12296,31 +12279,43 @@
         }
     }
 
-    // ===== 80% ZOOM FIX - Makes 100% zoom look like 80% zoom =====
-    (function() {
-        'use strict';
+    // Dynamic viewport adjustment - FIXED FOR 100% ZOOM
+    function adjustForViewport() {
+        const vw = window.innerWidth;
+        const vh = window.innerHeight;
+        const zoom = window.devicePixelRatio || 1;
 
-        // Apply 80% scaling to body
-        function applyScaling() {
-            document.body.style.transform = 'scale(0.8)';
-            document.body.style.transformOrigin = 'top left';
-            document.body.style.width = '125%'; // Compensate for scaling
-            document.body.style.height = '125%';
+        // Adjust root font size based on viewport AND zoom level
+        let baseFontSize = 14; // Default for 100% zoom at 1920x1080
 
-            console.log('✅ 80% scaling applied - interface now matches your preferred view');
+        if (vw < 1400) {
+            baseFontSize = 12; // Laptops
+        } else if (vw >= 1400 && vw < 1920) {
+            baseFontSize = 13; // Standard monitors
+        } else if (vw >= 1920 && vw < 2560) {
+            baseFontSize = 14; // Large monitors
+        } else if (vw >= 2560) {
+            baseFontSize = 16; // Ultra-wide/4K
         }
 
-        // Apply on page load
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', applyScaling);
-        } else {
-            applyScaling();
-        }
+        // Compensate for browser zoom (if user zooms to 80%, increase font size)
+        const adjustedFontSize = baseFontSize / zoom;
 
-        // Reapply after dynamic content loads
-        setTimeout(applyScaling, 100);
-        setTimeout(applyScaling, 500);
-    })();
+        document.documentElement.style.fontSize = adjustedFontSize + 'px';
+
+        console.log('Viewport adjusted:', {
+            screenWidth: vw,
+            screenHeight: vh,
+            browserZoom: (zoom * 100).toFixed(0) + '%',
+            baseFontSize: baseFontSize + 'px',
+            adjustedFontSize: adjustedFontSize.toFixed(1) + 'px'
+        });
+    }
+
+    // Run on load and resize
+    window.addEventListener('load', adjustForViewport);
+    window.addEventListener('resize', adjustForViewport);
+    adjustForViewport();
     </script>
 
 </body>
