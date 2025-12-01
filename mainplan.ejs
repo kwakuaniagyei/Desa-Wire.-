@@ -1250,7 +1250,7 @@
         }
 
         /* Hide main content completely when PDF viewer is open */
-        .pdf-viewer-modal.show ~ .main-content {
+        body:has(.pdf-viewer-modal.show) .main-content {
             display: none !important;
             visibility: hidden !important;
             opacity: 0 !important;
