@@ -1249,16 +1249,16 @@
             font-size: 16px;
         }
 
-        /* Hide main content panels when sidebar is collapsed in PDF viewer context */
-        .sidebar.collapsed ~ .main-content .action-bar {
+        /* Only hide main content when BOTH sidebar is collapsed AND PDF viewer is open */
+        .sidebar.collapsed ~ .main-content .pdf-viewer-modal.show ~ .action-bar {
             display: none;
         }
 
-        .sidebar.collapsed ~ .main-content .plans-content {
+        .sidebar.collapsed ~ .main-content .pdf-viewer-modal.show ~ .plans-content {
             display: none;
         }
 
-        .sidebar.collapsed ~ .main-content .status-bar {
+        .sidebar.collapsed ~ .main-content .pdf-viewer-modal.show ~ .status-bar {
             display: none;
         }
 
