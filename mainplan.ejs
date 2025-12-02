@@ -8256,17 +8256,17 @@
                         // Medium (1600-1799): reduce landscape by 30%
                         finalScale = finalScale * 0.7;
                     } else if (screenWidth < 2400) {
-                        // Big monitor (1800-2399): small - reduce to 0.55x
-                        finalScale = finalScale * 0.55;
+                        // Big monitor (1800-2399): small - reduce to 0.60x
+                        finalScale = finalScale * 0.60;
                     } else {
-                        // Extra large (2400+): small - reduce to 0.6x
-                        finalScale = finalScale * 0.6;
+                        // Extra large (2400+): small - reduce to 0.65x
+                        finalScale = finalScale * 0.65;
                     }
                 } else {
                     // For portrait PDFs
                     if (screenWidth >= 1800) {
-                        // Big monitor portrait: small - reduce to 0.55x
-                        finalScale = finalScale * 0.55;
+                        // Big monitor portrait: small - reduce to 0.60x
+                        finalScale = finalScale * 0.60;
                     } else {
                         finalScale = finalScale * 0.75;
                     }
