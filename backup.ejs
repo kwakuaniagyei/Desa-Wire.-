@@ -2030,54 +2030,31 @@
             max-width: 100% !important;
             padding: var(--fullscreen-padding-offset) clamp(8px, 1vw, 16px) clamp(8px, 1vh, 16px) clamp(8px, 1vw, 16px) !important;
             display: flex !important;
-            align-items: flex-start !important;
-            justify-content: flex-start !important;
+            align-items: center !important;
+            justify-content: center !important;
             overflow: auto !important;
             background: #ffffff !important;
-            min-height: calc(100vh - var(--fullscreen-padding-offset)) !important;
+            height: calc(100vh - var(--fullscreen-padding-offset)) !important;
             border: none !important;
-            padding-top: var(--fullscreen-padding-offset) !important;
-        }
-
-        /* Fullscreen on laptop - add left padding to avoid toolbar overlap */
-        @media screen and (max-width: 1599px) {
-            .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
-                padding-left: calc(var(--toolbar-width) + 60px) !important;
-            }
-        }
-
-        /* Fullscreen on medium screens - add left padding for toolbar */
-        @media screen and (min-width: 1600px) and (max-width: 2399px) {
-            .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
-                padding-left: calc(var(--toolbar-width) + 40px) !important;
-            }
-        }
-
-        /* Fullscreen on big monitors - minimal left padding */
-        @media screen and (min-width: 2400px) {
-            .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
-                padding-left: var(--toolbar-width) !important;
-            }
         }
 
         /* PDF content in fullscreen - FIT TO SCREEN */
         .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
+            width: auto !important;
+            max-width: none !important;
+            margin: 0 auto !important;
             background: transparent !important;
             padding: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 20px !important;
         }
 
         .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
+            width: auto !important;
             max-width: none !important;
+            height: auto !important;
             margin: 0 !important;
             display: block !important;
             background: white !important;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
             image-rendering: pixelated !important;
             image-rendering: -webkit-optimize-contrast !important;
             image-rendering: crisp-edges !important;
@@ -2459,27 +2436,6 @@
             align-items: center;
             justify-content: center;
             border: 1px solid #d1d5db;
-        }
-
-        /* For big monitors - keep original padding (no toolbar overlap) */
-        @media screen and (min-width: 2400px) {
-            .pdf-document-area {
-                padding-left: var(--pdf-padding-horizontal);
-            }
-        }
-
-        /* For medium screens - add significant left padding for toolbar clearance */
-        @media screen and (min-width: 1600px) and (max-width: 2399px) {
-            .pdf-document-area {
-                padding-left: calc(var(--pdf-padding-horizontal) + 150px);
-            }
-        }
-
-        /* For smaller laptop screens - maximum left padding for toolbar clearance */
-        @media screen and (max-width: 1599px) {
-            .pdf-document-area {
-                padding-left: calc(var(--pdf-padding-horizontal) + 180px);
-            }
         }
 
         .pdf-document-container {
@@ -3286,7 +3242,7 @@
             position: absolute;
             left: var(--toolbar-offset);
             top: var(--toolbar-offset);
-            z-index: 10002;
+            z-index: 10001;
             min-width: auto;
             max-width: none;
             border-right: none;
@@ -3658,7 +3614,7 @@
 
         /* ===== PDF RIGHT TASKS SIDEBAR ===== */
         .pdf-tasks-sidebar {
-            width: 350px;
+            width: 480px;
             background: white;
             border-left: 1px solid #e5e7eb;
             display: flex;
@@ -6755,19 +6711,9 @@
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d', { alpha: false });
 
-                // Detect screen type for sharp rendering
-                const dpr = window.devicePixelRatio || 1;
-                const isLaptop = window.innerWidth < 1600;
-
-                // For laptop: render at higher DPI for sharp image
-                const renderDPI = isLaptop ? Math.min(dpr * 1.5, 2) : dpr;
-
                 // Fill the entire container while showing the top of the PDF
-                canvas.width = containerWidth * renderDPI;
-                canvas.height = containerHeight * renderDPI;
-
-                // Scale context for sharp rendering
-                context.scale(renderDPI, renderDPI);
+                canvas.width = containerWidth;
+                canvas.height = containerHeight;
 
                 // Professional styling - clean, no borders, perfect fill
                 canvas.style.width = '100%';
@@ -6776,7 +6722,6 @@
                 canvas.style.objectFit = 'cover';
                 canvas.style.borderRadius = '4px';
                 canvas.style.backgroundColor = '#fff';
-                canvas.style.imageRendering = 'crisp-edges';
 
                 const renderContext = {
                     canvasContext: context,
@@ -8066,12 +8011,6 @@
             const modal = document.getElementById('pdfViewerModal');
             const contentContainer = document.getElementById('pdfDocumentContent');
 
-            // SAVE the original screen type when PDF is opened (before fullscreen is entered)
-            const detectedType = detectScreenType();
-            originalScreenTypeAtPDFOpen = detectedType.type;
-            console.log(`📱 PDF Opened - Original Screen Type Saved: ${originalScreenTypeAtPDFOpen}`);
-            console.log(`📱 Screen Detection Details - Type: ${detectedType.type}, Base Scale: ${detectedType.scale}, Window Width: ${window.innerWidth}, Screen Width: ${window.screen.width}`);
-
             // Clear the container
             contentContainer.innerHTML = '';
 
@@ -8164,107 +8103,27 @@
         function detectScreenType() {
             const width = window.innerWidth;
             const height = window.innerHeight;
-            // Try to detect actual screen size if available
-            const screenWidth = window.screen.width || width;
-            const screenHeight = window.screen.height || height;
             const diagonal = Math.sqrt(width * width + height * height);
 
-            // Smart detection: use physical screen size when available, fall back to window size
-            const detectionWidth = screenWidth >= 2000 ? screenWidth : width;
-
-            console.log('🖥️ detectScreenType: window.innerWidth=' + width + ', window.screen.width=' + window.screen.width + ', detectionWidth=' + detectionWidth);
-
-            // BIG_MONITOR: width >= 2000px (actual big physical screen)
-            // MEDIUM: width 1400-1999px (medium screen)
-            // LAPTOP: width 1000-1399px (smaller laptop)
-            // MOBILE: width < 1000px (mobile device)
-            if (detectionWidth >= 2000) {
-                return { type: 'BIG_MONITOR', scale: 1.5 };
-            } else if (detectionWidth >= 1400) {
-                return { type: 'MEDIUM', scale: 1.1 };
-            } else if (detectionWidth >= 1000) {
-                return { type: 'LAPTOP', scale: 0.95 };
+            // Smart detection based on physical screen dimensions
+            if (diagonal < 1500) {
+                return { type: 'MOBILE', scale: 1.0 };
+            } else if (diagonal < 2200) {
+                return { type: 'LAPTOP', scale: 1.2 };
+            } else if (diagonal < 3000) {
+                return { type: 'MEDIUM', scale: 1.5 };
             } else {
-                return { type: 'MOBILE', scale: 0.8 };
+                return { type: 'BIG_MONITOR', scale: 2.0 };
             }
         }
 
         function getOptimalPDFScale(pageViewport) {
             const screenInfo = detectScreenType();
-            // Use screen.width for determining scale, not innerWidth (which changes in fullscreen)
-            const screenWidth = window.screen.width || window.innerWidth;
-            const diagonal = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight);
-            const isFullscreen = window.pdfInFullscreen || false;
 
-            // Detect if PDF is landscape or portrait
-            const isLandscapePDF = pageViewport.width > pageViewport.height;
+            console.log(`📱 Screen Type: ${screenInfo.type} | Scale: ${screenInfo.scale}x`);
+            console.log(`📐 Window Size: ${window.innerWidth}×${window.innerHeight}`);
 
-            // In fullscreen, use the ORIGINAL screen type that was saved when PDF was opened
-            // This prevents misdetection when fullscreen changes window dimensions
-            const effectiveScreenType = isFullscreen && originalScreenTypeAtPDFOpen
-                ? originalScreenTypeAtPDFOpen
-                : screenInfo.type;
-            let finalScale = screenInfo.scale;
-
-            console.log('🔍 DEBUG getOptimalPDFScale:');
-            console.log('   screenInfo.type:', screenInfo.type);
-            console.log('   screenInfo.scale:', screenInfo.scale);
-            console.log('   isFullscreen:', isFullscreen);
-            console.log('   originalScreenTypeAtPDFOpen:', originalScreenTypeAtPDFOpen);
-            console.log('   effectiveScreenType:', effectiveScreenType);
-            console.log('   isLandscapePDF:', isLandscapePDF);
-            console.log('   pageViewport:', pageViewport.width, 'x', pageViewport.height);
-
-            // FULLSCREEN MODE - Different handling
-            if (isFullscreen) {
-                // In fullscreen, use the ORIGINAL screen type to determine scaling
-                // This ensures medium/laptop don't get zoomed just because fullscreen expanded the window
-
-                // FORCE CHECK: If actual screen width >= 2000px (big monitor), apply massive zoom even if detection fails
-                const isBigMonitorScreenSize = (window.screen.width || window.innerWidth) >= 2000;
-                const effectiveIsBigMonitor = (effectiveScreenType === 'BIG_MONITOR') || isBigMonitorScreenSize;
-
-                if (isLandscapePDF) {
-                    if (effectiveScreenType === 'LAPTOP' && !isBigMonitorScreenSize) {
-                        // Laptop fullscreen: Same as normal (reduce by 50%)
-                        finalScale = finalScale * 0.5;
-                    } else if (effectiveScreenType === 'MEDIUM' && !isBigMonitorScreenSize) {
-                        // Medium fullscreen: Same as normal (reduce by 40%)
-                        finalScale = finalScale * 0.6;
-                    } else if (effectiveIsBigMonitor) {
-                        // Big monitor fullscreen: Maximum zoom for excellent viewing on large displays
-                        finalScale = finalScale * 15.0;
-                    }
-                } else {
-                    // Portrait in fullscreen: Same as normal mode
-                    finalScale = finalScale * 0.75;
-                }
-            } else {
-                // NORMAL MODE (not fullscreen)
-                if (isLandscapePDF) {
-                    if (screenWidth < 1600) {
-                        // Laptop: reduce landscape by 50%
-                        finalScale = finalScale * 0.5;
-                    } else if (screenWidth < 2400) {
-                        // Medium: reduce landscape by 40%
-                        finalScale = finalScale * 0.6;
-                    } else {
-                        // Big monitor: INCREASE landscape by 200%
-                        finalScale = finalScale * 3.0;
-                    }
-                } else {
-                    // For portrait PDFs, reduce zoom
-                    finalScale = finalScale * 0.75;
-                }
-            }
-
-            console.log(`📱 Screen Type: ${screenInfo.type} | Effective Type: ${effectiveScreenType} | Base Scale: ${screenInfo.scale.toFixed(2)}x | Final Scale: ${finalScale.toFixed(2)}x | Fullscreen: ${isFullscreen}`);
-            console.log(`📐 Window Size: ${window.innerWidth}×${window.innerHeight} | Screen Size: ${screenWidth}×${window.screen.height}`);
-            console.log(`📄 PDF Type: ${isLandscapePDF ? 'LANDSCAPE' : 'PORTRAIT'}`);
-            console.log(`🔢 Multiplier Applied: ${(finalScale / screenInfo.scale).toFixed(2)}x`);
-            console.log('✅ FINAL ZOOM SCALE:', finalScale);
-
-            return finalScale;
+            return screenInfo.scale;
         }
 
         function renderPDFInViewer(base64Data, container, planData) {
@@ -8308,10 +8167,8 @@
                         // Calculate optimal scale based on ACTUAL page dimensions
                         const optimalScale = getOptimalPDFScale(firstPageViewport);
 
-                        console.log('🎯 Rendering PDF with scale:', optimalScale);
-                        console.log('📄 Base page dimensions (1:1):', firstPageViewport.width, 'x', firstPageViewport.height);
-                        const scaledViewport = firstPage.getViewport({ scale: optimalScale });
-                        console.log('📏 Scaled viewport dimensions:', scaledViewport.width, 'x', scaledViewport.height);
+                        console.log('Rendering PDF with scale:', optimalScale);
+                        console.log('Page dimensions:', firstPageViewport.width, 'x', firstPageViewport.height);
 
                         // Render all pages with the calculated scale
                         for (let pageNum = 1; pageNum <= numPages; pageNum++) {
@@ -8325,37 +8182,21 @@
                                     willReadFrequently: false
                                 });
 
-                                // High-DPI rendering for sharp PDFs on big monitors
-                                const screenInfo = detectScreenType();
-                                const isFullscreen = window.pdfInFullscreen || false;
-                                let dpr = window.devicePixelRatio || 1;
+                                // Set canvas size
+                                canvas.width = viewport.width;
+                                canvas.height = viewport.height;
 
-                                // Only apply extra DPI on big monitors NOT in fullscreen
-                                // In fullscreen on medium/laptop, use normal DPI to avoid zoom
-                                if (screenInfo.type === 'BIG_MONITOR' && !isFullscreen) {
-                                    dpr = Math.min(dpr * 3, 4); // Max 4x DPI for ultra sharpness
-                                } else if (screenInfo.type === 'MEDIUM' && !isFullscreen) {
-                                    dpr = Math.min(dpr * 1.5, 2.5); // Max 2.5x DPI for medium (only in normal mode)
-                                }
-                                // Laptop and Mobile: use normal DPI
-
-                                // Set canvas size with DPI multiplier for sharp rendering
-                                canvas.width = viewport.width * dpr;
-                                canvas.height = viewport.height * dpr;
-
-                                // Set display size to match viewport (scaled size) - this is what the user sees
+                                // Set display size to match viewport (scaled size)
                                 let displayWidth = viewport.width;
                                 let displayHeight = viewport.height;
 
-                                console.log(`📐 Canvas ${pageNum}: Display size = ${displayWidth}px × ${displayHeight}px, DPR = ${dpr}`);
-                                console.log(`   Internal canvas size = ${canvas.width}px × ${canvas.height}px`);
-                                console.log(`   isFullscreen = ${window.pdfInFullscreen}, modal has fullscreen-mode = ${document.getElementById('pdfViewerModal')?.classList.contains('fullscreen-mode')}`);
-
-                                // Force display size - use !important inline style to override CSS
-                                canvas.style.cssText = `width: ${displayWidth}px !important; height: ${displayHeight}px !important; display: block !important; margin-bottom: ${pageNum < numPages ? '20px' : '0'} !important; border: 1px solid #d1d5db !important; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important; background-color: white !important; image-rendering: crisp-edges !important;`;
-
-                                // Scale context for sharp rendering
-                                context.scale(dpr, dpr);
+                                canvas.style.width = displayWidth + 'px';
+                                canvas.style.height = displayHeight + 'px';
+                                canvas.style.display = 'block';
+                                canvas.style.marginBottom = pageNum < numPages ? '20px' : '0';
+                                canvas.style.border = '1px solid #d1d5db';
+                                canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
+                                canvas.style.backgroundColor = 'white';
 
                                 const renderContext = {
                                     canvasContext: context,
@@ -8967,7 +8808,6 @@
                             // Enter fullscreen mode
                             pdfModal.classList.add('fullscreen-mode');
                             this.classList.add('active');
-                            window.pdfInFullscreen = true; // Set fullscreen flag
 
                             // Request browser fullscreen API
                             if (pdfModal.requestFullscreen) {
@@ -8980,22 +8820,20 @@
 
                             console.log('Fullscreen enabled');
 
-                            // Re-render PDF with new scale after delay (allowing CSS transitions to complete)
+                            // Re-render PDF with new scale after short delay
                             setTimeout(() => {
                                 if (currentPlanIndex >= 0 && plans[currentPlanIndex]) {
                                     const plan = plans[currentPlanIndex];
                                     const container = document.getElementById('pdfDocumentContent');
                                     if (plan.preview && container) {
-                                        console.log('🖥️ Fullscreen re-rendering PDF with scale multiplier 15x for big monitors');
                                         renderPDFFromPreview(plan, container);
                                     }
                                 }
-                            }, 300);
+                            }, 100);
                         } else {
                             // Exit fullscreen mode
                             pdfModal.classList.remove('fullscreen-mode');
                             this.classList.remove('active');
-                            window.pdfInFullscreen = false; // Clear fullscreen flag
 
                             // Exit browser fullscreen API
                             if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
@@ -9010,17 +8848,16 @@
 
                             console.log('Fullscreen disabled');
 
-                            // Re-render PDF with normal scale after delay
+                            // Re-render PDF with normal scale after short delay
                             setTimeout(() => {
                                 if (currentPlanIndex >= 0 && plans[currentPlanIndex]) {
                                     const plan = plans[currentPlanIndex];
                                     const container = document.getElementById('pdfDocumentContent');
                                     if (plan.preview && container) {
-                                        console.log('📺 Normal mode re-rendering PDF');
                                         renderPDFFromPreview(plan, container);
                                     }
                                 }
-                            }, 300);
+                            }, 100);
                         }
                     }
                 });
@@ -9519,7 +9356,6 @@
         let currentPlanIndex = -1; // Track current plan being viewed
         let currentPDFPlan = -1; // Track current plan for edit feature
         let planRotations = {}; // Track rotation angles per plan ID
-        let originalScreenTypeAtPDFOpen = null; // Store the screen type when PDF is first opened
 
         function previousPDFPage() {
             // Navigate to previous plan
