@@ -179,8 +179,8 @@ class DesaChatWidget {
                     position: absolute;
                     bottom: 70px;
                     right: 0;
-                    width: 350px;
-                    height: 500px;
+                    width: 320px !important;
+                    height: 450px !important;
                     background: white;
                     border-radius: 16px;
                     box-shadow: 0 10px 50px rgba(0, 0, 0, 0.2);
@@ -822,15 +822,15 @@ class DesaChatWidget {
                 /* Responsive design */
                 @media (min-width: 1400px) {
                     .chat-window {
-                        width: 400px;
-                        height: 550px;
+                        width: 380px !important;
+                        height: 520px !important;
                     }
                 }
 
                 @media (max-width: 768px) {
                     .chat-window {
-                        width: 300px;
-                        height: 450px;
+                        width: 280px !important;
+                        height: 420px !important;
                     }
                 }
 
@@ -847,8 +847,8 @@ class DesaChatWidget {
                     }
 
                     .chat-window {
-                        width: 100%;
-                        height: 400px;
+                        width: 100% !important;
+                        height: 380px !important;
                         bottom: 60px;
                     }
                 }
