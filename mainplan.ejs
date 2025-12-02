@@ -8227,22 +8227,28 @@
 
                 if (isLandscapePDF) {
                     if (effectiveScreenType === 'LAPTOP' && !isBigMonitorScreenSize) {
-                        // Laptop fullscreen: Same as normal (reduce by 50%)
-                        finalScale = finalScale * 0.5;
+                        // Laptop fullscreen: Increase zoom to 0.9x
+                        finalScale = finalScale * 0.9;
                     } else if (effectiveScreenType === 'MEDIUM' && !isBigMonitorScreenSize) {
-                        // Medium fullscreen: Same as normal (reduce by 40%)
-                        finalScale = finalScale * 0.6;
+                        // Medium fullscreen: Increase zoom to 1.2x
+                        finalScale = finalScale * 1.2;
                     } else if (effectiveIsBigMonitor) {
                         // Big monitor fullscreen: No zoom multiplier - fit entire page on screen
                         finalScale = finalScale * 0.8;
                     }
                 } else {
                     // Portrait in fullscreen
-                    if (effectiveIsBigMonitor) {
+                    if (effectiveScreenType === 'LAPTOP' && !isBigMonitorScreenSize) {
+                        // Laptop fullscreen portrait: Increase zoom to 0.9x
+                        finalScale = finalScale * 0.9;
+                    } else if (effectiveScreenType === 'MEDIUM' && !isBigMonitorScreenSize) {
+                        // Medium fullscreen portrait: Increase zoom to 1.1x
+                        finalScale = finalScale * 1.1;
+                    } else if (effectiveIsBigMonitor) {
                         // Big monitor portrait: No zoom multiplier - fit entire page on screen
                         finalScale = finalScale * 0.8;
                     } else {
-                        // Other screens: reduce zoom
+                        // Other screens: standard zoom
                         finalScale = finalScale * 0.75;
                     }
                 }
