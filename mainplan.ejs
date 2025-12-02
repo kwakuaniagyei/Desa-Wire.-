@@ -8227,11 +8227,11 @@
 
                 if (isLandscapePDF) {
                     if (effectiveScreenType === 'LAPTOP' && !isBigMonitorScreenSize) {
-                        // Laptop fullscreen: Increase zoom to 0.9x
-                        finalScale = finalScale * 0.9;
+                        // Laptop fullscreen: Set zoom to 1.1x
+                        finalScale = finalScale * 1.1;
                     } else if (effectiveScreenType === 'MEDIUM' && !isBigMonitorScreenSize) {
-                        // Medium fullscreen: Increase zoom to 1.2x
-                        finalScale = finalScale * 1.2;
+                        // Medium fullscreen: Set zoom to 1.1x
+                        finalScale = finalScale * 1.1;
                     } else if (effectiveIsBigMonitor) {
                         // Big monitor fullscreen: No zoom multiplier - fit entire page on screen
                         finalScale = finalScale * 0.8;
@@ -8256,11 +8256,11 @@
                 // NORMAL MODE (not fullscreen)
                 if (isLandscapePDF) {
                     if (screenWidth < 1600) {
-                        // Laptop: reduce landscape by 50%
-                        finalScale = finalScale * 0.5;
+                        // Laptop: set landscape to 1.1x
+                        finalScale = finalScale * 1.1;
                     } else if (screenWidth < 1800) {
-                        // Medium (1600-1799): reduce landscape by 30%
-                        finalScale = finalScale * 0.7;
+                        // Medium (1600-1799): set landscape to 1.1x
+                        finalScale = finalScale * 1.1;
                     } else if (screenWidth < 2400) {
                         // Big monitor (1800-2399): small - reduce to 0.60x
                         finalScale = finalScale * 0.60;
