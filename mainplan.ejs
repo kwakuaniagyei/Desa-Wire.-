@@ -8233,14 +8233,14 @@
                         // Medium fullscreen: Same as normal (reduce by 40%)
                         finalScale = finalScale * 0.6;
                     } else if (effectiveIsBigMonitor) {
-                        // Big monitor fullscreen: Fit entire page with all corners visible
-                        finalScale = finalScale * 1.0;
+                        // Big monitor fullscreen: No zoom multiplier - fit entire page on screen
+                        finalScale = finalScale * 0.8;
                     }
                 } else {
                     // Portrait in fullscreen
                     if (effectiveIsBigMonitor) {
-                        // Big monitor portrait: Fit entire page with all corners visible
-                        finalScale = finalScale * 1.0;
+                        // Big monitor portrait: No zoom multiplier - fit entire page on screen
+                        finalScale = finalScale * 0.8;
                     } else {
                         // Other screens: reduce zoom
                         finalScale = finalScale * 0.75;
