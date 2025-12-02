@@ -8256,17 +8256,17 @@
                         // Medium (1600-1799): reduce landscape by 30%
                         finalScale = finalScale * 0.7;
                     } else if (screenWidth < 2400) {
-                        // Big monitor (1800-2399): INCREASE landscape by 100%
-                        finalScale = finalScale * 2.0;
+                        // Big monitor (1800-2399): slight increase to 1.1x
+                        finalScale = finalScale * 1.1;
                     } else {
-                        // Extra large (2400+): INCREASE landscape by 200%
-                        finalScale = finalScale * 3.0;
+                        // Extra large (2400+): increase to 1.3x
+                        finalScale = finalScale * 1.3;
                     }
                 } else {
                     // For portrait PDFs
                     if (screenWidth >= 1800) {
-                        // Big monitor portrait: increase zoom
-                        finalScale = finalScale * 1.2;
+                        // Big monitor portrait: reduce zoom to 0.9x
+                        finalScale = finalScale * 0.9;
                     } else {
                         finalScale = finalScale * 0.75;
                     }
