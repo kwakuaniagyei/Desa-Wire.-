@@ -8170,15 +8170,16 @@
             const diagonal = Math.sqrt(width * width + height * height);
 
             // Smart detection: use physical screen size when available, fall back to window size
-            const detectionWidth = screenWidth >= 2000 ? screenWidth : width;
+            // IMPORTANT: Always use screen.width for accurate detection, not window.innerWidth
+            const detectionWidth = screenWidth > 0 ? screenWidth : width;
 
             console.log('🖥️ detectScreenType: window.innerWidth=' + width + ', window.screen.width=' + window.screen.width + ', detectionWidth=' + detectionWidth);
 
-            // BIG_MONITOR: width >= 2000px (actual big physical screen)
-            // MEDIUM: width 1400-1999px (medium screen)
+            // BIG_MONITOR: width >= 1800px (large monitors - 1920, 2560, etc)
+            // MEDIUM: width 1400-1799px (medium screens)
             // LAPTOP: width 1000-1399px (smaller laptop)
             // MOBILE: width < 1000px (mobile device)
-            if (detectionWidth >= 2000) {
+            if (detectionWidth >= 1800) {
                 return { type: 'BIG_MONITOR', scale: 1.5 };
             } else if (detectionWidth >= 1400) {
                 return { type: 'MEDIUM', scale: 1.1 };
@@ -8236,8 +8237,14 @@
                         finalScale = finalScale * 15.0;
                     }
                 } else {
-                    // Portrait in fullscreen: Same as normal mode
-                    finalScale = finalScale * 0.75;
+                    // Portrait in fullscreen
+                    if (effectiveIsBigMonitor) {
+                        // Big monitor portrait: Apply 10x zoom for portrait too
+                        finalScale = finalScale * 10.0;
+                    } else {
+                        // Other screens: reduce zoom
+                        finalScale = finalScale * 0.75;
+                    }
                 }
             } else {
                 // NORMAL MODE (not fullscreen)
@@ -8245,16 +8252,24 @@
                     if (screenWidth < 1600) {
                         // Laptop: reduce landscape by 50%
                         finalScale = finalScale * 0.5;
+                    } else if (screenWidth < 1800) {
+                        // Medium (1600-1799): reduce landscape by 30%
+                        finalScale = finalScale * 0.7;
                     } else if (screenWidth < 2400) {
-                        // Medium: reduce landscape by 40%
-                        finalScale = finalScale * 0.6;
+                        // Big monitor (1800-2399): INCREASE landscape by 100%
+                        finalScale = finalScale * 2.0;
                     } else {
-                        // Big monitor: INCREASE landscape by 200%
+                        // Extra large (2400+): INCREASE landscape by 200%
                         finalScale = finalScale * 3.0;
                     }
                 } else {
-                    // For portrait PDFs, reduce zoom
-                    finalScale = finalScale * 0.75;
+                    // For portrait PDFs
+                    if (screenWidth >= 1800) {
+                        // Big monitor portrait: increase zoom
+                        finalScale = finalScale * 1.2;
+                    } else {
+                        finalScale = finalScale * 0.75;
+                    }
                 }
             }
 
