@@ -8233,14 +8233,14 @@
                         // Medium fullscreen: Same as normal (reduce by 40%)
                         finalScale = finalScale * 0.6;
                     } else if (effectiveIsBigMonitor) {
-                        // Big monitor fullscreen: Maximum zoom for excellent viewing on large displays
-                        finalScale = finalScale * 15.0;
+                        // Big monitor fullscreen: Zoom to fit nicely on large displays with all corners visible
+                        finalScale = finalScale * 3.5;
                     }
                 } else {
                     // Portrait in fullscreen
                     if (effectiveIsBigMonitor) {
-                        // Big monitor portrait: Apply 10x zoom for portrait too
-                        finalScale = finalScale * 10.0;
+                        // Big monitor portrait: Zoom for better viewing while keeping all corners visible
+                        finalScale = finalScale * 2.5;
                     } else {
                         // Other screens: reduce zoom
                         finalScale = finalScale * 0.75;
