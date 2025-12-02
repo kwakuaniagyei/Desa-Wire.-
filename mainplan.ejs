@@ -8256,11 +8256,11 @@
                 // NORMAL MODE (not fullscreen)
                 if (isLandscapePDF) {
                     if (screenWidth < 1600) {
-                        // Laptop: set landscape to 1.1x
-                        finalScale = finalScale * 1.1;
+                        // Laptop: reduce landscape by 50%
+                        finalScale = finalScale * 0.5;
                     } else if (screenWidth < 1800) {
-                        // Medium (1600-1799): set landscape to 1.1x
-                        finalScale = finalScale * 1.1;
+                        // Medium (1600-1799): reduce landscape by 30%
+                        finalScale = finalScale * 0.7;
                     } else if (screenWidth < 2400) {
                         // Big monitor (1800-2399): small - reduce to 0.60x
                         finalScale = finalScale * 0.60;
