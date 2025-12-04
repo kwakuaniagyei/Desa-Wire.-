@@ -26,9 +26,9 @@
             --sidebar-collapsed-width: 5rem;
             --toolbar-width: 3.75rem;
             --toolbar-offset: clamp(0.75rem, 2vw, 1.5rem);
-            --pdf-padding-vertical: clamp(1.5rem, 4vh, 3.75rem);
-            --pdf-padding-horizontal: clamp(1rem, 2vw, 2.5rem);
-            --pdf-padding-bottom: clamp(6.25rem, 15vh, 12.5rem);
+            --pdf-padding-vertical: 1.5rem; /* SIMPLIFIED: fixed value */
+            --pdf-padding-horizontal: 1.5rem; /* SIMPLIFIED: fixed value */
+            --pdf-padding-bottom: 3rem; /* REDUCED: from 12.5rem to 3rem */
             --dropdown-top-offset: clamp(3.75rem, 8vh, 6.25rem);
             --fullscreen-padding-offset: clamp(1.875rem, 4vh, 3.125rem);
         }
@@ -1557,6 +1557,7 @@
             opacity: 1;
         }
 
+        /* ORIGINAL - Normal sidebar footer (NOT collapsed) */
         .sidebar-footer {
             padding: 15px 20px;
             display: flex;
@@ -1564,26 +1565,45 @@
             border-top: 2px solid rgba(52, 152, 219, 0.3);
             margin-top: auto;
             justify-content: center;
+            flex-shrink: 0;
         }
 
+        /* ✅ FIXED: When sidebar is collapsed, stack icons vertically */
+        .sidebar.collapsed .sidebar-footer {
+            padding: 15px 10px;
+            gap: 12px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer icon styling - ENHANCED for visibility */
         .footer-icon {
             cursor: pointer;
             color: #7f8c8d;
             transition: all 0.3s ease;
             font-size: 20px;
-            width: 28px;
-            height: 28px;
-            display: flex;
+            width: 32px;
+            height: 32px;
+            display: flex !important; /* ✅ Force display */
             align-items: center;
             justify-content: center;
             border-radius: 6px;
             padding: 6px;
+            flex-shrink: 0;
         }
 
         .footer-icon:hover {
             color: #3498db;
             background-color: rgba(52, 152, 219, 0.15);
             transform: scale(1.1);
+        }
+
+        /* ✅ CRITICAL: Ensure all 3 icons stay visible when collapsed */
+        .sidebar.collapsed .footer-icon {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         /* Header Section */
@@ -1925,167 +1945,186 @@
             line-height: 1.4;
         }
 
-        /* ========== PDF VIEWER MODAL STYLES ========== */
+/* ========== PDF VIEWER MODAL STYLES ========== */
 
-        /* PDF Viewer Modal */
-        .pdf-viewer-modal {
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: var(--action-bar-height);
-            left: var(--sidebar-width);
-            right: 0;
-            bottom: 0;
-            background-color: white;
-            z-index: 10000;
-            margin: 0 !important;
-            padding: 0 !important;
-            visibility: hidden;
-            opacity: 0;
-            transition: left 0.3s ease;
-            overflow: hidden;
-        }
+/* PDF Viewer Modal - DIRECT EXPANSION FIX */
+.pdf-viewer-modal {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: var(--action-bar-height);
+    left: var(--sidebar-width);
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    z-index: 10000;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: hidden;
+    opacity: 0;
+    transition: left 0.3s ease, visibility 0s 0.3s, opacity 0.3s;
+    overflow: hidden;
+}
 
-        .pdf-viewer-modal.show {
-            visibility: visible;
-            opacity: 1;
-        }
+.pdf-viewer-modal.show {
+    visibility: visible;
+    opacity: 1;
+    transition: left 0.3s ease, visibility 0s, opacity 0.3s;
+}
 
-        /* When sidebar is collapsed, expand PDF viewer to full width */
-        .sidebar.collapsed ~ .pdf-viewer-modal {
-            left: var(--sidebar-collapsed-width);
-        }
+/* ✅ Force expansion when sidebar is collapsed */
+.sidebar.collapsed ~ .main-content .pdf-viewer-modal {
+    left: var(--sidebar-collapsed-width) !important;
+}
 
-        .sidebar.collapsed ~ .pdf-viewer-modal.show {
-            left: var(--sidebar-collapsed-width);
-        }
+/* Enhanced Fullscreen Mode */
+.pdf-viewer-modal.fullscreen-mode {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 99999 !important;
+    background: #ffffff !important;
+}
 
-        /* Enhanced Fullscreen Mode - UPDATED */
-        .pdf-viewer-modal.fullscreen-mode {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            z-index: 99999 !important;
-            background: #ffffff !important;
-        }
+/* Hide UI elements in fullscreen */
+.pdf-viewer-modal.fullscreen-mode .pdf-viewer-secondary-header {
+    display: none !important;
+}
 
-        /* Hide UI elements in fullscreen - UPDATED */
-        .pdf-viewer-modal.fullscreen-mode .pdf-viewer-secondary-header {
-            display: none !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-tasks-sidebar {
+    display: none !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-tasks-sidebar {
-            display: none !important;
-        }
+/* KEEP search and eye controls visible in fullscreen */
+.pdf-viewer-modal.fullscreen-mode .pdf-top-right-controls {
+    display: flex !important;
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    z-index: 100000 !important;
+}
 
-        /* KEEP search and eye controls visible in fullscreen */
-        .pdf-viewer-modal.fullscreen-mode .pdf-top-right-controls {
-            display: flex !important;
-            position: fixed !important;
-            top: 20px !important;
-            right: 20px !important;
-            z-index: 100000 !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-bottom-panel {
+    display: none !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-bottom-panel {
-            display: none !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-date-selector {
+    display: none !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-date-selector {
-            display: none !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-bottom-name-bar {
+    display: none !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-bottom-name-bar {
-            display: none !important;
-        }
+/* Keep toolbar visible in fullscreen */
+.pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar {
+    background-color: rgba(31, 41, 55, 0.95) !important;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    position: fixed !important;
+    left: var(--toolbar-offset) !important;
+    top: var(--toolbar-offset) !important;
+    z-index: 100000 !important;
+}
 
-        /* Keep toolbar visible in fullscreen - UPDATED positioning */
-        .pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar {
-            background-color: rgba(31, 41, 55, 0.95) !important;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-            position: fixed !important;
-            left: var(--toolbar-offset) !important;
-            top: var(--toolbar-offset) !important;
-            z-index: 100000 !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar:hover {
+    opacity: 1;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar:hover {
-            opacity: 1;
-        }
+/* Expand document area to full width in fullscreen */
+.pdf-viewer-modal.fullscreen-mode .pdf-center-content {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding-left: calc(var(--toolbar-width) + var(--fullscreen-padding-offset)) !important;
+}
 
-        /* Expand document area to full width in fullscreen - UPDATED */
-        .pdf-viewer-modal.fullscreen-mode .pdf-center-content {
-            width: 100% !important;
-            margin-left: 0 !important;
-            padding-left: calc(var(--toolbar-width) + var(--fullscreen-padding-offset)) !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: var(--fullscreen-padding-offset) clamp(8px, 1vw, 16px) clamp(8px, 1vh, 16px) clamp(8px, 1vw, 16px) !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    overflow: auto !important;
+    background: #ffffff !important;
+    min-height: calc(100vh - var(--fullscreen-padding-offset)) !important;
+    border: none !important;
+    padding-top: var(--fullscreen-padding-offset) !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: var(--fullscreen-padding-offset) clamp(8px, 1vw, 16px) clamp(8px, 1vh, 16px) clamp(8px, 1vw, 16px) !important;
-            display: flex !important;
-            align-items: center !important;
-            justify-content: center !important;
-            overflow: auto !important;
-            background: #ffffff !important;
-            height: calc(100vh - var(--fullscreen-padding-offset)) !important;
-            border: none !important;
-        }
+/* Fullscreen on laptop - add left padding to avoid toolbar overlap */
+@media screen and (max-width: 1599px) {
+    .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+        padding-left: calc(var(--toolbar-width) + 60px) !important;
+    }
+}
 
-        /* PDF content in fullscreen - FIT TO SCREEN */
-        .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent {
-            width: auto !important;
-            max-width: none !important;
-            margin: 0 auto !important;
-            background: transparent !important;
-            padding: 0 !important;
-        }
+/* Fullscreen on medium screens - add left padding for toolbar */
+@media screen and (min-width: 1600px) and (max-width: 2399px) {
+    .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+        padding-left: calc(var(--toolbar-width) + 40px) !important;
+    }
+}
 
-        .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
-            width: auto !important;
-            max-width: none !important;
-            height: auto !important;
-            margin: 0 !important;
-            display: block !important;
-            background: white !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
-            image-rendering: pixelated !important;
-            image-rendering: -webkit-optimize-contrast !important;
-            image-rendering: crisp-edges !important;
-            -ms-interpolation-mode: high-quality !important;
-            -webkit-backface-visibility: hidden !important;
-            backface-visibility: hidden !important;
-            -webkit-font-smoothing: antialiased !important;
-            -moz-osx-font-smoothing: grayscale !important;
-            filter: contrast(1.05) saturate(1.02) !important;
-            will-change: transform !important;
-            contain: layout style paint !important;
-        }
+/* Fullscreen on big monitors - minimal left padding */
+@media screen and (min-width: 2400px) {
+    .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+        padding-left: var(--toolbar-width) !important;
+    }
+}
 
-        /* PDF canvas - let browser handle scaling naturally */
-        .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
-            transform: none !important;
-            transform-origin: top center !important;
-            image-rendering: crisp-edges !important;
-            image-rendering: -webkit-optimize-contrast !important;
-            filter: contrast(1.05) saturate(1.02) !important;
-            will-change: transform !important;
-        }
+/* PDF content in fullscreen - FIT TO SCREEN */
+.pdf-viewer-modal.fullscreen-mode #pdfDocumentContent {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 20px !important;
+}
 
+.pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
+    max-width: none !important;
+    margin: 0 !important;
+    display: block !important;
+    background: white !important;
+    image-rendering: pixelated !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+    -ms-interpolation-mode: high-quality !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    filter: contrast(1.05) saturate(1.02) !important;
+    will-change: transform !important;
+    contain: layout style paint !important;
+}
 
-        /* Eye dropdown in fullscreen mode */
-        .pdf-viewer-modal.fullscreen-mode .eye-dropdown-menu {
-            position: fixed !important;
-            top: var(--dropdown-top-offset) !important;
-            right: var(--toolbar-offset) !important;
-            z-index: 100001 !important;
-        }
+/* PDF canvas - let browser handle scaling naturally */
+.pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
+    transform: none !important;
+    transform-origin: top center !important;
+    image-rendering: crisp-edges !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    filter: contrast(1.05) saturate(1.02) !important;
+    will-change: transform !important;
+}
+
+/* Eye dropdown in fullscreen mode */
+.pdf-viewer-modal.fullscreen-mode .eye-dropdown-menu {
+    position: fixed !important;
+    top: var(--dropdown-top-offset) !important;
+    right: var(--toolbar-offset) !important;
+    z-index: 100001 !important;
+}
 
         /* Left Sidebar with Tools */
         .pdf-tools-sidebar {
@@ -2431,11 +2470,35 @@
             flex: 1;
             overflow: auto;
             background: #f5f5f5;
-            padding: var(--pdf-padding-vertical) var(--pdf-padding-horizontal) var(--pdf-padding-bottom);
+            padding: 0.5rem; /* Minimal padding to let PDF fill the space */
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px solid #d1d5db;
+            margin: 0.5rem 1rem 0.5rem 1rem; /* Restore margins for spacing between nav and container */
+            border-radius: 0.5rem;
+            position: relative; /* Allow absolute positioning of date selector */
+        }
+
+        /* For big monitors - keep original padding (no toolbar overlap) */
+        @media screen and (min-width: 2400px) {
+            .pdf-document-area {
+                padding-left: var(--pdf-padding-horizontal);
+            }
+        }
+
+        /* For medium screens - add significant left padding for toolbar clearance */
+        @media screen and (min-width: 1600px) and (max-width: 2399px) {
+            .pdf-document-area {
+                padding-left: calc(var(--pdf-padding-horizontal) + 150px);
+            }
+        }
+
+        /* For smaller laptop screens - maximum left padding for toolbar clearance */
+        @media screen and (max-width: 1599px) {
+            .pdf-document-area {
+                padding-left: calc(var(--pdf-padding-horizontal) + 180px);
+            }
         }
 
         .pdf-document-container {
@@ -2695,7 +2758,7 @@
             min-height: 56px;
             position: relative;
             z-index: 10003;
-            margin: 0 !important;
+            margin: 0 0 0.75rem 0;
             flex-shrink: 0;
         }
 
@@ -3242,7 +3305,7 @@
             position: absolute;
             left: var(--toolbar-offset);
             top: var(--toolbar-offset);
-            z-index: 10001;
+            z-index: 10002;
             min-width: auto;
             max-width: none;
             border-right: none;
@@ -3380,10 +3443,10 @@
             flex: 1;
             overflow: auto;
             background: #f5f5f5;
-            padding: var(--pdf-padding-vertical) var(--pdf-padding-horizontal) var(--pdf-padding-bottom) var(--pdf-padding-horizontal);
+            padding: 1rem var(--pdf-padding-horizontal) var(--pdf-padding-bottom) var(--pdf-padding-horizontal);
             position: relative;
             display: flex;
-            align-items: center; /* ✅ CHANGED: center instead of flex-start */
+            align-items: flex-start;
             justify-content: center;
             border-top: 1px solid #d1d5db;
             border-left: 1px solid #d1d5db;
@@ -3407,23 +3470,23 @@
 
         /* Enhanced PDF document content container */
         #pdfDocumentContent {
-            width: auto; /* ✅ CHANGED: auto instead of 100% */
+            width: auto;
             max-width: none;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 20px;
-            background: transparent;
-            padding: 0; /* ✅ Padding will be added dynamically when zoomed */
-            box-shadow: none !important;
+            background: transparent; /* Remove white background */
+            padding: 0; /* Remove padding to eliminate white space */
+            box-shadow: none !important; /* Remove shadow */
             outline: none !important;
-            border: none !important;
+            border: none !important; /* REMOVED: inner border to fix double border issue */
             filter: none !important;
             min-height: auto;
             align-items: center;
-            justify-content: center;
-            /* ✅ ADDED: Allow content to expand beyond viewport */
+            justify-content: flex-start;
             min-width: min-content;
+            border-radius: 0;
         }
 
         /* PDF document content rotation support */
@@ -3438,7 +3501,7 @@
             margin: 0 auto 20px auto !important;
             background: white !important;
             border: 1px solid #d1d5db !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
             image-rendering: -webkit-optimize-contrast !important;
             image-rendering: crisp-edges !important;
             -ms-interpolation-mode: high-quality !important;
@@ -3569,19 +3632,19 @@
 
         /* PDF Name Display at Bottom */
         .pdf-bottom-name-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 12px 24px;
+            position: fixed; /* CHANGED: from absolute to fixed */
+            bottom: 1rem; /* CHANGED: from 0 to 1rem */
+            left: 50%;
+            transform: translateX(-50%); /* ADDED: center horizontally */
+            background: transparent; /* CHANGED: transparent background */
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 16px;
             z-index: 10002;
-            height: 48px;
-            border-top: 1px solid #e5e7eb;
+            height: auto; /* CHANGED: auto height */
+            border-top: none; /* REMOVED: border */
         }
 
         .pdf-name-display {
@@ -3614,7 +3677,7 @@
 
         /* ===== PDF RIGHT TASKS SIDEBAR ===== */
         .pdf-tasks-sidebar {
-            width: 480px;
+            width: 350px;
             background: white;
             border-left: 1px solid #e5e7eb;
             display: flex;
@@ -3789,40 +3852,49 @@
             bottom: 20px;
             right: 20px;
             background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 14px 18px;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+            border: 3px solid #374151;
+            border-radius: 50%;
+            padding: 12px;
+            box-shadow: 0 4px 16px rgba(0, 0, 0, 0.2);
             z-index: 10001;
             min-width: auto;
+            width: 120px;
+            height: 120px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
         }
 
         .pdf-panel-title {
-            font-size: 12px;
+            font-size: 10px;
             font-weight: 700;
             color: #9ca3af;
             text-transform: uppercase;
             letter-spacing: 0.4px;
-            margin-bottom: 6px;
+            margin-bottom: 4px;
+            display: none;
         }
 
         .pdf-date-display {
-            font-size: 14px;
+            font-size: 13px;
             color: #1f2937;
-            font-weight: 600;
-            margin-bottom: 8px;
+            font-weight: 700;
+            margin-bottom: 6px;
+            text-align: center;
         }
 
         .pdf-compare-btn {
             background: white;
             border: 1px solid #d1d5db;
-            padding: 6px 12px;
-            border-radius: 5px;
-            font-size: 12px;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 11px;
             color: #374151;
             cursor: pointer;
-            width: 100%;
             transition: all 0.2s;
+            white-space: nowrap;
         }
 
         .pdf-compare-btn:hover {
@@ -3831,13 +3903,13 @@
         }
 
         .pdf-date-selector {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 8px;
-            padding: 12px 16px;
+            position: relative;
+            bottom: auto;
+            right: auto;
+            background: transparent;
+            border: none;
+            border-radius: 0;
+            padding: 0;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             z-index: 10001;
             min-width: 160px;
@@ -3845,17 +3917,258 @@
 
         .pdf-date-selector input {
             width: 100%;
-            padding: 6px 8px;
+            padding: 4px 6px;
             border: 1px solid #d1d5db;
-            border-radius: 4px;
-            font-size: 12px;
+            border-radius: 3px;
+            font-size: 11px;
             color: #1f2937;
+            display: none;
         }
 
         .pdf-date-selector input:focus {
             outline: none;
             border-color: #2563eb;
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        /* ===== MODERN DATE SELECTOR - STACKED LAYOUT ===== */
+        .pdf-modern-date-selector {
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
+            z-index: 10001;
+            display: flex;
+            flex-direction: column-reverse;
+        }
+
+        .pdf-modern-date-selector:hover {
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .modern-date-input {
+            background: #2c3e50;
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 600;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            outline: none;
+            cursor: pointer;
+            padding: 14px 20px;
+            width: 180px;
+            -webkit-appearance: none;
+            -moz-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
+        }
+
+        .modern-date-input:hover {
+            background-color: #34495e;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .modern-date-input:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: -2px;
+        }
+
+        .modern-date-input option {
+            background: #2c3e50;
+            color: white;
+            padding: 10px;
+        }
+
+        .modern-date-input option[value=""]:hover {
+            background: #1a1a1a;
+            color: #93c5fd;
+        }
+
+        /* ===== COMPARE VERSIONS MODAL ===== */
+        .compare-versions-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10005;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .compare-versions-modal.show {
+            display: flex;
+        }
+
+        .compare-versions-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .compare-versions-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .compare-versions-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .compare-versions-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 4px;
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .compare-versions-close:hover {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .compare-versions-body {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .compare-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .compare-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .compare-dot.blue {
+            background: #3b82f6;
+        }
+
+        .compare-dot.red {
+            background: #ef4444;
+        }
+
+        .compare-selectors {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .compare-select {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .compare-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .compare-date-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .compare-date-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .compare-submit-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: #93c5fd;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            margin-top: 8px;
+        }
+
+        .compare-submit-btn:hover {
+            background: #60a5fa;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .compare-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
+        }
+
+        /* Hide old date selector */
+        .pdf-bottom-panel {
+            display: none !important;
         }
 
         .pdf-edit-bar {
@@ -6711,9 +7024,19 @@
                 const canvas = document.createElement('canvas');
                 const context = canvas.getContext('2d', { alpha: false });
 
+                // Detect screen type for sharp rendering
+                const dpr = window.devicePixelRatio || 1;
+                const isLaptop = window.innerWidth < 1600;
+
+                // For laptop: render at higher DPI for sharp image
+                const renderDPI = isLaptop ? Math.min(dpr * 1.5, 2) : dpr;
+
                 // Fill the entire container while showing the top of the PDF
-                canvas.width = containerWidth;
-                canvas.height = containerHeight;
+                canvas.width = containerWidth * renderDPI;
+                canvas.height = containerHeight * renderDPI;
+
+                // Scale context for sharp rendering
+                context.scale(renderDPI, renderDPI);
 
                 // Professional styling - clean, no borders, perfect fill
                 canvas.style.width = '100%';
@@ -6722,6 +7045,7 @@
                 canvas.style.objectFit = 'cover';
                 canvas.style.borderRadius = '4px';
                 canvas.style.backgroundColor = '#fff';
+                canvas.style.imageRendering = 'crisp-edges';
 
                 const renderContext = {
                     canvasContext: context,
@@ -7671,9 +7995,31 @@
             helpPanel.classList.remove('show');
         });
 
-        // Sidebar toggle
+        // Sidebar toggle with PDF viewer awareness
         sidebarToggleBtn.addEventListener('click', function() {
             sidebar.classList.toggle('collapsed');
+
+            // ✅ FORCE PDF viewer to update when sidebar toggles
+            const pdfModal = document.getElementById('pdfViewerModal');
+            if (pdfModal && pdfModal.classList.contains('show')) {
+                // Force immediate position update
+                if (sidebar.classList.contains('collapsed')) {
+                    pdfModal.style.left = 'var(--sidebar-collapsed-width)';
+                } else {
+                    pdfModal.style.left = 'var(--sidebar-width)';
+                }
+
+                // Hide background content when PDF is open
+                setTimeout(() => {
+                    const plansContent = document.getElementById('plansContent');
+                    const actionBar = document.querySelector('.action-bar');
+                    const statusBar = document.querySelector('.status-bar');
+
+                    if (plansContent) plansContent.style.display = 'none';
+                    if (actionBar) actionBar.style.display = 'none';
+                    if (statusBar) statusBar.style.display = 'none';
+                }, 50);
+            }
         });
 
         // Sidebar logo and project dropdown toggle
@@ -8011,6 +8357,12 @@
             const modal = document.getElementById('pdfViewerModal');
             const contentContainer = document.getElementById('pdfDocumentContent');
 
+            // SAVE the original screen type when PDF is opened (before fullscreen is entered)
+            const detectedType = detectScreenType();
+            originalScreenTypeAtPDFOpen = detectedType.type;
+            console.log(`📱 PDF Opened - Original Screen Type Saved: ${originalScreenTypeAtPDFOpen}`);
+            console.log(`📱 Screen Detection Details - Type: ${detectedType.type}, Base Scale: ${detectedType.scale}, Window Width: ${window.innerWidth}, Screen Width: ${window.screen.width}`);
+
             // Clear the container
             contentContainer.innerHTML = '';
 
@@ -8092,6 +8444,26 @@
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
 
+            // ✅ FORCE HIDE background content
+            setTimeout(() => {
+                const plansContent = document.getElementById('plansContent');
+                const actionBar = document.querySelector('.action-bar');
+                const statusBar = document.querySelector('.status-bar');
+
+                if (plansContent) {
+                    plansContent.style.display = 'none';
+                    plansContent.style.visibility = 'hidden';
+                }
+                if (actionBar) {
+                    actionBar.style.display = 'none';
+                    actionBar.style.visibility = 'hidden';
+                }
+                if (statusBar) {
+                    statusBar.style.display = 'none';
+                    statusBar.style.visibility = 'hidden';
+                }
+            }, 100);
+
         }
 
         // ════════════════════════════════════════════════════════════════════════════
@@ -8103,27 +8475,128 @@
         function detectScreenType() {
             const width = window.innerWidth;
             const height = window.innerHeight;
+            // Try to detect actual screen size if available
+            const screenWidth = window.screen.width || width;
+            const screenHeight = window.screen.height || height;
             const diagonal = Math.sqrt(width * width + height * height);
 
-            // Smart detection based on physical screen dimensions
-            if (diagonal < 1500) {
-                return { type: 'MOBILE', scale: 1.0 };
-            } else if (diagonal < 2200) {
-                return { type: 'LAPTOP', scale: 1.2 };
-            } else if (diagonal < 3000) {
-                return { type: 'MEDIUM', scale: 1.5 };
+            // Smart detection: use physical screen size when available, fall back to window size
+            // IMPORTANT: Always use screen.width for accurate detection, not window.innerWidth
+            const detectionWidth = screenWidth > 0 ? screenWidth : width;
+
+            console.log('🖥️ detectScreenType: window.innerWidth=' + width + ', window.screen.width=' + window.screen.width + ', detectionWidth=' + detectionWidth);
+
+            // BIG_MONITOR: width >= 1800px (large monitors - 1920, 2560, etc)
+            // MEDIUM: width 1400-1799px (medium screens)
+            // LAPTOP: width 1000-1399px (smaller laptop)
+            // MOBILE: width < 1000px (mobile device)
+            if (detectionWidth >= 1800) {
+                return { type: 'BIG_MONITOR', scale: 1.5 };
+            } else if (detectionWidth >= 1400) {
+                return { type: 'MEDIUM', scale: 1.1 };
+            } else if (detectionWidth >= 1000) {
+                return { type: 'LAPTOP', scale: 0.95 };
             } else {
-                return { type: 'BIG_MONITOR', scale: 2.0 };
+                return { type: 'MOBILE', scale: 0.8 };
             }
         }
 
         function getOptimalPDFScale(pageViewport) {
             const screenInfo = detectScreenType();
+            // Use screen.width for determining scale, not innerWidth (which changes in fullscreen)
+            const screenWidth = window.screen.width || window.innerWidth;
+            const diagonal = Math.sqrt(window.innerWidth * window.innerWidth + window.innerHeight * window.innerHeight);
+            const isFullscreen = window.pdfInFullscreen || false;
 
-            console.log(`📱 Screen Type: ${screenInfo.type} | Scale: ${screenInfo.scale}x`);
-            console.log(`📐 Window Size: ${window.innerWidth}×${window.innerHeight}`);
+            // Detect if PDF is landscape or portrait
+            const isLandscapePDF = pageViewport.width > pageViewport.height;
 
-            return screenInfo.scale;
+            // In fullscreen, use the ORIGINAL screen type that was saved when PDF was opened
+            // This prevents misdetection when fullscreen changes window dimensions
+            const effectiveScreenType = isFullscreen && originalScreenTypeAtPDFOpen
+                ? originalScreenTypeAtPDFOpen
+                : screenInfo.type;
+            let finalScale = screenInfo.scale;
+
+            console.log('🔍 DEBUG getOptimalPDFScale:');
+            console.log('   screenInfo.type:', screenInfo.type);
+            console.log('   screenInfo.scale:', screenInfo.scale);
+            console.log('   isFullscreen:', isFullscreen);
+            console.log('   originalScreenTypeAtPDFOpen:', originalScreenTypeAtPDFOpen);
+            console.log('   effectiveScreenType:', effectiveScreenType);
+            console.log('   isLandscapePDF:', isLandscapePDF);
+            console.log('   pageViewport:', pageViewport.width, 'x', pageViewport.height);
+
+            // FULLSCREEN MODE - Different handling
+            if (isFullscreen) {
+                // In fullscreen, use the ORIGINAL screen type to determine scaling
+                // This ensures medium/laptop don't get zoomed just because fullscreen expanded the window
+
+                // FORCE CHECK: If actual screen width >= 2000px (big monitor), apply massive zoom even if detection fails
+                const isBigMonitorScreenSize = (window.screen.width || window.innerWidth) >= 2000;
+                const effectiveIsBigMonitor = (effectiveScreenType === 'BIG_MONITOR') || isBigMonitorScreenSize;
+
+                if (isLandscapePDF) {
+                    if (effectiveScreenType === 'LAPTOP' && !isBigMonitorScreenSize) {
+                        // Laptop fullscreen: Set zoom to 1.1x
+                        finalScale = finalScale * 1.1;
+                    } else if (effectiveScreenType === 'MEDIUM' && !isBigMonitorScreenSize) {
+                        // Medium fullscreen: Set zoom to 1.1x
+                        finalScale = finalScale * 1.1;
+                    } else if (effectiveIsBigMonitor) {
+                        // Big monitor fullscreen: No zoom multiplier - fit entire page on screen
+                        finalScale = finalScale * 0.8;
+                    }
+                } else {
+                    // Portrait in fullscreen
+                    if (effectiveScreenType === 'LAPTOP' && !isBigMonitorScreenSize) {
+                        // Laptop fullscreen portrait: Increase zoom to 0.9x
+                        finalScale = finalScale * 0.9;
+                    } else if (effectiveScreenType === 'MEDIUM' && !isBigMonitorScreenSize) {
+                        // Medium fullscreen portrait: Increase zoom to 1.1x
+                        finalScale = finalScale * 1.1;
+                    } else if (effectiveIsBigMonitor) {
+                        // Big monitor portrait: No zoom multiplier - fit entire page on screen
+                        finalScale = finalScale * 0.8;
+                    } else {
+                        // Other screens: standard zoom
+                        finalScale = finalScale * 0.75;
+                    }
+                }
+            } else {
+                // NORMAL MODE (not fullscreen)
+                if (isLandscapePDF) {
+                    if (screenWidth < 1600) {
+                        // Laptop: reduce landscape by 50%
+                        finalScale = finalScale * 0.5;
+                    } else if (screenWidth < 1800) {
+                        // Medium (1600-1799): reduce landscape by 30%
+                        finalScale = finalScale * 0.7;
+                    } else if (screenWidth < 2400) {
+                        // Big monitor (1800-2399): small - reduce to 0.60x
+                        finalScale = finalScale * 0.60;
+                    } else {
+                        // Extra large (2400+): small - reduce to 0.65x
+                        finalScale = finalScale * 0.65;
+                    }
+                } else {
+                    // For portrait PDFs
+                    if (screenWidth >= 1800) {
+                        // Big monitor portrait: small - reduce to 0.60x
+                        finalScale = finalScale * 0.60;
+                    } else {
+                        finalScale = finalScale * 0.75;
+                    }
+                }
+            }
+
+            console.log(`📱 Screen Type: ${screenInfo.type} | Effective Type: ${effectiveScreenType} | Base Scale: ${screenInfo.scale.toFixed(2)}x | Final Scale: ${finalScale.toFixed(2)}x | Fullscreen: ${isFullscreen}`);
+            console.log(`📐 Window Size: ${window.innerWidth}×${window.innerHeight} | Screen Size: ${screenWidth}×${window.screen.height}`);
+            console.log(`📄 PDF Type: ${isLandscapePDF ? 'LANDSCAPE' : 'PORTRAIT'}`);
+            console.log(`🔢 Multiplier Applied: ${(finalScale / screenInfo.scale).toFixed(2)}x`);
+            console.log('✅ FINAL ZOOM SCALE:', finalScale);
+
+            return finalScale;
         }
 
         function renderPDFInViewer(base64Data, container, planData) {
@@ -8167,8 +8640,10 @@
                         // Calculate optimal scale based on ACTUAL page dimensions
                         const optimalScale = getOptimalPDFScale(firstPageViewport);
 
-                        console.log('Rendering PDF with scale:', optimalScale);
-                        console.log('Page dimensions:', firstPageViewport.width, 'x', firstPageViewport.height);
+                        console.log('🎯 Rendering PDF with scale:', optimalScale);
+                        console.log('📄 Base page dimensions (1:1):', firstPageViewport.width, 'x', firstPageViewport.height);
+                        const scaledViewport = firstPage.getViewport({ scale: optimalScale });
+                        console.log('📏 Scaled viewport dimensions:', scaledViewport.width, 'x', scaledViewport.height);
 
                         // Render all pages with the calculated scale
                         for (let pageNum = 1; pageNum <= numPages; pageNum++) {
@@ -8182,21 +8657,37 @@
                                     willReadFrequently: false
                                 });
 
-                                // Set canvas size
-                                canvas.width = viewport.width;
-                                canvas.height = viewport.height;
+                                // High-DPI rendering for sharp PDFs on big monitors
+                                const screenInfo = detectScreenType();
+                                const isFullscreen = window.pdfInFullscreen || false;
+                                let dpr = window.devicePixelRatio || 1;
 
-                                // Set display size to match viewport (scaled size)
+                                // Only apply extra DPI on big monitors NOT in fullscreen
+                                // In fullscreen on medium/laptop, use normal DPI to avoid zoom
+                                if (screenInfo.type === 'BIG_MONITOR' && !isFullscreen) {
+                                    dpr = Math.min(dpr * 3, 4); // Max 4x DPI for ultra sharpness
+                                } else if (screenInfo.type === 'MEDIUM' && !isFullscreen) {
+                                    dpr = Math.min(dpr * 1.5, 2.5); // Max 2.5x DPI for medium (only in normal mode)
+                                }
+                                // Laptop and Mobile: use normal DPI
+
+                                // Set canvas size with DPI multiplier for sharp rendering
+                                canvas.width = viewport.width * dpr;
+                                canvas.height = viewport.height * dpr;
+
+                                // Set display size to match viewport (scaled size) - this is what the user sees
                                 let displayWidth = viewport.width;
                                 let displayHeight = viewport.height;
 
-                                canvas.style.width = displayWidth + 'px';
-                                canvas.style.height = displayHeight + 'px';
-                                canvas.style.display = 'block';
-                                canvas.style.marginBottom = pageNum < numPages ? '20px' : '0';
-                                canvas.style.border = '1px solid #d1d5db';
-                                canvas.style.boxShadow = '0 2px 8px rgba(0, 0, 0, 0.1)';
-                                canvas.style.backgroundColor = 'white';
+                                console.log(`📐 Canvas ${pageNum}: Display size = ${displayWidth}px × ${displayHeight}px, DPR = ${dpr}`);
+                                console.log(`   Internal canvas size = ${canvas.width}px × ${canvas.height}px`);
+                                console.log(`   isFullscreen = ${window.pdfInFullscreen}, modal has fullscreen-mode = ${document.getElementById('pdfViewerModal')?.classList.contains('fullscreen-mode')}`);
+
+                                // Force display size - use !important inline style to override CSS
+                                canvas.style.cssText = `width: ${displayWidth}px !important; height: ${displayHeight}px !important; display: block !important; margin-bottom: ${pageNum < numPages ? '20px' : '0'} !important; background-color: white !important; image-rendering: crisp-edges !important;`;
+
+                                // Scale context for sharp rendering
+                                context.scale(dpr, dpr);
 
                                 const renderContext = {
                                     canvasContext: context,
@@ -8231,6 +8722,28 @@
             const modal = document.getElementById('pdfViewerModal');
             modal.classList.remove('show');
             document.body.style.overflow = 'auto';
+
+            // ✅ FIX: Restore hidden content when PDF viewer closes
+            const plansContent = document.getElementById('plansContent');
+            const actionBar = document.querySelector('.action-bar');
+            const statusBar = document.querySelector('.status-bar');
+
+            if (plansContent) {
+                plansContent.style.display = 'block';
+                plansContent.style.visibility = 'visible';
+            }
+
+            if (actionBar) {
+                actionBar.style.display = 'flex';
+                actionBar.style.visibility = 'visible';
+            }
+
+            if (statusBar) {
+                statusBar.style.display = 'block';
+                statusBar.style.visibility = 'visible';
+            }
+
+            console.log('✅ PDF viewer closed - content restored');
         }
 
         // PDF Toolbar Functionality
@@ -8808,6 +9321,7 @@
                             // Enter fullscreen mode
                             pdfModal.classList.add('fullscreen-mode');
                             this.classList.add('active');
+                            window.pdfInFullscreen = true; // Set fullscreen flag
 
                             // Request browser fullscreen API
                             if (pdfModal.requestFullscreen) {
@@ -8820,20 +9334,22 @@
 
                             console.log('Fullscreen enabled');
 
-                            // Re-render PDF with new scale after short delay
+                            // Re-render PDF with new scale after delay (allowing CSS transitions to complete)
                             setTimeout(() => {
                                 if (currentPlanIndex >= 0 && plans[currentPlanIndex]) {
                                     const plan = plans[currentPlanIndex];
                                     const container = document.getElementById('pdfDocumentContent');
                                     if (plan.preview && container) {
+                                        console.log('🖥️ Fullscreen re-rendering PDF with scale multiplier 15x for big monitors');
                                         renderPDFFromPreview(plan, container);
                                     }
                                 }
-                            }, 100);
+                            }, 300);
                         } else {
                             // Exit fullscreen mode
                             pdfModal.classList.remove('fullscreen-mode');
                             this.classList.remove('active');
+                            window.pdfInFullscreen = false; // Clear fullscreen flag
 
                             // Exit browser fullscreen API
                             if (document.fullscreenElement || document.webkitFullscreenElement || document.msFullscreenElement) {
@@ -8848,16 +9364,17 @@
 
                             console.log('Fullscreen disabled');
 
-                            // Re-render PDF with normal scale after short delay
+                            // Re-render PDF with normal scale after delay
                             setTimeout(() => {
                                 if (currentPlanIndex >= 0 && plans[currentPlanIndex]) {
                                     const plan = plans[currentPlanIndex];
                                     const container = document.getElementById('pdfDocumentContent');
                                     if (plan.preview && container) {
+                                        console.log('📺 Normal mode re-rendering PDF');
                                         renderPDFFromPreview(plan, container);
                                     }
                                 }
-                            }, 100);
+                            }, 300);
                         }
                     }
                 });
@@ -9244,6 +9761,36 @@
             clearSearchResults();
         }
 
+        // Compare PDF versions function
+        function compareVersions() {
+            const selectedDate = document.getElementById('pdfDateInput').value;
+            console.log('Comparing with date:', selectedDate);
+            // Show notification
+            const notification = document.createElement('div');
+            notification.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                background: #2563eb;
+                color: white;
+                padding: 14px 20px;
+                border-radius: 6px;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+                font-size: 14px;
+                z-index: 10002;
+                animation: slideIn 0.3s ease;
+            `;
+            notification.textContent = `📅 Comparing with ${selectedDate}`;
+            document.body.appendChild(notification);
+
+            setTimeout(() => {
+                notification.style.animation = 'slideOut 0.3s ease';
+                setTimeout(() => notification.remove(), 300);
+            }, 2000);
+
+            // Add your comparison logic here
+        }
+
         // Toggle eye dropdown
         function toggleEyeDropdown() {
             const dropdown = document.getElementById('eyeDropdownMenu');
@@ -9356,6 +9903,7 @@
         let currentPlanIndex = -1; // Track current plan being viewed
         let currentPDFPlan = -1; // Track current plan for edit feature
         let planRotations = {}; // Track rotation angles per plan ID
+        let originalScreenTypeAtPDFOpen = null; // Store the screen type when PDF is first opened
 
         function previousPDFPage() {
             // Navigate to previous plan
@@ -11054,6 +11602,64 @@
                     <div id="pdfDocumentContent">
                         <!-- Document content loads here -->
                     </div>
+
+                    <!-- Modern Date Selector with Compare Button - Bottom Right (Image 3 Style) -->
+                    <div class="pdf-modern-date-selector">
+                        <select class="modern-date-input" id="pdfDateInput">
+                            <option value="2025-01-23" selected>2025-01-23</option>
+                            <option value="">Compare</option>
+                        </select>
+                    </div>
+
+                    <!-- Compare Versions Modal -->
+                    <div id="compareVersionsModal" class="compare-versions-modal">
+                        <div class="compare-versions-content">
+                            <div class="compare-versions-header">
+                                <h2 class="compare-versions-title">Compare Versions</h2>
+                                <button class="compare-versions-close" onclick="closeCompareModal()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                            <div class="compare-versions-body">
+                                <!-- Version 1 Selection -->
+                                <div class="compare-row">
+                                    <div class="compare-dot blue"></div>
+                                    <div class="compare-selectors">
+                                        <select class="compare-select" id="compareVersion1">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <input type="date" class="compare-date-input" id="compareDate1" value="2025-01-23">
+                                    </div>
+                                </div>
+
+                                <!-- Version 2 Selection -->
+                                <div class="compare-row">
+                                    <div class="compare-dot red"></div>
+                                    <div class="compare-selectors">
+                                        <select class="compare-select" id="compareVersion2">
+                                            <option value="" disabled selected>Search</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <input type="date" class="compare-date-input" id="compareDate2" value="">
+                                    </div>
+                                </div>
+
+                                <!-- Compare Button -->
+                                <button class="compare-submit-btn" onclick="executeCompare()">
+                                    Compare
+                                </button>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -11076,17 +11682,6 @@
             </div>
         </div>
 
-        <!-- Bottom Panels -->
-        <div class="pdf-bottom-panel">
-            <div class="pdf-panel-title">Date Compare</div>
-            <div class="pdf-date-display">2025-10-17</div>
-            <button class="pdf-compare-btn">Compare</button>
-        </div>
-
-        <!-- Date Selector -->
-        <div class="pdf-date-selector">
-            <input type="date" value="2025-10-17">
-        </div>
 
         <!-- Edit Bar -->
         <!-- Bottom Name Bar -->
@@ -12121,6 +12716,87 @@
     }
 
     // Removed viewport-based adjustments for uniform scaling across all screens
+
+    // ===== COMPARE VERSIONS MODAL FUNCTIONS =====
+    function openCompareModal() {
+        const modal = document.getElementById('compareVersionsModal');
+        const currentDate = document.getElementById('pdfDateInput').value;
+
+        // Set the current date to the first comparison field
+        document.getElementById('compareDate1').value = currentDate;
+
+        // Show the modal
+        if (modal) {
+            modal.classList.add('show');
+        }
+    }
+
+    function closeCompareModal() {
+        const modal = document.getElementById('compareVersionsModal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+
+    function executeCompare() {
+        const version1 = document.getElementById('compareVersion1').value;
+        const date1 = document.getElementById('compareDate1').value;
+        const version2 = document.getElementById('compareVersion2').value;
+        const date2 = document.getElementById('compareDate2').value;
+
+        if (!version2 || !date2) {
+            showNotification('⚠️ Please select both versions to compare', 'error');
+            return;
+        }
+
+        console.log('Comparing:', version1, date1, 'with', version2, date2);
+        showNotification(`🔍 Comparing Version ${version1} (${date1}) with Version ${version2} (${date2})`, 'success');
+
+        // Close the modal
+        closeCompareModal();
+
+        // Here you would implement the actual comparison logic
+        // For now, it just shows a notification
+    }
+
+    // Event listeners for Compare Versions modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('compareVersionsModal');
+        const dateSelector = document.getElementById('pdfDateInput');
+
+        // Handle date dropdown selection
+        if (dateSelector) {
+            dateSelector.addEventListener('change', function(event) {
+                if (event.target.value === '') {
+                    // Compare option selected
+                    openCompareModal();
+                    // Reset dropdown to show first date option
+                    setTimeout(() => {
+                        dateSelector.value = '2025-01-23';
+                    }, 100);
+                }
+            });
+        }
+
+        // Close modal when clicking outside the modal content
+        if (modal) {
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeCompareModal();
+                }
+            });
+        }
+
+        // Close modal when pressing ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('compareVersionsModal');
+                if (modal && modal.classList.contains('show')) {
+                    closeCompareModal();
+                }
+            }
+        });
+    });
     </script>
 
 </body>
