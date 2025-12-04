@@ -26,9 +26,9 @@
             --sidebar-collapsed-width: 5rem;
             --toolbar-width: 3.75rem;
             --toolbar-offset: clamp(0.75rem, 2vw, 1.5rem);
-            --pdf-padding-vertical: clamp(1.5rem, 4vh, 3.75rem);
-            --pdf-padding-horizontal: clamp(1rem, 2vw, 2.5rem);
-            --pdf-padding-bottom: clamp(6.25rem, 15vh, 12.5rem);
+            --pdf-padding-vertical: 1.5rem; /* SIMPLIFIED: fixed value */
+            --pdf-padding-horizontal: 1.5rem; /* SIMPLIFIED: fixed value */
+            --pdf-padding-bottom: 3rem; /* REDUCED: from 12.5rem to 3rem */
             --dropdown-top-offset: clamp(3.75rem, 8vh, 6.25rem);
             --fullscreen-padding-offset: clamp(1.875rem, 4vh, 3.125rem);
         }
@@ -556,6 +556,290 @@
         .pdf-qr-code-body {
             padding: 32px;
             text-align: center;
+        }
+
+        /* ===== PROFESSIONAL QR CODE MODAL STYLING ===== */
+
+        .professional-qr-modal {
+            max-width: 420px !important;
+            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
+        }
+
+        .qr-modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-radius: 12px 12px 0 0;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .qr-modal-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
+            pointer-events: none;
+        }
+
+        .qr-header-icon {
+            width: 44px;
+            height: 44px;
+            background: rgba(255, 255, 255, 0.25);
+            backdrop-filter: blur(10px);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            z-index: 1;
+        }
+
+        .qr-header-icon i {
+            font-size: 22px;
+            color: white;
+        }
+
+        .qr-header-text {
+            flex: 1;
+            z-index: 1;
+        }
+
+        .qr-modal-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: white;
+            margin: 0 0 2px 0;
+            letter-spacing: -0.5px;
+        }
+
+        .qr-modal-subtitle {
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.9);
+            margin: 0;
+            font-weight: 400;
+        }
+
+        .qr-modal-close-btn {
+            background: rgba(255, 255, 255, 0.2);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 18px;
+            transition: all 0.3s ease;
+            z-index: 1;
+        }
+
+        .qr-modal-close-btn:hover {
+            background: rgba(255, 255, 255, 0.3);
+            transform: scale(1.1);
+        }
+
+        .qr-modal-body {
+            padding: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        /* Info Card */
+        .qr-info-card {
+            background: white;
+            border: 1px solid #e5e7eb;
+            border-radius: 10px;
+            padding: 14px 18px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+        }
+
+        .qr-info-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 6px 0;
+        }
+
+        .qr-info-row:not(:last-child) {
+            border-bottom: 1px solid #f3f4f6;
+        }
+
+        .qr-info-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #6b7280;
+        }
+
+        .qr-info-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #1f2937;
+        }
+
+        /* QR Code Display */
+        .qr-code-display-area {
+            display: flex;
+            justify-content: center;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        }
+
+        .qr-code-frame {
+            background: white;
+            padding: 12px;
+            border-radius: 10px;
+            border: 2px solid #e5e7eb;
+            display: inline-block;
+            position: relative;
+        }
+
+        .qr-code-frame::before {
+            content: '';
+            position: absolute;
+            top: -2px;
+            left: -2px;
+            right: -2px;
+            bottom: -2px;
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            border-radius: 12px;
+            z-index: -1;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+        .qr-code-frame:hover::before {
+            opacity: 1;
+        }
+
+        .qr-code-inner {
+            display: inline-block;
+            padding: 8px;
+            background: white;
+            border-radius: 6px;
+        }
+
+        #qrCodeContainer {
+            min-width: 140px;
+            min-height: 140px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #qrCodeContainer canvas,
+        #qrCodeContainer img {
+            display: block !important;
+            max-width: 100%;
+            height: auto;
+        }
+
+        /* Branding */
+        .qr-branding {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border-radius: 10px;
+            border: 1px solid #e5e7eb;
+        }
+
+        .qr-brand-logo {
+            width: 28px;
+            height: 28px;
+            object-fit: contain;
+        }
+
+        .qr-brand-name {
+            font-size: 16px;
+            font-weight: 700;
+            color: #1f2937;
+            letter-spacing: -0.3px;
+        }
+
+        /* Instructions */
+        .qr-instructions {
+            text-align: center;
+            font-size: 13px;
+            color: #6b7280;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        /* Action Buttons */
+        .qr-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: center;
+        }
+
+        .qr-download-btn,
+        .qr-print-btn {
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: all 0.3s ease;
+            border: none;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        }
+
+        .qr-download-btn {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+        }
+
+        .qr-download-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+        }
+
+        .qr-print-btn {
+            background: white;
+            color: #374151;
+            border: 2px solid #e5e7eb;
+        }
+
+        .qr-print-btn:hover {
+            background: #f9fafb;
+            border-color: #d1d5db;
+            transform: translateY(-2px);
+        }
+
+        /* Responsive */
+        @media (max-width: 640px) {
+            .qr-modal-body {
+                padding: 24px;
+                gap: 24px;
+            }
+
+            .qr-actions {
+                flex-direction: column;
+            }
+
+            .qr-download-btn,
+            .qr-print-btn {
+                width: 100%;
+                justify-content: center;
+            }
         }
 
         .upload-dropzone {
@@ -1557,6 +1841,7 @@
             opacity: 1;
         }
 
+        /* ORIGINAL - Normal sidebar footer (NOT collapsed) */
         .sidebar-footer {
             padding: 15px 20px;
             display: flex;
@@ -1564,26 +1849,45 @@
             border-top: 2px solid rgba(52, 152, 219, 0.3);
             margin-top: auto;
             justify-content: center;
+            flex-shrink: 0;
         }
 
+        /* ✅ FIXED: When sidebar is collapsed, stack icons vertically */
+        .sidebar.collapsed .sidebar-footer {
+            padding: 15px 10px;
+            gap: 12px;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Footer icon styling - ENHANCED for visibility */
         .footer-icon {
             cursor: pointer;
             color: #7f8c8d;
             transition: all 0.3s ease;
             font-size: 20px;
-            width: 28px;
-            height: 28px;
-            display: flex;
+            width: 32px;
+            height: 32px;
+            display: flex !important; /* ✅ Force display */
             align-items: center;
             justify-content: center;
             border-radius: 6px;
             padding: 6px;
+            flex-shrink: 0;
         }
 
         .footer-icon:hover {
             color: #3498db;
             background-color: rgba(52, 152, 219, 0.15);
             transform: scale(1.1);
+        }
+
+        /* ✅ CRITICAL: Ensure all 3 icons stay visible when collapsed */
+        .sidebar.collapsed .footer-icon {
+            display: flex !important;
+            visibility: visible !important;
+            opacity: 1 !important;
         }
 
         /* Header Section */
@@ -1925,190 +2229,186 @@
             line-height: 1.4;
         }
 
-        /* ========== PDF VIEWER MODAL STYLES ========== */
+/* ========== PDF VIEWER MODAL STYLES ========== */
 
-        /* PDF Viewer Modal */
-        .pdf-viewer-modal {
-            display: flex;
-            flex-direction: column;
-            position: fixed;
-            top: var(--action-bar-height);
-            left: var(--sidebar-width);
-            right: 0;
-            bottom: 0;
-            background-color: white;
-            z-index: 10000;
-            margin: 0 !important;
-            padding: 0 !important;
-            visibility: hidden;
-            opacity: 0;
-            transition: left 0.3s ease;
-            overflow: hidden;
-        }
+/* PDF Viewer Modal - DIRECT EXPANSION FIX */
+.pdf-viewer-modal {
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    top: var(--action-bar-height);
+    left: var(--sidebar-width);
+    right: 0;
+    bottom: 0;
+    background-color: white;
+    z-index: 10000;
+    margin: 0 !important;
+    padding: 0 !important;
+    visibility: hidden;
+    opacity: 0;
+    transition: left 0.3s ease, visibility 0s 0.3s, opacity 0.3s;
+    overflow: hidden;
+}
 
-        .pdf-viewer-modal.show {
-            visibility: visible;
-            opacity: 1;
-        }
+.pdf-viewer-modal.show {
+    visibility: visible;
+    opacity: 1;
+    transition: left 0.3s ease, visibility 0s, opacity 0.3s;
+}
 
-        /* When sidebar is collapsed, expand PDF viewer to full width */
-        .sidebar.collapsed ~ .pdf-viewer-modal {
-            left: var(--sidebar-collapsed-width);
-        }
+/* ✅ Force expansion when sidebar is collapsed */
+.sidebar.collapsed ~ .main-content .pdf-viewer-modal {
+    left: var(--sidebar-collapsed-width) !important;
+}
 
-        .sidebar.collapsed ~ .pdf-viewer-modal.show {
-            left: var(--sidebar-collapsed-width);
-        }
+/* Enhanced Fullscreen Mode */
+.pdf-viewer-modal.fullscreen-mode {
+    position: fixed !important;
+    top: 0 !important;
+    left: 0 !important;
+    right: 0 !important;
+    bottom: 0 !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    z-index: 99999 !important;
+    background: #ffffff !important;
+}
 
-        /* Enhanced Fullscreen Mode - UPDATED */
-        .pdf-viewer-modal.fullscreen-mode {
-            position: fixed !important;
-            top: 0 !important;
-            left: 0 !important;
-            right: 0 !important;
-            bottom: 0 !important;
-            width: 100vw !important;
-            height: 100vh !important;
-            z-index: 99999 !important;
-            background: #ffffff !important;
-        }
+/* Hide UI elements in fullscreen */
+.pdf-viewer-modal.fullscreen-mode .pdf-viewer-secondary-header {
+    display: none !important;
+}
 
-        /* Hide UI elements in fullscreen - UPDATED */
-        .pdf-viewer-modal.fullscreen-mode .pdf-viewer-secondary-header {
-            display: none !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-tasks-sidebar {
+    display: none !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-tasks-sidebar {
-            display: none !important;
-        }
+/* KEEP search and eye controls visible in fullscreen */
+.pdf-viewer-modal.fullscreen-mode .pdf-top-right-controls {
+    display: flex !important;
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    z-index: 100000 !important;
+}
 
-        /* KEEP search and eye controls visible in fullscreen */
-        .pdf-viewer-modal.fullscreen-mode .pdf-top-right-controls {
-            display: flex !important;
-            position: fixed !important;
-            top: 20px !important;
-            right: 20px !important;
-            z-index: 100000 !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-bottom-panel {
+    display: none !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-bottom-panel {
-            display: none !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-date-selector {
+    display: none !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-date-selector {
-            display: none !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-bottom-name-bar {
+    display: none !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-bottom-name-bar {
-            display: none !important;
-        }
+/* Keep toolbar visible in fullscreen */
+.pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar {
+    background-color: rgba(31, 41, 55, 0.95) !important;
+    opacity: 1;
+    transition: opacity 0.3s ease;
+    position: fixed !important;
+    left: var(--toolbar-offset) !important;
+    top: var(--toolbar-offset) !important;
+    z-index: 100000 !important;
+}
 
-        /* Keep toolbar visible in fullscreen - UPDATED positioning */
-        .pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar {
-            background-color: rgba(31, 41, 55, 0.95) !important;
-            opacity: 1;
-            transition: opacity 0.3s ease;
-            position: fixed !important;
-            left: var(--toolbar-offset) !important;
-            top: var(--toolbar-offset) !important;
-            z-index: 100000 !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar:hover {
+    opacity: 1;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-left-sidebar:hover {
-            opacity: 1;
-        }
+/* Expand document area to full width in fullscreen */
+.pdf-viewer-modal.fullscreen-mode .pdf-center-content {
+    width: 100% !important;
+    margin-left: 0 !important;
+    padding-left: calc(var(--toolbar-width) + var(--fullscreen-padding-offset)) !important;
+}
 
-        /* Expand document area to full width in fullscreen - UPDATED */
-        .pdf-viewer-modal.fullscreen-mode .pdf-center-content {
-            width: 100% !important;
-            margin-left: 0 !important;
-            padding-left: calc(var(--toolbar-width) + var(--fullscreen-padding-offset)) !important;
-        }
+.pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding: var(--fullscreen-padding-offset) clamp(8px, 1vw, 16px) clamp(8px, 1vh, 16px) clamp(8px, 1vw, 16px) !important;
+    display: flex !important;
+    align-items: flex-start !important;
+    justify-content: flex-start !important;
+    overflow: auto !important;
+    background: #ffffff !important;
+    min-height: calc(100vh - var(--fullscreen-padding-offset)) !important;
+    border: none !important;
+    padding-top: var(--fullscreen-padding-offset) !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
-            width: 100% !important;
-            max-width: 100% !important;
-            padding: var(--fullscreen-padding-offset) clamp(8px, 1vw, 16px) clamp(8px, 1vh, 16px) clamp(8px, 1vw, 16px) !important;
-            display: flex !important;
-            align-items: flex-start !important;
-            justify-content: flex-start !important;
-            overflow: auto !important;
-            background: #ffffff !important;
-            min-height: calc(100vh - var(--fullscreen-padding-offset)) !important;
-            border: none !important;
-            padding-top: var(--fullscreen-padding-offset) !important;
-        }
+/* Fullscreen on laptop - add left padding to avoid toolbar overlap */
+@media screen and (max-width: 1599px) {
+    .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+        padding-left: calc(var(--toolbar-width) + 60px) !important;
+    }
+}
 
-        /* Fullscreen on laptop - add left padding to avoid toolbar overlap */
-        @media screen and (max-width: 1599px) {
-            .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
-                padding-left: calc(var(--toolbar-width) + 60px) !important;
-            }
-        }
+/* Fullscreen on medium screens - add left padding for toolbar */
+@media screen and (min-width: 1600px) and (max-width: 2399px) {
+    .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+        padding-left: calc(var(--toolbar-width) + 40px) !important;
+    }
+}
 
-        /* Fullscreen on medium screens - add left padding for toolbar */
-        @media screen and (min-width: 1600px) and (max-width: 2399px) {
-            .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
-                padding-left: calc(var(--toolbar-width) + 40px) !important;
-            }
-        }
+/* Fullscreen on big monitors - minimal left padding */
+@media screen and (min-width: 2400px) {
+    .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
+        padding-left: var(--toolbar-width) !important;
+    }
+}
 
-        /* Fullscreen on big monitors - minimal left padding */
-        @media screen and (min-width: 2400px) {
-            .pdf-viewer-modal.fullscreen-mode .pdf-document-area {
-                padding-left: var(--toolbar-width) !important;
-            }
-        }
+/* PDF content in fullscreen - FIT TO SCREEN */
+.pdf-viewer-modal.fullscreen-mode #pdfDocumentContent {
+    width: 100% !important;
+    max-width: 100% !important;
+    margin: 0 !important;
+    background: transparent !important;
+    padding: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    gap: 20px !important;
+}
 
-        /* PDF content in fullscreen - FIT TO SCREEN */
-        .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent {
-            width: 100% !important;
-            max-width: 100% !important;
-            margin: 0 !important;
-            background: transparent !important;
-            padding: 0 !important;
-            display: flex !important;
-            flex-direction: column !important;
-            align-items: center !important;
-            gap: 20px !important;
-        }
+.pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
+    max-width: none !important;
+    margin: 0 !important;
+    display: block !important;
+    background: white !important;
+    image-rendering: pixelated !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    image-rendering: crisp-edges !important;
+    -ms-interpolation-mode: high-quality !important;
+    -webkit-backface-visibility: hidden !important;
+    backface-visibility: hidden !important;
+    -webkit-font-smoothing: antialiased !important;
+    -moz-osx-font-smoothing: grayscale !important;
+    filter: contrast(1.05) saturate(1.02) !important;
+    will-change: transform !important;
+    contain: layout style paint !important;
+}
 
-        .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
-            max-width: none !important;
-            margin: 0 !important;
-            display: block !important;
-            background: white !important;
-            image-rendering: pixelated !important;
-            image-rendering: -webkit-optimize-contrast !important;
-            image-rendering: crisp-edges !important;
-            -ms-interpolation-mode: high-quality !important;
-            -webkit-backface-visibility: hidden !important;
-            backface-visibility: hidden !important;
-            -webkit-font-smoothing: antialiased !important;
-            -moz-osx-font-smoothing: grayscale !important;
-            filter: contrast(1.05) saturate(1.02) !important;
-            will-change: transform !important;
-            contain: layout style paint !important;
-        }
+/* PDF canvas - let browser handle scaling naturally */
+.pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
+    transform: none !important;
+    transform-origin: top center !important;
+    image-rendering: crisp-edges !important;
+    image-rendering: -webkit-optimize-contrast !important;
+    filter: contrast(1.05) saturate(1.02) !important;
+    will-change: transform !important;
+}
 
-        /* PDF canvas - let browser handle scaling naturally */
-        .pdf-viewer-modal.fullscreen-mode #pdfDocumentContent canvas {
-            transform: none !important;
-            transform-origin: top center !important;
-            image-rendering: crisp-edges !important;
-            image-rendering: -webkit-optimize-contrast !important;
-            filter: contrast(1.05) saturate(1.02) !important;
-            will-change: transform !important;
-        }
-
-
-        /* Eye dropdown in fullscreen mode */
-        .pdf-viewer-modal.fullscreen-mode .eye-dropdown-menu {
-            position: fixed !important;
-            top: var(--dropdown-top-offset) !important;
-            right: var(--toolbar-offset) !important;
-            z-index: 100001 !important;
-        }
+/* Eye dropdown in fullscreen mode */
+.pdf-viewer-modal.fullscreen-mode .eye-dropdown-menu {
+    position: fixed !important;
+    top: var(--dropdown-top-offset) !important;
+    right: var(--toolbar-offset) !important;
+    z-index: 100001 !important;
+}
 
         /* Left Sidebar with Tools */
         .pdf-tools-sidebar {
@@ -2454,11 +2754,14 @@
             flex: 1;
             overflow: auto;
             background: #f5f5f5;
-            padding: var(--pdf-padding-vertical) var(--pdf-padding-horizontal) var(--pdf-padding-bottom);
+            padding: 0.5rem; /* Minimal padding to let PDF fill the space */
             display: flex;
             align-items: center;
             justify-content: center;
             border: 1px solid #d1d5db;
+            margin: 0.5rem 1rem 0.5rem 1rem; /* Restore margins for spacing between nav and container */
+            border-radius: 0.5rem;
+            position: relative; /* Allow absolute positioning of date selector */
         }
 
         /* For big monitors - keep original padding (no toolbar overlap) */
@@ -2739,7 +3042,7 @@
             min-height: 56px;
             position: relative;
             z-index: 10003;
-            margin: 0 !important;
+            margin: 0 0 0.75rem 0;
             flex-shrink: 0;
         }
 
@@ -3424,10 +3727,10 @@
             flex: 1;
             overflow: auto;
             background: #f5f5f5;
-            padding: var(--pdf-padding-vertical) var(--pdf-padding-horizontal) var(--pdf-padding-bottom) var(--pdf-padding-horizontal);
+            padding: 1rem var(--pdf-padding-horizontal) var(--pdf-padding-bottom) var(--pdf-padding-horizontal);
             position: relative;
             display: flex;
-            align-items: center; /* ✅ CHANGED: center instead of flex-start */
+            align-items: flex-start;
             justify-content: center;
             border-top: 1px solid #d1d5db;
             border-left: 1px solid #d1d5db;
@@ -3451,23 +3754,23 @@
 
         /* Enhanced PDF document content container */
         #pdfDocumentContent {
-            width: auto; /* ✅ CHANGED: auto instead of 100% */
+            width: auto;
             max-width: none;
             margin: 0 auto;
             display: flex;
             flex-direction: column;
             gap: 20px;
-            background: transparent;
-            padding: 0; /* ✅ Padding will be added dynamically when zoomed */
-            box-shadow: none !important;
+            background: transparent; /* Remove white background */
+            padding: 0; /* Remove padding to eliminate white space */
+            box-shadow: none !important; /* Remove shadow */
             outline: none !important;
-            border: none !important;
+            border: none !important; /* REMOVED: inner border to fix double border issue */
             filter: none !important;
             min-height: auto;
             align-items: center;
-            justify-content: center;
-            /* ✅ ADDED: Allow content to expand beyond viewport */
+            justify-content: flex-start;
             min-width: min-content;
+            border-radius: 0;
         }
 
         /* PDF document content rotation support */
@@ -3482,7 +3785,7 @@
             margin: 0 auto 20px auto !important;
             background: white !important;
             border: 1px solid #d1d5db !important;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1) !important;
             image-rendering: -webkit-optimize-contrast !important;
             image-rendering: crisp-edges !important;
             -ms-interpolation-mode: high-quality !important;
@@ -3613,19 +3916,19 @@
 
         /* PDF Name Display at Bottom */
         .pdf-bottom-name-bar {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: white;
-            padding: 12px 24px;
+            position: fixed; /* CHANGED: from absolute to fixed */
+            bottom: 1rem; /* CHANGED: from 0 to 1rem */
+            left: 50%;
+            transform: translateX(-50%); /* ADDED: center horizontally */
+            background: transparent; /* CHANGED: transparent background */
+            padding: 0;
             display: flex;
             align-items: center;
             justify-content: center;
             gap: 16px;
             z-index: 10002;
-            height: 48px;
-            border-top: 1px solid #e5e7eb;
+            height: auto; /* CHANGED: auto height */
+            border-top: none; /* REMOVED: border */
         }
 
         .pdf-name-display {
@@ -3912,93 +4215,239 @@
             box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
         }
 
-        /* ===== MODERN DATE SELECTOR - IMAGE 1 & 3 STYLE ===== */
+        /* ===== MODERN DATE SELECTOR - STACKED LAYOUT ===== */
         .pdf-modern-date-selector {
-            position: fixed;
-            bottom: 60px;
-            right: 24px;
+            position: absolute;
+            bottom: 20px;
+            right: 20px;
             z-index: 10001;
             display: flex;
-            align-items: center;
-            background: #2c3e50;
-            border-radius: 8px;
-            overflow: hidden;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-            transition: all 0.3s ease;
+            flex-direction: column-reverse;
         }
 
         .pdf-modern-date-selector:hover {
             box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
-            transform: translateY(-2px);
         }
 
         .modern-date-input {
             background: #2c3e50;
             color: white;
             border: none;
-            padding: 12px 16px;
             font-size: 16px;
-            font-weight: 500;
+            font-weight: 600;
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
             outline: none;
             cursor: pointer;
-            min-width: 150px;
+            padding: 14px 20px;
+            width: 180px;
             -webkit-appearance: none;
             -moz-appearance: none;
             appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23ffffff' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.2s ease;
         }
 
-        /* Hide default calendar icon */
-        .modern-date-input::-webkit-calendar-picker-indicator {
+        .modern-date-input:hover {
+            background-color: #34495e;
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.4);
+        }
+
+        .modern-date-input:focus {
+            outline: 2px solid #3b82f6;
+            outline-offset: -2px;
+        }
+
+        .modern-date-input option {
+            background: #2c3e50;
+            color: white;
+            padding: 10px;
+        }
+
+        .modern-date-input option[value=""]:hover {
+            background: #1a1a1a;
+            color: #93c5fd;
+        }
+
+        /* ===== COMPARE VERSIONS MODAL ===== */
+        .compare-versions-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            backdrop-filter: blur(4px);
             display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10005;
+            animation: fadeIn 0.3s ease;
         }
 
-        .modern-date-input::-webkit-inner-spin-button,
-        .modern-date-input::-webkit-outer-spin-button {
-            display: none;
+        .compare-versions-modal.show {
+            display: flex;
         }
 
-        .modern-date-dropdown-btn {
-            background: #34495e;
+        .compare-versions-content {
+            background: white;
+            border-radius: 12px;
+            width: 90%;
+            max-width: 600px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            animation: modalSlideUp 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .compare-versions-header {
+            padding: 24px 32px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .compare-versions-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .compare-versions-close {
+            background: none;
             border: none;
-            padding: 12px 14px;
+            font-size: 24px;
+            color: #9ca3af;
             cursor: pointer;
+            padding: 4px;
+            width: 32px;
+            height: 32px;
             display: flex;
             align-items: center;
             justify-content: center;
+            border-radius: 6px;
+            transition: all 0.2s;
+        }
+
+        .compare-versions-close:hover {
+            background: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .compare-versions-body {
+            padding: 32px;
+            display: flex;
+            flex-direction: column;
+            gap: 24px;
+        }
+
+        .compare-row {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .compare-dot {
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .compare-dot.blue {
+            background: #3b82f6;
+        }
+
+        .compare-dot.red {
+            background: #ef4444;
+        }
+
+        .compare-selectors {
+            display: flex;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .compare-select {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%236b7280' d='M6 9L1 4h10z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 12px center;
+            padding-right: 36px;
+        }
+
+        .compare-select:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .compare-date-input {
+            flex: 1;
+            padding: 12px 16px;
+            border: 1px solid #d1d5db;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            color: #1f2937;
+            background: white;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .compare-date-input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .compare-submit-btn {
+            width: 100%;
+            padding: 14px 24px;
+            background: #93c5fd;
             color: white;
-            font-size: 14px;
-            transition: background 0.2s;
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .modern-date-dropdown-btn:hover {
-            background: #3e5368;
-        }
-
-        .modern-date-dropdown-btn i {
-            transition: transform 0.2s;
-        }
-
-        .modern-date-input:focus + .modern-date-dropdown-btn i {
-            transform: rotate(180deg);
-        }
-
-        .modern-compare-btn {
-            background: #3498db;
             border: none;
-            color: white;
-            padding: 12px 20px;
-            font-size: 14px;
+            border-radius: 8px;
+            font-size: 16px;
             font-weight: 600;
             cursor: pointer;
-            transition: background 0.2s;
-            border-left: 1px solid rgba(255, 255, 255, 0.1);
-            display: none !important;
+            transition: all 0.2s;
+            margin-top: 8px;
         }
 
-        .modern-compare-btn:hover {
-            background: #2980b9;
+        .compare-submit-btn:hover {
+            background: #60a5fa;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+        }
+
+        .compare-submit-btn:active {
+            transform: translateY(0);
+        }
+
+        @keyframes modalSlideUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px) scale(0.95);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0) scale(1);
+            }
         }
 
         /* Hide old date selector */
@@ -7830,9 +8279,31 @@
             helpPanel.classList.remove('show');
         });
 
-        // Sidebar toggle
+        // Sidebar toggle with PDF viewer awareness
         sidebarToggleBtn.addEventListener('click', function() {
             sidebar.classList.toggle('collapsed');
+
+            // ✅ FORCE PDF viewer to update when sidebar toggles
+            const pdfModal = document.getElementById('pdfViewerModal');
+            if (pdfModal && pdfModal.classList.contains('show')) {
+                // Force immediate position update
+                if (sidebar.classList.contains('collapsed')) {
+                    pdfModal.style.left = 'var(--sidebar-collapsed-width)';
+                } else {
+                    pdfModal.style.left = 'var(--sidebar-width)';
+                }
+
+                // Hide background content when PDF is open
+                setTimeout(() => {
+                    const plansContent = document.getElementById('plansContent');
+                    const actionBar = document.querySelector('.action-bar');
+                    const statusBar = document.querySelector('.status-bar');
+
+                    if (plansContent) plansContent.style.display = 'none';
+                    if (actionBar) actionBar.style.display = 'none';
+                    if (statusBar) statusBar.style.display = 'none';
+                }, 50);
+            }
         });
 
         // Sidebar logo and project dropdown toggle
@@ -8257,6 +8728,26 @@
             modal.classList.add('show');
             document.body.style.overflow = 'hidden';
 
+            // ✅ FORCE HIDE background content
+            setTimeout(() => {
+                const plansContent = document.getElementById('plansContent');
+                const actionBar = document.querySelector('.action-bar');
+                const statusBar = document.querySelector('.status-bar');
+
+                if (plansContent) {
+                    plansContent.style.display = 'none';
+                    plansContent.style.visibility = 'hidden';
+                }
+                if (actionBar) {
+                    actionBar.style.display = 'none';
+                    actionBar.style.visibility = 'hidden';
+                }
+                if (statusBar) {
+                    statusBar.style.display = 'none';
+                    statusBar.style.visibility = 'hidden';
+                }
+            }, 100);
+
         }
 
         // ════════════════════════════════════════════════════════════════════════════
@@ -8477,7 +8968,7 @@
                                 console.log(`   isFullscreen = ${window.pdfInFullscreen}, modal has fullscreen-mode = ${document.getElementById('pdfViewerModal')?.classList.contains('fullscreen-mode')}`);
 
                                 // Force display size - use !important inline style to override CSS
-                                canvas.style.cssText = `width: ${displayWidth}px !important; height: ${displayHeight}px !important; display: block !important; margin-bottom: ${pageNum < numPages ? '20px' : '0'} !important; border: 1px solid #d1d5db !important; box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1) !important; background-color: white !important; image-rendering: crisp-edges !important;`;
+                                canvas.style.cssText = `width: ${displayWidth}px !important; height: ${displayHeight}px !important; display: block !important; margin-bottom: ${pageNum < numPages ? '20px' : '0'} !important; background-color: white !important; image-rendering: crisp-edges !important;`;
 
                                 // Scale context for sharp rendering
                                 context.scale(dpr, dpr);
@@ -8515,6 +9006,28 @@
             const modal = document.getElementById('pdfViewerModal');
             modal.classList.remove('show');
             document.body.style.overflow = 'auto';
+
+            // ✅ FIX: Restore hidden content when PDF viewer closes
+            const plansContent = document.getElementById('plansContent');
+            const actionBar = document.querySelector('.action-bar');
+            const statusBar = document.querySelector('.status-bar');
+
+            if (plansContent) {
+                plansContent.style.display = 'block';
+                plansContent.style.visibility = 'visible';
+            }
+
+            if (actionBar) {
+                actionBar.style.display = 'flex';
+                actionBar.style.visibility = 'visible';
+            }
+
+            if (statusBar) {
+                statusBar.style.display = 'block';
+                statusBar.style.visibility = 'visible';
+            }
+
+            console.log('✅ PDF viewer closed - content restored');
         }
 
         // PDF Toolbar Functionality
@@ -10120,7 +10633,7 @@
             togglePDFActionsDropdown();
         }
 
-        // 8. Export QR code
+        // 8. Export QR code - PROFESSIONAL VERSION
         async function exportQRCode() {
             console.log('Export QR code clicked');
 
@@ -10138,15 +10651,15 @@
             // Close actions dropdown
             togglePDFActionsDropdown();
 
-            // Generate QR code URL (you can customize this URL to your needs)
+            // Generate QR code URL
             const qrCodeURL = `${window.location.origin}/plan/${plan.id}`;
 
-            // Show the QR modal
-            openQRCodeModal(plan, projectName, qrCodeURL);
+            // Show the professional modal
+            openProfessionalQRCodeModal(plan, projectName, qrCodeURL);
         }
 
-        // Open QR Code Modal - FIXED VERSION
-        function openQRCodeModal(plan, projectName, qrCodeURL) {
+        // Open Professional QR Code Modal
+        function openProfessionalQRCodeModal(plan, projectName, qrCodeURL) {
             const modal = document.getElementById('qrCodeModal');
             const container = document.getElementById('qrCodeContainer');
 
@@ -10155,84 +10668,41 @@
                 return;
             }
 
+            // Update project and plan names
+            const qrProjectName = document.getElementById('qrProjectName');
+            const qrPlanName = document.getElementById('qrPlanName');
+
+            if (qrProjectName) qrProjectName.textContent = projectName;
+            if (qrPlanName) qrPlanName.textContent = plan.name || plan.sheetNumber || 'Document';
+
             // Clear previous QR code
-            container.innerHTML = '';
+            container.innerHTML = '<div style="padding: 40px; text-align: center;"><i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #667eea;"></i></div>';
 
-            // Create a wrapper div for all content (for downloading)
-            const downloadWrapper = document.createElement('div');
-            downloadWrapper.id = 'qrDownloadWrapper';
-            downloadWrapper.style.cssText = 'display: inline-block; background: white; padding: 24px; border-radius: 8px;';
+            // Show modal
+            modal.classList.add('show');
 
-            // Add project info above QR code
-            const infoDiv = document.createElement('div');
-            infoDiv.style.cssText = 'text-align: center; margin-bottom: 16px;';
-            infoDiv.innerHTML = `
-                <div style="font-size: 14px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">
-                    ${projectName}
-                </div>
-                <div style="font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 8px;">
-                    ${plan.name || plan.sheetNumber || 'Document'}
-                </div>
-            `;
+            // Generate QR code
+            setTimeout(() => {
+                try {
+                    // Clear loading spinner
+                    container.innerHTML = '';
 
-            // Create QR code wrapper
-            const qrWrapper = document.createElement('div');
-            qrWrapper.id = 'qrCodeImage';
-            qrWrapper.style.cssText = 'display: inline-block; padding: 16px; background: white; margin-bottom: 12px;';
+                    // Generate QR code using QRCode.js
+                    const qrcode = new QRCode(container, {
+                        text: qrCodeURL,
+                        width: 140,
+                        height: 140,
+                        colorDark: "#1f2937",
+                        colorLight: "#ffffff",
+                        correctLevel: QRCode.CorrectLevel.H
+                    });
 
-            // Add Fieldwire-style branding
-            const brandingDiv = document.createElement('div');
-            brandingDiv.style.cssText = 'display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px;';
-            brandingDiv.innerHTML = `
-                <img src="/img/img.webp" alt="Logo" style="width: 24px; height: 24px;">
-                <span style="font-size: 12px; font-weight: 600; color: #374151;">DESA Wire</span>
-            `;
-
-            // Assemble the download wrapper
-            downloadWrapper.appendChild(infoDiv);
-            downloadWrapper.appendChild(qrWrapper);
-            downloadWrapper.appendChild(brandingDiv);
-            container.appendChild(downloadWrapper);
-
-            // Generate QR code using QRCode.js
-            try {
-                // Create QR code instance
-                const qrcode = new QRCode(qrWrapper, {
-                    text: qrCodeURL,
-                    width: 256,
-                    height: 256,
-                    colorDark: "#000000",
-                    colorLight: "#ffffff",
-                    correctLevel: QRCode.CorrectLevel.H
-                });
-
-                console.log('✅ QR code generated');
-
-                // Show modal
-                modal.classList.add('show');
-
-                // CRITICAL: Wait for QR code to ACTUALLY render in DOM
-                // We need to wait for the canvas/img element to be created
-                setTimeout(() => {
-                    const qrCanvas = qrWrapper.querySelector('canvas');
-                    const qrImg = qrWrapper.querySelector('img');
-
-                    if (qrCanvas || qrImg) {
-                        console.log('✅ QR code element found:', qrCanvas ? 'canvas' : 'img');
-                        // Wait a bit more for rendering to complete
-                        setTimeout(() => {
-                            downloadQRCode();
-                        }, 500);
-                    } else {
-                        console.error('❌ QR code element not found');
-                        showNotification('Error: QR code not rendered', 'error');
-                    }
-                }, 1000); // Wait 1 second for QR code to render
-
-            } catch (error) {
-                console.error('Error generating QR code:', error);
-                showNotification('Error generating QR code', 'error');
-            }
+                    console.log('✅ Professional QR code generated');
+                } catch (error) {
+                    console.error('Error generating QR code:', error);
+                    container.innerHTML = '<div style="padding: 40px; text-align: center; color: #dc2626;">Error generating QR code</div>';
+                }
+            }, 300);
         }
 
         // Close QR Code Modal
@@ -10243,95 +10713,114 @@
             }
         }
 
-        // Download QR Code as Image - COMPLETE VERSION WITH ALL ELEMENTS
+        // Download QR Code as Image - Professional Version
         function downloadQRCode() {
-            const wrapper = document.getElementById('qrDownloadWrapper');
-            if (!wrapper) {
-                console.error('QR download wrapper not found');
-                showNotification('Error: QR code not ready', 'error');
+            const qrContainer = document.getElementById('qrCodeContainer');
+            const projectName = document.getElementById('qrProjectName')?.textContent || 'Project';
+            const planName = document.getElementById('qrPlanName')?.textContent || 'Document';
+
+            if (!qrContainer) {
+                showNotification('QR code not ready', 'error');
                 return;
             }
 
-            // Verify QR code is actually rendered
-            const qrWrapper = document.getElementById('qrCodeImage');
-            const qrCanvas = qrWrapper?.querySelector('canvas');
-            const qrImg = qrWrapper?.querySelector('img');
-
-            if (!qrCanvas && !qrImg) {
-                console.error('❌ QR code not rendered yet');
-                showNotification('QR code still loading, please try again', 'error');
+            const canvas = qrContainer.querySelector('canvas');
+            if (!canvas) {
+                showNotification('QR code not generated yet', 'error');
                 return;
             }
-
-            console.log('✅ Starting download...');
-            console.log('QR Code element found:', qrCanvas ? 'canvas' : 'img');
 
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
             const plan = plans[planIndex];
-            const projectName = '<%= projectName %>' || 'Project';
-            const fileName = `${projectName}-${plan.name || 'QR'}.png`;
+            const fileName = `${projectName}-${plan.name || planName || 'QR'}.png`;
 
-            // Always use html2canvas to capture the entire wrapper with all elements
-            console.log('✅ Capturing complete QR wrapper with html2canvas');
-            html2canvas(wrapper, {
-                backgroundColor: '#ffffff', // Explicitly set white background
-                scale: 4, // Higher scale for maximum clarity and quality
-                logging: false,
-                useCORS: true,
-                allowTaint: true,
-                imageTimeout: 5000,
-                windowWidth: wrapper.scrollWidth,
-                windowHeight: wrapper.scrollHeight,
-                onclone: function(clonedDoc) {
-                    // Ensure the cloned wrapper has proper styling
-                    const clonedWrapper = clonedDoc.getElementById('qrDownloadWrapper');
-                    if (clonedWrapper) {
-                        clonedWrapper.style.backgroundColor = '#ffffff';
-                        clonedWrapper.style.display = 'inline-block';
-                        clonedWrapper.style.padding = '24px';
-                        clonedWrapper.style.borderRadius = '8px';
-                    }
-
-                    // Ensure the QR canvas is visible
-                    const clonedQrWrapper = clonedDoc.getElementById('qrCodeImage');
-                    if (clonedQrWrapper) {
-                        clonedQrWrapper.style.display = 'inline-block';
-                        clonedQrWrapper.style.backgroundColor = 'transparent';
-                    }
-
-                    console.log('✅ Cloned document styled with white background');
+            // Convert canvas to blob and download
+            canvas.toBlob(blob => {
+                if (!blob) {
+                    showNotification('Error creating download', 'error');
+                    return;
                 }
-            }).then(canvas => {
-                console.log('✅ Canvas created:', canvas.width, 'x', canvas.height);
-                console.log('✅ Canvas resolution: ' + (canvas.width * canvas.height) + ' pixels');
 
-                // Convert canvas to blob with maximum quality
-                canvas.toBlob(blob => {
-                    if (!blob) {
-                        console.error('Failed to create blob');
-                        showNotification('Error downloading QR code', 'error');
-                        return;
-                    }
+                const url = URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = fileName;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                URL.revokeObjectURL(url);
 
-                    console.log('✅ Blob created, size:', (blob.size / 1024).toFixed(2) + ' KB');
+                showNotification('QR code downloaded successfully!', 'success');
+            }, 'image/png', 1.0);
+        }
 
-                    // Create download link
-                    const url = URL.createObjectURL(blob);
-                    const link = document.createElement('a');
-                    link.href = url;
-                    link.download = fileName;
-                    document.body.appendChild(link);
-                    link.click();
-                    document.body.removeChild(link);
-                    URL.revokeObjectURL(url);
+        // Print QR Code
+        function printQRCode() {
+            const qrContainer = document.getElementById('qrCodeContainer');
+            const projectName = document.getElementById('qrProjectName')?.textContent || 'Project';
+            const planName = document.getElementById('qrPlanName')?.textContent || 'Document';
 
-                    console.log('✅ Download triggered - File: ' + fileName);
-                    showNotification('✅ QR code downloaded successfully!\n\nFile: ' + fileName, 'success');
-                }, 'image/png', 1.0); // Maximum quality
-            }).catch(error => {
-                console.error('❌ Error downloading QR code:', error);
-                showNotification('Error downloading QR code: ' + error.message, 'error');
-            });
+            if (!qrContainer) {
+                showNotification('QR code not ready', 'error');
+                return;
+            }
+
+            const canvas = qrContainer.querySelector('canvas');
+            if (!canvas) {
+                showNotification('QR code not generated yet', 'error');
+                return;
+            }
+
+            // Create print window
+            const printWindow = window.open('', '', 'width=600,height=800');
+            printWindow.document.write(`
+                <html>
+                <head>
+                    <title>Print QR Code - ${planName}</title>
+                    <style>
+                        body {
+                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                            display: flex;
+                            flex-direction: column;
+                            align-items: center;
+                            padding: 40px;
+                            margin: 0;
+                        }
+                        h1 { font-size: 24px; margin-bottom: 8px; }
+                        h2 { font-size: 18px; color: #6b7280; margin-bottom: 32px; font-weight: 400; }
+                        img { border: 2px solid #e5e7eb; padding: 20px; border-radius: 12px; }
+                        .branding {
+                            display: flex;
+                            align-items: center;
+                            gap: 12px;
+                            margin-top: 32px;
+                        }
+                        .branding img { border: none; padding: 0; width: 32px; height: 32px; }
+                        @media print {
+                            body { padding: 20px; }
+                        }
+                    </style>
+                </head>
+                <body>
+                    <h1>${projectName}</h1>
+                    <h2>${planName}</h2>
+                    <img src="${canvas.toDataURL()}" alt="QR Code">
+                    <div class="branding">
+                        <img src="/img/img.webp" alt="DESA Logo">
+                        <span style="font-weight: 700; font-size: 16px;">DESA Wire</span>
+                    </div>
+                </body>
+                </html>
+            `);
+
+            printWindow.document.close();
+            printWindow.focus();
+
+            setTimeout(() => {
+                printWindow.print();
+            }, 500);
+
+            showNotification('Opening print dialog...', 'success');
         }
 
         // Close QR modal when clicking outside (on overlay)
@@ -11374,15 +11863,62 @@
                         <!-- Document content loads here -->
                     </div>
 
-                    <!-- Modern Date Selector with Compare Button - Bottom Right -->
+                    <!-- Modern Date Selector with Compare Button - Bottom Right (Image 3 Style) -->
                     <div class="pdf-modern-date-selector">
-                        <input type="date" class="modern-date-input" id="pdfDateInput" value="2025-01-23">
-                        <button class="modern-date-dropdown-btn" onclick="document.getElementById('pdfDateInput').showPicker()">
-                            <i class="fas fa-chevron-down"></i>
-                        </button>
-                        <button class="modern-compare-btn" onclick="compareVersions()">
-                            Compare
-                        </button>
+                        <select class="modern-date-input" id="pdfDateInput">
+                            <option value="2025-01-23" selected>2025-01-23</option>
+                            <option value="">Compare</option>
+                        </select>
+                    </div>
+
+                    <!-- Compare Versions Modal -->
+                    <div id="compareVersionsModal" class="compare-versions-modal">
+                        <div class="compare-versions-content">
+                            <div class="compare-versions-header">
+                                <h2 class="compare-versions-title">Compare Versions</h2>
+                                <button class="compare-versions-close" onclick="closeCompareModal()">
+                                    <i class="fas fa-times"></i>
+                                </button>
+                            </div>
+
+                            <div class="compare-versions-body">
+                                <!-- Version 1 Selection -->
+                                <div class="compare-row">
+                                    <div class="compare-dot blue"></div>
+                                    <div class="compare-selectors">
+                                        <select class="compare-select" id="compareVersion1">
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <input type="date" class="compare-date-input" id="compareDate1" value="2025-01-23">
+                                    </div>
+                                </div>
+
+                                <!-- Version 2 Selection -->
+                                <div class="compare-row">
+                                    <div class="compare-dot red"></div>
+                                    <div class="compare-selectors">
+                                        <select class="compare-select" id="compareVersion2">
+                                            <option value="" disabled selected>Search</option>
+                                            <option value="1">1</option>
+                                            <option value="2">2</option>
+                                            <option value="3">3</option>
+                                            <option value="4">4</option>
+                                            <option value="5">5</option>
+                                        </select>
+                                        <input type="date" class="compare-date-input" id="compareDate2" value="">
+                                    </div>
+                                </div>
+
+                                <!-- Compare Button -->
+                                <button class="compare-submit-btn" onclick="executeCompare()">
+                                    Compare
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -11416,38 +11952,69 @@
             </div>
         </div>
 
-        <!-- QR Code Export Modal - Inside PDF Viewer -->
+        <!-- Professional QR Code Export Modal -->
         <div id="qrCodeModal" class="pdf-qr-code-modal">
             <div class="pdf-qr-code-overlay"></div>
-            <div class="pdf-qr-code-content">
-                <div class="pdf-qr-code-header">
-                    <h2 class="pdf-qr-code-title">Plan QR Code</h2>
-                    <button class="pdf-qr-code-close" onclick="closeQRCodeModal()">×</button>
+            <div class="pdf-qr-code-content professional-qr-modal">
+                <!-- Modern Professional Header -->
+                <div class="qr-modal-header">
+                    <div class="qr-header-icon">
+                        <i class="fas fa-qrcode"></i>
+                    </div>
+                    <div class="qr-header-text">
+                        <h2 class="qr-modal-title">Plan QR Code</h2>
+                        <p class="qr-modal-subtitle">Scan to access this plan instantly</p>
+                    </div>
+                    <button class="qr-modal-close-btn" onclick="closeQRCodeModal()">
+                        <i class="fas fa-times"></i>
+                    </button>
                 </div>
-                <div class="pdf-qr-code-body">
-                    <!-- Success Icon -->
-                    <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
-                        <i class="fas fa-check" style="font-size: 40px; color: #0284c7;"></i>
+
+                <!-- QR Code Display Area -->
+                <div class="qr-modal-body">
+                    <!-- Project & Plan Info Card -->
+                    <div class="qr-info-card">
+                        <div class="qr-info-row">
+                            <span class="qr-info-label">Project:</span>
+                            <span class="qr-info-value" id="qrProjectName"><%= projectName %></span>
+                        </div>
+                        <div class="qr-info-row">
+                            <span class="qr-info-label">Plan:</span>
+                            <span class="qr-info-value" id="qrPlanName">Document</span>
+                        </div>
                     </div>
 
-                    <!-- Success Message -->
-                    <h3 style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 8px;">
-                        Your QR code has been generated!
-                    </h3>
-                    <p style="font-size: 14px; color: #6b7280; margin-bottom: 32px;">
-                        Click below if it hasn't started downloading yet.
+                    <!-- QR Code Container with Professional Styling -->
+                    <div class="qr-code-display-area">
+                        <div class="qr-code-frame">
+                            <div id="qrCodeContainer" class="qr-code-inner">
+                                <!-- QR code will be generated here -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Company Branding -->
+                    <div class="qr-branding">
+                        <img src="/img/img.webp" alt="DESA Logo" class="qr-brand-logo">
+                        <span class="qr-brand-name">DESA Wire</span>
+                    </div>
+
+                    <!-- Instructions Text -->
+                    <p class="qr-instructions">
+                        Scan this QR code with your mobile device to quickly access this plan anywhere
                     </p>
 
-                    <!-- QR Code Container -->
-                    <div id="qrCodeContainer" style="display: inline-block; padding: 24px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 24px;">
-                        <!-- QR code will be generated here -->
+                    <!-- Action Buttons -->
+                    <div class="qr-actions">
+                        <button class="qr-download-btn" onclick="downloadQRCode()">
+                            <i class="fas fa-download"></i>
+                            <span>Download QR Code</span>
+                        </button>
+                        <button class="qr-print-btn" onclick="printQRCode()">
+                            <i class="fas fa-print"></i>
+                            <span>Print</span>
+                        </button>
                     </div>
-
-                    <!-- Download Button -->
-                    <button class="btn-primary" onclick="downloadQRCode()" style="width: 100%; max-width: 300px; margin: 0 auto; justify-content: center;">
-                        <i class="fas fa-download"></i>
-                        <span>Download</span>
-                    </button>
                 </div>
             </div>
         </div>
@@ -12440,6 +13007,87 @@
     }
 
     // Removed viewport-based adjustments for uniform scaling across all screens
+
+    // ===== COMPARE VERSIONS MODAL FUNCTIONS =====
+    function openCompareModal() {
+        const modal = document.getElementById('compareVersionsModal');
+        const currentDate = document.getElementById('pdfDateInput').value;
+
+        // Set the current date to the first comparison field
+        document.getElementById('compareDate1').value = currentDate;
+
+        // Show the modal
+        if (modal) {
+            modal.classList.add('show');
+        }
+    }
+
+    function closeCompareModal() {
+        const modal = document.getElementById('compareVersionsModal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+    }
+
+    function executeCompare() {
+        const version1 = document.getElementById('compareVersion1').value;
+        const date1 = document.getElementById('compareDate1').value;
+        const version2 = document.getElementById('compareVersion2').value;
+        const date2 = document.getElementById('compareDate2').value;
+
+        if (!version2 || !date2) {
+            showNotification('⚠️ Please select both versions to compare', 'error');
+            return;
+        }
+
+        console.log('Comparing:', version1, date1, 'with', version2, date2);
+        showNotification(`🔍 Comparing Version ${version1} (${date1}) with Version ${version2} (${date2})`, 'success');
+
+        // Close the modal
+        closeCompareModal();
+
+        // Here you would implement the actual comparison logic
+        // For now, it just shows a notification
+    }
+
+    // Event listeners for Compare Versions modal
+    document.addEventListener('DOMContentLoaded', function() {
+        const modal = document.getElementById('compareVersionsModal');
+        const dateSelector = document.getElementById('pdfDateInput');
+
+        // Handle date dropdown selection
+        if (dateSelector) {
+            dateSelector.addEventListener('change', function(event) {
+                if (event.target.value === '') {
+                    // Compare option selected
+                    openCompareModal();
+                    // Reset dropdown to show first date option
+                    setTimeout(() => {
+                        dateSelector.value = '2025-01-23';
+                    }, 100);
+                }
+            });
+        }
+
+        // Close modal when clicking outside the modal content
+        if (modal) {
+            modal.addEventListener('click', function(event) {
+                if (event.target === modal) {
+                    closeCompareModal();
+                }
+            });
+        }
+
+        // Close modal when pressing ESC key
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Escape') {
+                const modal = document.getElementById('compareVersionsModal');
+                if (modal && modal.classList.contains('show')) {
+                    closeCompareModal();
+                }
+            }
+        });
+    });
     </script>
 
 </body>
