@@ -558,290 +558,6 @@
             text-align: center;
         }
 
-        /* ===== PROFESSIONAL QR CODE MODAL STYLING ===== */
-
-        .professional-qr-modal {
-            max-width: 420px !important;
-            background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%) !important;
-        }
-
-        .qr-modal-header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            padding: 20px 24px;
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            border-radius: 12px 12px 0 0;
-            position: relative;
-            overflow: hidden;
-        }
-
-        .qr-modal-header::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background: linear-gradient(45deg, rgba(255,255,255,0.1) 0%, transparent 100%);
-            pointer-events: none;
-        }
-
-        .qr-header-icon {
-            width: 44px;
-            height: 44px;
-            background: rgba(255, 255, 255, 0.25);
-            backdrop-filter: blur(10px);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-shrink: 0;
-            z-index: 1;
-        }
-
-        .qr-header-icon i {
-            font-size: 22px;
-            color: white;
-        }
-
-        .qr-header-text {
-            flex: 1;
-            z-index: 1;
-        }
-
-        .qr-modal-title {
-            font-size: 20px;
-            font-weight: 700;
-            color: white;
-            margin: 0 0 2px 0;
-            letter-spacing: -0.5px;
-        }
-
-        .qr-modal-subtitle {
-            font-size: 13px;
-            color: rgba(255, 255, 255, 0.9);
-            margin: 0;
-            font-weight: 400;
-        }
-
-        .qr-modal-close-btn {
-            background: rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.3);
-            width: 36px;
-            height: 36px;
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: pointer;
-            color: white;
-            font-size: 18px;
-            transition: all 0.3s ease;
-            z-index: 1;
-        }
-
-        .qr-modal-close-btn:hover {
-            background: rgba(255, 255, 255, 0.3);
-            transform: scale(1.1);
-        }
-
-        .qr-modal-body {
-            padding: 24px;
-            display: flex;
-            flex-direction: column;
-            gap: 16px;
-        }
-
-        /* Info Card */
-        .qr-info-card {
-            background: white;
-            border: 1px solid #e5e7eb;
-            border-radius: 10px;
-            padding: 14px 18px;
-            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-        }
-
-        .qr-info-row {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 0;
-        }
-
-        .qr-info-row:not(:last-child) {
-            border-bottom: 1px solid #f3f4f6;
-        }
-
-        .qr-info-label {
-            font-size: 13px;
-            font-weight: 600;
-            color: #6b7280;
-        }
-
-        .qr-info-value {
-            font-size: 13px;
-            font-weight: 600;
-            color: #1f2937;
-        }
-
-        /* QR Code Display */
-        .qr-code-display-area {
-            display: flex;
-            justify-content: center;
-            padding: 12px;
-            background: white;
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
-        }
-
-        .qr-code-frame {
-            background: white;
-            padding: 12px;
-            border-radius: 10px;
-            border: 2px solid #e5e7eb;
-            display: inline-block;
-            position: relative;
-        }
-
-        .qr-code-frame::before {
-            content: '';
-            position: absolute;
-            top: -2px;
-            left: -2px;
-            right: -2px;
-            bottom: -2px;
-            background: linear-gradient(135deg, #667eea, #764ba2);
-            border-radius: 12px;
-            z-index: -1;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-
-        .qr-code-frame:hover::before {
-            opacity: 1;
-        }
-
-        .qr-code-inner {
-            display: inline-block;
-            padding: 8px;
-            background: white;
-            border-radius: 6px;
-        }
-
-        #qrCodeContainer {
-            min-width: 140px;
-            min-height: 140px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        #qrCodeContainer canvas,
-        #qrCodeContainer img {
-            display: block !important;
-            max-width: 100%;
-            height: auto;
-        }
-
-        /* Branding */
-        .qr-branding {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            gap: 10px;
-            padding: 12px;
-            background: white;
-            border-radius: 10px;
-            border: 1px solid #e5e7eb;
-        }
-
-        .qr-brand-logo {
-            width: 28px;
-            height: 28px;
-            object-fit: contain;
-        }
-
-        .qr-brand-name {
-            font-size: 16px;
-            font-weight: 700;
-            color: #1f2937;
-            letter-spacing: -0.3px;
-        }
-
-        /* Instructions */
-        .qr-instructions {
-            text-align: center;
-            font-size: 13px;
-            color: #6b7280;
-            line-height: 1.5;
-            margin: 0;
-        }
-
-        /* Action Buttons */
-        .qr-actions {
-            display: flex;
-            gap: 8px;
-            justify-content: center;
-        }
-
-        .qr-download-btn,
-        .qr-print-btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
-            cursor: pointer;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            transition: all 0.3s ease;
-            border: none;
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-        }
-
-        .qr-download-btn {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
-        }
-
-        .qr-download-btn:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
-        }
-
-        .qr-print-btn {
-            background: white;
-            color: #374151;
-            border: 2px solid #e5e7eb;
-        }
-
-        .qr-print-btn:hover {
-            background: #f9fafb;
-            border-color: #d1d5db;
-            transform: translateY(-2px);
-        }
-
-        /* Responsive */
-        @media (max-width: 640px) {
-            .qr-modal-body {
-                padding: 24px;
-                gap: 24px;
-            }
-
-            .qr-actions {
-                flex-direction: column;
-            }
-
-            .qr-download-btn,
-            .qr-print-btn {
-                width: 100%;
-                justify-content: center;
-            }
-        }
-
         .upload-dropzone {
             border: 2px dashed #d1d5db;
             border-radius: 8px;
@@ -6454,6 +6170,272 @@
             font-size: clamp(0.75rem, 1.5vw, 0.875rem);
         }
 
+        /* ===== HYPERLINK TOOLBAR STYLES ===== */
+        .hyperlink-toolbar {
+            position: fixed;
+            /* Position will be set dynamically next to Link button */
+            background: #1f2937;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            padding: 0.5rem;
+            display: none;
+            flex-direction: row;
+            gap: 0.25rem;
+            z-index: 10003;
+            animation: slideInLeft 0.3s ease-out;
+        }
+
+        .hyperlink-toolbar.show {
+            display: flex;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hyperlink-tool-btn {
+            width: 3rem;
+            height: 3rem;
+            border: none;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: #374151;
+            color: #d1d5db;
+            font-size: 1.25rem;
+            padding: 0;
+            margin: 0;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .hyperlink-tool-btn:hover {
+            background-color: #4b5563;
+            color: #ffffff;
+        }
+
+        .hyperlink-tool-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .hyperlink-tool-btn .tooltip {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 10004;
+        }
+
+        .hyperlink-tool-btn:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* ===== LINK TO PLAN MODAL STYLES ===== */
+        .link-to-plan-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10005;
+        }
+
+        .link-to-plan-modal.show {
+            display: flex;
+        }
+
+        .link-to-plan-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .link-to-plan-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .link-to-plan-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .link-to-plan-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .link-to-plan-close:hover {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .link-to-plan-body {
+            padding: 20px;
+        }
+
+        .link-to-plan-search {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .link-to-plan-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .link-to-plan-search input {
+            width: 100%;
+            padding: 10px 12px 10px 40px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .link-to-plan-search input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .link-to-plan-results {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .link-to-plan-item {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .link-to-plan-item:hover {
+            background: #f3f4f6;
+            border-color: #3b82f6;
+        }
+
+        .link-to-plan-item i {
+            font-size: 18px;
+            color: #3b82f6;
+        }
+
+        .link-to-plan-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .link-to-plan-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+
+        /* ===== PLAN HYPERLINK MARKER STYLES ===== */
+        .plan-hyperlink-marker {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            animation: linkDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .plan-hyperlink-marker:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+        }
+
+        .plan-hyperlink-marker svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.4));
+        }
+
+        @keyframes linkDrop {
+            0% {
+                transform: translate(-50%, -150%) scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -45%) scale(1.1);
+            }
+            65% {
+                transform: translate(-50%, -52%) scale(0.95);
+            }
+            80% {
+                transform: translate(-50%, -48%) scale(1.05);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Cursor when in add hyperlink mode */
+        .pdf-document-area.adding-hyperlink-mode {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="%232563eb" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="5" stroke="%232563eb" stroke-width="2"/><line x1="16" y1="27" x2="16" y2="31" stroke="%232563eb" stroke-width="2"/><line x1="1" y1="16" x2="5" y2="16" stroke="%232563eb" stroke-width="2"/><line x1="27" y1="16" x2="31" y2="16" stroke="%232563eb" stroke-width="2"/></svg>') 16 16, crosshair !important;
+        }
+
+        .pdf-document-area.adding-hyperlink-mode * {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="%232563eb" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="5" stroke="%232563eb" stroke-width="2"/><line x1="16" y1="27" x2="16" y2="31" stroke="%232563eb" stroke-width="2"/><line x1="1" y1="16" x2="5" y2="16" stroke="%232563eb" stroke-width="2"/><line x1="27" y1="16" x2="31" y2="16" stroke="%232563eb" stroke-width="2"/></svg>') 16 16, crosshair !important;
+        }
+
     </style>
     <script>
         // Removed zoom-based adjustments for uniform scaling across all screens
@@ -10633,7 +10615,7 @@
             togglePDFActionsDropdown();
         }
 
-        // 8. Export QR code - PROFESSIONAL VERSION
+        // 8. Export QR code
         async function exportQRCode() {
             console.log('Export QR code clicked');
 
@@ -10651,15 +10633,15 @@
             // Close actions dropdown
             togglePDFActionsDropdown();
 
-            // Generate QR code URL
+            // Generate QR code URL (you can customize this URL to your needs)
             const qrCodeURL = `${window.location.origin}/plan/${plan.id}`;
 
-            // Show the professional modal
-            openProfessionalQRCodeModal(plan, projectName, qrCodeURL);
+            // Show the QR modal
+            openQRCodeModal(plan, projectName, qrCodeURL);
         }
 
-        // Open Professional QR Code Modal
-        function openProfessionalQRCodeModal(plan, projectName, qrCodeURL) {
+        // Open QR Code Modal - FIXED VERSION
+        function openQRCodeModal(plan, projectName, qrCodeURL) {
             const modal = document.getElementById('qrCodeModal');
             const container = document.getElementById('qrCodeContainer');
 
@@ -10668,41 +10650,84 @@
                 return;
             }
 
-            // Update project and plan names
-            const qrProjectName = document.getElementById('qrProjectName');
-            const qrPlanName = document.getElementById('qrPlanName');
-
-            if (qrProjectName) qrProjectName.textContent = projectName;
-            if (qrPlanName) qrPlanName.textContent = plan.name || plan.sheetNumber || 'Document';
-
             // Clear previous QR code
-            container.innerHTML = '<div style="padding: 40px; text-align: center;"><i class="fas fa-spinner fa-spin" style="font-size: 32px; color: #667eea;"></i></div>';
+            container.innerHTML = '';
 
-            // Show modal
-            modal.classList.add('show');
+            // Create a wrapper div for all content (for downloading)
+            const downloadWrapper = document.createElement('div');
+            downloadWrapper.id = 'qrDownloadWrapper';
+            downloadWrapper.style.cssText = 'display: inline-block; background: white; padding: 24px; border-radius: 8px;';
 
-            // Generate QR code
-            setTimeout(() => {
-                try {
-                    // Clear loading spinner
-                    container.innerHTML = '';
+            // Add project info above QR code
+            const infoDiv = document.createElement('div');
+            infoDiv.style.cssText = 'text-align: center; margin-bottom: 16px;';
+            infoDiv.innerHTML = `
+                <div style="font-size: 14px; font-weight: 600; color: #6b7280; margin-bottom: 4px;">
+                    ${projectName}
+                </div>
+                <div style="font-size: 16px; font-weight: 700; color: #1f2937; margin-bottom: 8px;">
+                    ${plan.name || plan.sheetNumber || 'Document'}
+                </div>
+            `;
 
-                    // Generate QR code using QRCode.js
-                    const qrcode = new QRCode(container, {
-                        text: qrCodeURL,
-                        width: 140,
-                        height: 140,
-                        colorDark: "#1f2937",
-                        colorLight: "#ffffff",
-                        correctLevel: QRCode.CorrectLevel.H
-                    });
+            // Create QR code wrapper
+            const qrWrapper = document.createElement('div');
+            qrWrapper.id = 'qrCodeImage';
+            qrWrapper.style.cssText = 'display: inline-block; padding: 16px; background: white; margin-bottom: 12px;';
 
-                    console.log('✅ Professional QR code generated');
-                } catch (error) {
-                    console.error('Error generating QR code:', error);
-                    container.innerHTML = '<div style="padding: 40px; text-align: center; color: #dc2626;">Error generating QR code</div>';
-                }
-            }, 300);
+            // Add Fieldwire-style branding
+            const brandingDiv = document.createElement('div');
+            brandingDiv.style.cssText = 'display: flex; align-items: center; justify-content: center; gap: 8px; margin-top: 12px;';
+            brandingDiv.innerHTML = `
+                <img src="/img/img.webp" alt="Logo" style="width: 24px; height: 24px;">
+                <span style="font-size: 12px; font-weight: 600; color: #374151;">DESA Wire</span>
+            `;
+
+            // Assemble the download wrapper
+            downloadWrapper.appendChild(infoDiv);
+            downloadWrapper.appendChild(qrWrapper);
+            downloadWrapper.appendChild(brandingDiv);
+            container.appendChild(downloadWrapper);
+
+            // Generate QR code using QRCode.js
+            try {
+                // Create QR code instance
+                const qrcode = new QRCode(qrWrapper, {
+                    text: qrCodeURL,
+                    width: 256,
+                    height: 256,
+                    colorDark: "#000000",
+                    colorLight: "#ffffff",
+                    correctLevel: QRCode.CorrectLevel.H
+                });
+
+                console.log('✅ QR code generated');
+
+                // Show modal
+                modal.classList.add('show');
+
+                // CRITICAL: Wait for QR code to ACTUALLY render in DOM
+                // We need to wait for the canvas/img element to be created
+                setTimeout(() => {
+                    const qrCanvas = qrWrapper.querySelector('canvas');
+                    const qrImg = qrWrapper.querySelector('img');
+
+                    if (qrCanvas || qrImg) {
+                        console.log('✅ QR code element found:', qrCanvas ? 'canvas' : 'img');
+                        // Wait a bit more for rendering to complete
+                        setTimeout(() => {
+                            downloadQRCode();
+                        }, 500);
+                    } else {
+                        console.error('❌ QR code element not found');
+                        showNotification('Error: QR code not rendered', 'error');
+                    }
+                }, 1000); // Wait 1 second for QR code to render
+
+            } catch (error) {
+                console.error('Error generating QR code:', error);
+                showNotification('Error generating QR code', 'error');
+            }
         }
 
         // Close QR Code Modal
@@ -10713,114 +10738,95 @@
             }
         }
 
-        // Download QR Code as Image - Professional Version
+        // Download QR Code as Image - COMPLETE VERSION WITH ALL ELEMENTS
         function downloadQRCode() {
-            const qrContainer = document.getElementById('qrCodeContainer');
-            const projectName = document.getElementById('qrProjectName')?.textContent || 'Project';
-            const planName = document.getElementById('qrPlanName')?.textContent || 'Document';
-
-            if (!qrContainer) {
-                showNotification('QR code not ready', 'error');
+            const wrapper = document.getElementById('qrDownloadWrapper');
+            if (!wrapper) {
+                console.error('QR download wrapper not found');
+                showNotification('Error: QR code not ready', 'error');
                 return;
             }
 
-            const canvas = qrContainer.querySelector('canvas');
-            if (!canvas) {
-                showNotification('QR code not generated yet', 'error');
+            // Verify QR code is actually rendered
+            const qrWrapper = document.getElementById('qrCodeImage');
+            const qrCanvas = qrWrapper?.querySelector('canvas');
+            const qrImg = qrWrapper?.querySelector('img');
+
+            if (!qrCanvas && !qrImg) {
+                console.error('❌ QR code not rendered yet');
+                showNotification('QR code still loading, please try again', 'error');
                 return;
             }
+
+            console.log('✅ Starting download...');
+            console.log('QR Code element found:', qrCanvas ? 'canvas' : 'img');
 
             const planIndex = currentPlanIndex !== -1 ? currentPlanIndex : currentPDFPlan;
             const plan = plans[planIndex];
-            const fileName = `${projectName}-${plan.name || planName || 'QR'}.png`;
+            const projectName = '<%= projectName %>' || 'Project';
+            const fileName = `${projectName}-${plan.name || 'QR'}.png`;
 
-            // Convert canvas to blob and download
-            canvas.toBlob(blob => {
-                if (!blob) {
-                    showNotification('Error creating download', 'error');
-                    return;
+            // Always use html2canvas to capture the entire wrapper with all elements
+            console.log('✅ Capturing complete QR wrapper with html2canvas');
+            html2canvas(wrapper, {
+                backgroundColor: '#ffffff', // Explicitly set white background
+                scale: 4, // Higher scale for maximum clarity and quality
+                logging: false,
+                useCORS: true,
+                allowTaint: true,
+                imageTimeout: 5000,
+                windowWidth: wrapper.scrollWidth,
+                windowHeight: wrapper.scrollHeight,
+                onclone: function(clonedDoc) {
+                    // Ensure the cloned wrapper has proper styling
+                    const clonedWrapper = clonedDoc.getElementById('qrDownloadWrapper');
+                    if (clonedWrapper) {
+                        clonedWrapper.style.backgroundColor = '#ffffff';
+                        clonedWrapper.style.display = 'inline-block';
+                        clonedWrapper.style.padding = '24px';
+                        clonedWrapper.style.borderRadius = '8px';
+                    }
+
+                    // Ensure the QR canvas is visible
+                    const clonedQrWrapper = clonedDoc.getElementById('qrCodeImage');
+                    if (clonedQrWrapper) {
+                        clonedQrWrapper.style.display = 'inline-block';
+                        clonedQrWrapper.style.backgroundColor = 'transparent';
+                    }
+
+                    console.log('✅ Cloned document styled with white background');
                 }
+            }).then(canvas => {
+                console.log('✅ Canvas created:', canvas.width, 'x', canvas.height);
+                console.log('✅ Canvas resolution: ' + (canvas.width * canvas.height) + ' pixels');
 
-                const url = URL.createObjectURL(blob);
-                const link = document.createElement('a');
-                link.href = url;
-                link.download = fileName;
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-                URL.revokeObjectURL(url);
+                // Convert canvas to blob with maximum quality
+                canvas.toBlob(blob => {
+                    if (!blob) {
+                        console.error('Failed to create blob');
+                        showNotification('Error downloading QR code', 'error');
+                        return;
+                    }
 
-                showNotification('QR code downloaded successfully!', 'success');
-            }, 'image/png', 1.0);
-        }
+                    console.log('✅ Blob created, size:', (blob.size / 1024).toFixed(2) + ' KB');
 
-        // Print QR Code
-        function printQRCode() {
-            const qrContainer = document.getElementById('qrCodeContainer');
-            const projectName = document.getElementById('qrProjectName')?.textContent || 'Project';
-            const planName = document.getElementById('qrPlanName')?.textContent || 'Document';
+                    // Create download link
+                    const url = URL.createObjectURL(blob);
+                    const link = document.createElement('a');
+                    link.href = url;
+                    link.download = fileName;
+                    document.body.appendChild(link);
+                    link.click();
+                    document.body.removeChild(link);
+                    URL.revokeObjectURL(url);
 
-            if (!qrContainer) {
-                showNotification('QR code not ready', 'error');
-                return;
-            }
-
-            const canvas = qrContainer.querySelector('canvas');
-            if (!canvas) {
-                showNotification('QR code not generated yet', 'error');
-                return;
-            }
-
-            // Create print window
-            const printWindow = window.open('', '', 'width=600,height=800');
-            printWindow.document.write(`
-                <html>
-                <head>
-                    <title>Print QR Code - ${planName}</title>
-                    <style>
-                        body {
-                            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-                            display: flex;
-                            flex-direction: column;
-                            align-items: center;
-                            padding: 40px;
-                            margin: 0;
-                        }
-                        h1 { font-size: 24px; margin-bottom: 8px; }
-                        h2 { font-size: 18px; color: #6b7280; margin-bottom: 32px; font-weight: 400; }
-                        img { border: 2px solid #e5e7eb; padding: 20px; border-radius: 12px; }
-                        .branding {
-                            display: flex;
-                            align-items: center;
-                            gap: 12px;
-                            margin-top: 32px;
-                        }
-                        .branding img { border: none; padding: 0; width: 32px; height: 32px; }
-                        @media print {
-                            body { padding: 20px; }
-                        }
-                    </style>
-                </head>
-                <body>
-                    <h1>${projectName}</h1>
-                    <h2>${planName}</h2>
-                    <img src="${canvas.toDataURL()}" alt="QR Code">
-                    <div class="branding">
-                        <img src="/img/img.webp" alt="DESA Logo">
-                        <span style="font-weight: 700; font-size: 16px;">DESA Wire</span>
-                    </div>
-                </body>
-                </html>
-            `);
-
-            printWindow.document.close();
-            printWindow.focus();
-
-            setTimeout(() => {
-                printWindow.print();
-            }, 500);
-
-            showNotification('Opening print dialog...', 'success');
+                    console.log('✅ Download triggered - File: ' + fileName);
+                    showNotification('✅ QR code downloaded successfully!\n\nFile: ' + fileName, 'success');
+                }, 'image/png', 1.0); // Maximum quality
+            }).catch(error => {
+                console.error('❌ Error downloading QR code:', error);
+                showNotification('Error downloading QR code: ' + error.message, 'error');
+            });
         }
 
         // Close QR modal when clicking outside (on overlay)
@@ -11611,6 +11617,60 @@
 
     <!-- PDF VIEWER MODAL -->
     <div class="pdf-viewer-modal" id="pdfViewerModal">
+        <!-- Hyperlink Toolbar - Appears when Link tool is clicked -->
+        <div class="hyperlink-toolbar" id="hyperlinkToolbar">
+            <!-- Add Plan hyperlink -->
+            <button class="hyperlink-tool-btn" onclick="initAddPlanHyperlinkMode()" title="Add Plan hyperlink">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M3 9h18M9 21V9"/>
+                    <path d="M7 5h3M14 5h3"/>
+                </svg>
+                <span class="tooltip">Add Plan hyperlink</span>
+            </button>
+
+            <!-- Add Specification hyperlink -->
+            <button class="hyperlink-tool-btn" title="Add Specification hyperlink">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    <path d="M9 10h6M9 14h6M9 18h4"/>
+                </svg>
+                <span class="tooltip">Add Specification hyperlink</span>
+            </button>
+
+            <!-- Add Photo hyperlink -->
+            <button class="hyperlink-tool-btn" title="Add Photo hyperlink">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/>
+                    <circle cx="12" cy="13" r="4"/>
+                </svg>
+                <span class="tooltip">Add Photo hyperlink</span>
+            </button>
+
+            <!-- Add File hyperlink -->
+            <button class="hyperlink-tool-btn" title="Add File hyperlink">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M13 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V9z"/>
+                    <polyline points="13 2 13 9 20 9"/>
+                </svg>
+                <span class="tooltip">Add File hyperlink</span>
+            </button>
+
+            <!-- Add Form hyperlink -->
+            <button class="hyperlink-tool-btn" title="Add Form hyperlink">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 4h2a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2h2"/>
+                    <rect x="8" y="2" width="8" height="4" rx="1" ry="1"/>
+                    <line x1="9" y1="12" x2="9.01" y2="12"/>
+                    <line x1="13" y1="12" x2="15" y2="12"/>
+                    <line x1="9" y1="16" x2="9.01" y2="16"/>
+                    <line x1="13" y1="16" x2="15" y2="16"/>
+                </svg>
+                <span class="tooltip">Add Form hyperlink</span>
+            </button>
+        </div>
+
         <!-- Secondary Header Bar (Inside Modal) -->
         <div class="pdf-viewer-secondary-header">
             <div class="pdf-secondary-left">
@@ -11952,69 +12012,38 @@
             </div>
         </div>
 
-        <!-- Professional QR Code Export Modal -->
+        <!-- QR Code Export Modal - Inside PDF Viewer -->
         <div id="qrCodeModal" class="pdf-qr-code-modal">
             <div class="pdf-qr-code-overlay"></div>
-            <div class="pdf-qr-code-content professional-qr-modal">
-                <!-- Modern Professional Header -->
-                <div class="qr-modal-header">
-                    <div class="qr-header-icon">
-                        <i class="fas fa-qrcode"></i>
-                    </div>
-                    <div class="qr-header-text">
-                        <h2 class="qr-modal-title">Plan QR Code</h2>
-                        <p class="qr-modal-subtitle">Scan to access this plan instantly</p>
-                    </div>
-                    <button class="qr-modal-close-btn" onclick="closeQRCodeModal()">
-                        <i class="fas fa-times"></i>
-                    </button>
+            <div class="pdf-qr-code-content">
+                <div class="pdf-qr-code-header">
+                    <h2 class="pdf-qr-code-title">Plan QR Code</h2>
+                    <button class="pdf-qr-code-close" onclick="closeQRCodeModal()">×</button>
                 </div>
-
-                <!-- QR Code Display Area -->
-                <div class="qr-modal-body">
-                    <!-- Project & Plan Info Card -->
-                    <div class="qr-info-card">
-                        <div class="qr-info-row">
-                            <span class="qr-info-label">Project:</span>
-                            <span class="qr-info-value" id="qrProjectName"><%= projectName %></span>
-                        </div>
-                        <div class="qr-info-row">
-                            <span class="qr-info-label">Plan:</span>
-                            <span class="qr-info-value" id="qrPlanName">Document</span>
-                        </div>
+                <div class="pdf-qr-code-body">
+                    <!-- Success Icon -->
+                    <div style="width: 80px; height: 80px; margin: 0 auto 24px; background: #e0f2fe; border-radius: 50%; display: flex; align-items: center; justify-content: center;">
+                        <i class="fas fa-check" style="font-size: 40px; color: #0284c7;"></i>
                     </div>
 
-                    <!-- QR Code Container with Professional Styling -->
-                    <div class="qr-code-display-area">
-                        <div class="qr-code-frame">
-                            <div id="qrCodeContainer" class="qr-code-inner">
-                                <!-- QR code will be generated here -->
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Company Branding -->
-                    <div class="qr-branding">
-                        <img src="/img/img.webp" alt="DESA Logo" class="qr-brand-logo">
-                        <span class="qr-brand-name">DESA Wire</span>
-                    </div>
-
-                    <!-- Instructions Text -->
-                    <p class="qr-instructions">
-                        Scan this QR code with your mobile device to quickly access this plan anywhere
+                    <!-- Success Message -->
+                    <h3 style="font-size: 18px; font-weight: 600; color: #1f2937; margin-bottom: 8px;">
+                        Your QR code has been generated!
+                    </h3>
+                    <p style="font-size: 14px; color: #6b7280; margin-bottom: 32px;">
+                        Click below if it hasn't started downloading yet.
                     </p>
 
-                    <!-- Action Buttons -->
-                    <div class="qr-actions">
-                        <button class="qr-download-btn" onclick="downloadQRCode()">
-                            <i class="fas fa-download"></i>
-                            <span>Download QR Code</span>
-                        </button>
-                        <button class="qr-print-btn" onclick="printQRCode()">
-                            <i class="fas fa-print"></i>
-                            <span>Print</span>
-                        </button>
+                    <!-- QR Code Container -->
+                    <div id="qrCodeContainer" style="display: inline-block; padding: 24px; background: white; border: 1px solid #e5e7eb; border-radius: 8px; margin-bottom: 24px;">
+                        <!-- QR code will be generated here -->
                     </div>
+
+                    <!-- Download Button -->
+                    <button class="btn-primary" onclick="downloadQRCode()" style="width: 100%; max-width: 300px; margin: 0 auto; justify-content: center;">
+                        <i class="fas fa-download"></i>
+                        <span>Download</span>
+                    </button>
                 </div>
             </div>
         </div>
@@ -13088,6 +13117,388 @@
             }
         });
     });
+    </script>
+
+    <!-- Link to Plan Modal -->
+    <div id="linkToPlanModal" class="link-to-plan-modal">
+        <div class="link-to-plan-content">
+            <div class="link-to-plan-header">
+                <h3 class="link-to-plan-title">Link to Plan</h3>
+                <button class="link-to-plan-close" onclick="closeLinkToPlanModal()">×</button>
+            </div>
+            <div class="link-to-plan-body">
+                <div class="link-to-plan-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="linkToPlanSearch" placeholder="Search" autocomplete="off" oninput="searchPlansForLink(this.value)">
+                </div>
+                <div class="link-to-plan-results" id="linkToPlanResults">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ===== PLAN HYPERLINK SYSTEM - COMPLETE IMPLEMENTATION =====
+
+    // Global state
+    let addPlanHyperlinkMode = false;
+    let hyperlinkClickLocation = null;
+    if (!window.planHyperlinks) window.planHyperlinks = {};
+
+    // Toggle hyperlink toolbar when Link tool is clicked
+    function toggleHyperlinkToolbar() {
+        const toolbar = document.getElementById('hyperlinkToolbar');
+        const linkBtn = document.querySelector('.pdf-tool-btn[data-tool="link"]');
+
+        if (!toolbar) return;
+
+        const isVisible = toolbar.classList.contains('show');
+
+        if (isVisible) {
+            // Hide toolbar
+            toolbar.classList.remove('show');
+            if (linkBtn) linkBtn.classList.remove('active');
+
+            // Disable any active hyperlink mode
+            if (addPlanHyperlinkMode) {
+                disableAddPlanHyperlinkMode();
+            }
+        } else {
+            // Position toolbar next to Link button
+            if (linkBtn) {
+                const rect = linkBtn.getBoundingClientRect();
+                toolbar.style.position = 'fixed';
+                toolbar.style.left = (rect.right + 8) + 'px'; // 8px gap from Link button
+                toolbar.style.top = rect.top + 'px'; // Align with button top
+            }
+
+            // Show toolbar
+            toolbar.classList.add('show');
+            if (linkBtn) linkBtn.classList.add('active');
+        }
+
+        console.log('🔗 Hyperlink toolbar toggled:', !isVisible);
+    }
+
+    // Initialize Add Plan Hyperlink Mode
+    function initAddPlanHyperlinkMode() {
+        addPlanHyperlinkMode = true;
+        hyperlinkClickLocation = null;
+
+        // Change cursor
+        const documentArea = document.querySelector('.pdf-document-area');
+        if (documentArea) {
+            documentArea.classList.add('adding-hyperlink-mode');
+        }
+
+        // Highlight the button
+        const planHyperlinkBtn = document.querySelector('.hyperlink-toolbar .hyperlink-tool-btn:first-child');
+        if (planHyperlinkBtn) {
+            planHyperlinkBtn.classList.add('active');
+        }
+
+        console.log('✅ Add Plan Hyperlink mode activated');
+    }
+
+    // Disable Add Plan Hyperlink Mode
+    function disableAddPlanHyperlinkMode() {
+        addPlanHyperlinkMode = false;
+        hyperlinkClickLocation = null;
+
+        const documentArea = document.querySelector('.pdf-document-area');
+        if (documentArea) {
+            documentArea.classList.remove('adding-hyperlink-mode');
+        }
+
+        const planHyperlinkBtn = document.querySelector('.hyperlink-toolbar .hyperlink-tool-btn:first-child');
+        if (planHyperlinkBtn) {
+            planHyperlinkBtn.classList.remove('active');
+        }
+
+        console.log('❌ Add Plan Hyperlink mode deactivated');
+    }
+
+    // Handle click on PDF to place hyperlink
+    function handleAddPlanHyperlinkClick(e) {
+        if (!addPlanHyperlinkMode) return;
+
+        const pdfContent = document.getElementById('pdfDocumentContent');
+        if (!pdfContent) return;
+
+        // Get click coordinates relative to PDF content
+        const rect = pdfContent.getBoundingClientRect();
+        const x = e.clientX - rect.left + pdfContent.scrollLeft;
+        const y = e.clientY - rect.top + pdfContent.scrollTop;
+
+        // Store location
+        hyperlinkClickLocation = { x, y };
+
+        // Reset cursor
+        const documentArea = document.querySelector('.pdf-document-area');
+        if (documentArea) {
+            documentArea.classList.remove('adding-hyperlink-mode');
+        }
+
+        // Open Link to Plan modal
+        openLinkToPlanModal();
+
+        console.log('📍 Hyperlink location set:', x, y);
+    }
+
+    // Open Link to Plan Modal
+    function openLinkToPlanModal() {
+        const modal = document.getElementById('linkToPlanModal');
+        if (!modal) return;
+
+        modal.classList.add('show');
+
+        // Load all available plans
+        loadPlansForLinking();
+
+        // Focus search input
+        setTimeout(() => {
+            const searchInput = document.getElementById('linkToPlanSearch');
+            if (searchInput) searchInput.focus();
+        }, 100);
+    }
+
+    // Close Link to Plan Modal
+    function closeLinkToPlanModal() {
+        const modal = document.getElementById('linkToPlanModal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+
+        // Clear search
+        const searchInput = document.getElementById('linkToPlanSearch');
+        if (searchInput) searchInput.value = '';
+
+        // Reset state
+        disableAddPlanHyperlinkMode();
+    }
+
+    // Load plans for linking
+    function loadPlansForLinking() {
+        const resultsContainer = document.getElementById('linkToPlanResults');
+        if (!resultsContainer) return;
+
+        if (!plans || plans.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="link-to-plan-empty">
+                    <i class="fas fa-file-pdf" style="font-size: 48px; margin-bottom: 12px; display: block;"></i>
+                    <p>No plans available</p>
+                </div>
+            `;
+            return;
+        }
+
+        renderPlanLinkResults(plans);
+    }
+
+    // Search plans for linking
+    function searchPlansForLink(query) {
+        if (!query || query.trim() === '') {
+            loadPlansForLinking();
+            return;
+        }
+
+        const searchTerm = query.toLowerCase();
+        const filteredPlans = plans.filter(plan => {
+            const planName = (plan.name || plan.sheetNumber || '').toLowerCase();
+            return planName.includes(searchTerm);
+        });
+
+        renderPlanLinkResults(filteredPlans);
+    }
+
+    // Render plan link results
+    function renderPlanLinkResults(planList) {
+        const resultsContainer = document.getElementById('linkToPlanResults');
+        if (!resultsContainer) return;
+
+        if (planList.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="link-to-plan-empty">
+                    <i class="fas fa-search" style="font-size: 48px; margin-bottom: 12px; display: block;"></i>
+                    <p>No plans found</p>
+                </div>
+            `;
+            return;
+        }
+
+        resultsContainer.innerHTML = planList.map((plan, index) => `
+            <div class="link-to-plan-item" onclick="selectPlanForLink(${plans.indexOf(plan)})">
+                <i class="fas fa-file-pdf"></i>
+                <div class="link-to-plan-item-name">${plan.name || plan.sheetNumber || 'Untitled'}</div>
+            </div>
+        `).join('');
+    }
+
+    // Select plan for linking
+    function selectPlanForLink(planIndex) {
+        const linkedPlan = plans[planIndex];
+        if (!linkedPlan) return;
+
+        if (!hyperlinkClickLocation) {
+            showNotification('Error: No hyperlink location set', 'error');
+            return;
+        }
+
+        // Generate unique hyperlink ID
+        const hyperlinkId = 'hyperlink-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+
+        // Create hyperlink marker on PDF
+        addPlanHyperlinkMarker(
+            hyperlinkClickLocation.x,
+            hyperlinkClickLocation.y,
+            hyperlinkId,
+            linkedPlan
+        );
+
+        // Store hyperlink data
+        planHyperlinks[hyperlinkId] = {
+            id: hyperlinkId,
+            x: hyperlinkClickLocation.x,
+            y: hyperlinkClickLocation.y,
+            linkedPlanId: linkedPlan.id,
+            linkedPlanIndex: planIndex,
+            linkedPlanName: linkedPlan.name || linkedPlan.sheetNumber || 'Untitled',
+            createdAt: new Date()
+        };
+
+        // Close modal
+        closeLinkToPlanModal();
+
+        // Hide hyperlink toolbar
+        const toolbar = document.getElementById('hyperlinkToolbar');
+        if (toolbar) toolbar.classList.remove('show');
+
+        showNotification(`✅ Hyperlink created to "${linkedPlan.name || 'Untitled'}"`, 'success');
+
+        console.log('🔗 Hyperlink created:', planHyperlinks[hyperlinkId]);
+    }
+
+    // Add plan hyperlink marker to PDF
+    function addPlanHyperlinkMarker(x, y, hyperlinkId, linkedPlan) {
+        const pdfContent = document.getElementById('pdfDocumentContent');
+        if (!pdfContent) return;
+
+        const marker = document.createElement('div');
+        marker.className = 'plan-hyperlink-marker';
+        marker.dataset.hyperlinkId = hyperlinkId;
+        marker.style.left = x + 'px';
+        marker.style.top = y + 'px';
+
+        // Professional hyperlink icon
+        marker.innerHTML = `
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="linkGradient-${hyperlinkId}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Background circle -->
+                <circle cx="16" cy="16" r="14" fill="url(#linkGradient-${hyperlinkId})" stroke="white" stroke-width="2"/>
+
+                <!-- Link icon -->
+                <path d="M13 19a3 3 0 0 0 4.24.24l2-2a3 3 0 0 0-4.24-4.24l-1 1"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+                <path d="M19 13a3 3 0 0 0-4.24-.24l-2 2a3 3 0 0 0 4.24 4.24l1-1"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+        `;
+
+        // Click to navigate to linked plan
+        marker.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            const hyperlinkData = planHyperlinks[hyperlinkId];
+            if (hyperlinkData) {
+                // Animate marker
+                marker.style.animation = 'none';
+                setTimeout(() => {
+                    marker.style.animation = 'linkDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                }, 10);
+
+                // Navigate to linked plan
+                viewPlan(hyperlinkData.linkedPlanIndex);
+                showNotification(`🔗 Opening "${hyperlinkData.linkedPlanName}"`, 'success');
+            }
+        });
+
+        // Right-click to delete hyperlink
+        marker.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            if (confirm(`Delete hyperlink to "${linkedPlan.name || 'Untitled'}"?`)) {
+                marker.remove();
+                delete planHyperlinks[hyperlinkId];
+                showNotification('Hyperlink deleted', 'success');
+            }
+        });
+
+        pdfContent.appendChild(marker);
+
+        console.log('✅ Hyperlink marker added to PDF');
+    }
+
+    // Update Link tool button to toggle hyperlink toolbar
+    document.addEventListener('DOMContentLoaded', function() {
+        // Find Link tool button and add click handler
+        const linkToolBtn = document.querySelector('.pdf-tool-btn[data-tool="link"]');
+        if (linkToolBtn) {
+            // Remove existing onclick
+            linkToolBtn.onclick = null;
+
+            // Add new click handler
+            linkToolBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleHyperlinkToolbar();
+            });
+        }
+
+        // Add click listener to PDF area for hyperlink placement
+        const documentArea = document.querySelector('.pdf-document-area');
+        if (documentArea) {
+            documentArea.addEventListener('click', function(e) {
+                // Only handle if in add plan hyperlink mode
+                if (addPlanHyperlinkMode) {
+                    handleAddPlanHyperlinkClick(e);
+                }
+            });
+        }
+    });
+
+    // Close Link to Plan modal when clicking outside
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('linkToPlanModal');
+        const modalContent = document.querySelector('.link-to-plan-content');
+
+        if (modal && modalContent && e.target === modal && !modalContent.contains(e.target)) {
+            closeLinkToPlanModal();
+        }
+    });
+
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('linkToPlanModal');
+            if (modal && modal.classList.contains('show')) {
+                closeLinkToPlanModal();
+            }
+        }
+    });
+
+    console.log('✅ Plan Hyperlink System Loaded');
     </script>
 
 </body>

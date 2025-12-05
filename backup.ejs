@@ -6170,6 +6170,272 @@
             font-size: clamp(0.75rem, 1.5vw, 0.875rem);
         }
 
+        /* ===== HYPERLINK TOOLBAR STYLES ===== */
+        .hyperlink-toolbar {
+            position: fixed;
+            /* Position will be set dynamically next to Link button */
+            background: #1f2937;
+            border-radius: 0.5rem;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            padding: 0.5rem;
+            display: none;
+            flex-direction: row;
+            gap: 0.25rem;
+            z-index: 10003;
+            animation: slideInLeft 0.3s ease-out;
+        }
+
+        .hyperlink-toolbar.show {
+            display: flex;
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .hyperlink-tool-btn {
+            width: 3rem;
+            height: 3rem;
+            border: none;
+            border-radius: 0.375rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+            background-color: #374151;
+            color: #d1d5db;
+            font-size: 1.25rem;
+            padding: 0;
+            margin: 0;
+            flex-shrink: 0;
+            position: relative;
+        }
+
+        .hyperlink-tool-btn:hover {
+            background-color: #4b5563;
+            color: #ffffff;
+        }
+
+        .hyperlink-tool-btn.active {
+            background-color: #2563eb;
+            color: #ffffff;
+        }
+
+        .hyperlink-tool-btn .tooltip {
+            position: absolute;
+            bottom: -35px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: #1f2937;
+            color: white;
+            padding: 6px 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.2s;
+            z-index: 10004;
+        }
+
+        .hyperlink-tool-btn:hover .tooltip {
+            opacity: 1;
+        }
+
+        /* ===== LINK TO PLAN MODAL STYLES ===== */
+        .link-to-plan-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 10005;
+        }
+
+        .link-to-plan-modal.show {
+            display: flex;
+        }
+
+        .link-to-plan-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 400px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+            animation: modalSlideIn 0.3s ease;
+        }
+
+        .link-to-plan-header {
+            padding: 16px 20px;
+            border-bottom: 1px solid #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .link-to-plan-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #1f2937;
+            margin: 0;
+        }
+
+        .link-to-plan-close {
+            background: none;
+            border: none;
+            font-size: 24px;
+            color: #9ca3af;
+            cursor: pointer;
+            padding: 0;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 4px;
+            transition: all 0.2s;
+        }
+
+        .link-to-plan-close:hover {
+            background-color: #f3f4f6;
+            color: #6b7280;
+        }
+
+        .link-to-plan-body {
+            padding: 20px;
+        }
+
+        .link-to-plan-search {
+            position: relative;
+            margin-bottom: 16px;
+        }
+
+        .link-to-plan-search i {
+            position: absolute;
+            left: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #9ca3af;
+            font-size: 14px;
+        }
+
+        .link-to-plan-search input {
+            width: 100%;
+            padding: 10px 12px 10px 40px;
+            border: 1px solid #d1d5db;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: all 0.2s;
+        }
+
+        .link-to-plan-search input:focus {
+            outline: none;
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .link-to-plan-results {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .link-to-plan-item {
+            padding: 12px;
+            border: 1px solid #e5e7eb;
+            border-radius: 6px;
+            margin-bottom: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .link-to-plan-item:hover {
+            background: #f3f4f6;
+            border-color: #3b82f6;
+        }
+
+        .link-to-plan-item i {
+            font-size: 18px;
+            color: #3b82f6;
+        }
+
+        .link-to-plan-item-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #1f2937;
+        }
+
+        .link-to-plan-empty {
+            text-align: center;
+            padding: 40px 20px;
+            color: #9ca3af;
+        }
+
+        /* ===== PLAN HYPERLINK MARKER STYLES ===== */
+        .plan-hyperlink-marker {
+            position: absolute;
+            width: 32px;
+            height: 32px;
+            transform: translate(-50%, -50%);
+            z-index: 10000;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            animation: linkDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .plan-hyperlink-marker:hover {
+            transform: translate(-50%, -50%) scale(1.15);
+        }
+
+        .plan-hyperlink-marker svg {
+            width: 100%;
+            height: 100%;
+            filter: drop-shadow(0 2px 4px rgba(37, 99, 235, 0.4));
+        }
+
+        @keyframes linkDrop {
+            0% {
+                transform: translate(-50%, -150%) scale(0.3);
+                opacity: 0;
+            }
+            50% {
+                transform: translate(-50%, -45%) scale(1.1);
+            }
+            65% {
+                transform: translate(-50%, -52%) scale(0.95);
+            }
+            80% {
+                transform: translate(-50%, -48%) scale(1.05);
+            }
+            100% {
+                transform: translate(-50%, -50%) scale(1);
+                opacity: 1;
+            }
+        }
+
+        /* Cursor when in add hyperlink mode */
+        .pdf-document-area.adding-hyperlink-mode {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="%232563eb" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="5" stroke="%232563eb" stroke-width="2"/><line x1="16" y1="27" x2="16" y2="31" stroke="%232563eb" stroke-width="2"/><line x1="1" y1="16" x2="5" y2="16" stroke="%232563eb" stroke-width="2"/><line x1="27" y1="16" x2="31" y2="16" stroke="%232563eb" stroke-width="2"/></svg>') 16 16, crosshair !important;
+        }
+
+        .pdf-document-area.adding-hyperlink-mode * {
+            cursor: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="32" height="32" viewBox="0 0 32 32"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71" stroke="%232563eb" stroke-width="2" fill="none" stroke-linecap="round"/><line x1="16" y1="1" x2="16" y2="5" stroke="%232563eb" stroke-width="2"/><line x1="16" y1="27" x2="16" y2="31" stroke="%232563eb" stroke-width="2"/><line x1="1" y1="16" x2="5" y2="16" stroke="%232563eb" stroke-width="2"/><line x1="27" y1="16" x2="31" y2="16" stroke="%232563eb" stroke-width="2"/></svg>') 16 16, crosshair !important;
+        }
+
     </style>
     <script>
         // Removed zoom-based adjustments for uniform scaling across all screens
@@ -11351,6 +11617,48 @@
 
     <!-- PDF VIEWER MODAL -->
     <div class="pdf-viewer-modal" id="pdfViewerModal">
+        <!-- Hyperlink Toolbar - Appears when Link tool is clicked -->
+        <div class="hyperlink-toolbar" id="hyperlinkToolbar">
+            <!-- Add Plan hyperlink -->
+            <button class="hyperlink-tool-btn" onclick="initAddPlanHyperlinkMode()" title="Add Plan hyperlink">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2"/>
+                    <path d="M7 7h10M7 12h10M7 17h10"/>
+                </svg>
+                <span class="tooltip">Add Plan hyperlink</span>
+            </button>
+
+            <!-- Add Form link -->
+            <button class="hyperlink-tool-btn" title="Add Form link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/>
+                    <polyline points="14 2 14 8 20 8"/>
+                    <line x1="9" y1="15" x2="15" y2="15"/>
+                </svg>
+                <span class="tooltip">Add Form link</span>
+            </button>
+
+            <!-- Add Photo link -->
+            <button class="hyperlink-tool-btn" title="Add Photo link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="18" height="18" rx="2" ry="2"/>
+                    <circle cx="8.5" cy="8.5" r="1.5"/>
+                    <polyline points="21 15 16 10 5 21"/>
+                </svg>
+                <span class="tooltip">Add Photo link</span>
+            </button>
+
+            <!-- Add Web link -->
+            <button class="hyperlink-tool-btn" title="Add Web link">
+                <svg xmlns="http://www.w3.org/2000/svg" width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"/>
+                    <line x1="2" y1="12" x2="22" y2="12"/>
+                    <path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/>
+                </svg>
+                <span class="tooltip">Add Web link</span>
+            </button>
+        </div>
+
         <!-- Secondary Header Bar (Inside Modal) -->
         <div class="pdf-viewer-secondary-header">
             <div class="pdf-secondary-left">
@@ -12488,6 +12796,7 @@
                         pin.element.style.animation = 'pinPulse 1s ease-out';
                     }, 10);
                 }
+            
             });
 
             // Insert after "New task" button
@@ -12797,6 +13106,388 @@
             }
         });
     });
+    </script>
+
+    <!-- Link to Plan Modal -->
+    <div id="linkToPlanModal" class="link-to-plan-modal">
+        <div class="link-to-plan-content">
+            <div class="link-to-plan-header">
+                <h3 class="link-to-plan-title">Link to Plan</h3>
+                <button class="link-to-plan-close" onclick="closeLinkToPlanModal()">×</button>
+            </div>
+            <div class="link-to-plan-body">
+                <div class="link-to-plan-search">
+                    <i class="fas fa-search"></i>
+                    <input type="text" id="linkToPlanSearch" placeholder="Search" autocomplete="off" oninput="searchPlansForLink(this.value)">
+                </div>
+                <div class="link-to-plan-results" id="linkToPlanResults">
+                    <!-- Results will be loaded here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+    // ===== PLAN HYPERLINK SYSTEM - COMPLETE IMPLEMENTATION =====
+
+    // Global state
+    let addPlanHyperlinkMode = false;
+    let hyperlinkClickLocation = null;
+    if (!window.planHyperlinks) window.planHyperlinks = {};
+
+    // Toggle hyperlink toolbar when Link tool is clicked
+    function toggleHyperlinkToolbar() {
+        const toolbar = document.getElementById('hyperlinkToolbar');
+        const linkBtn = document.querySelector('.pdf-tool-btn[data-tool="link"]');
+
+        if (!toolbar) return;
+
+        const isVisible = toolbar.classList.contains('show');
+
+        if (isVisible) {
+            // Hide toolbar
+            toolbar.classList.remove('show');
+            if (linkBtn) linkBtn.classList.remove('active');
+
+            // Disable any active hyperlink mode
+            if (addPlanHyperlinkMode) {
+                disableAddPlanHyperlinkMode();
+            }
+        } else {
+            // Position toolbar next to Link button
+            if (linkBtn) {
+                const rect = linkBtn.getBoundingClientRect();
+                toolbar.style.position = 'fixed';
+                toolbar.style.left = (rect.right + 8) + 'px'; // 8px gap from Link button
+                toolbar.style.top = rect.top + 'px'; // Align with button top
+            }
+
+            // Show toolbar
+            toolbar.classList.add('show');
+            if (linkBtn) linkBtn.classList.add('active');
+        }
+
+        console.log('🔗 Hyperlink toolbar toggled:', !isVisible);
+    }
+
+    // Initialize Add Plan Hyperlink Mode
+    function initAddPlanHyperlinkMode() {
+        addPlanHyperlinkMode = true;
+        hyperlinkClickLocation = null;
+
+        // Change cursor
+        const documentArea = document.querySelector('.pdf-document-area');
+        if (documentArea) {
+            documentArea.classList.add('adding-hyperlink-mode');
+        }
+
+        // Highlight the button
+        const planHyperlinkBtn = document.querySelector('.hyperlink-toolbar .hyperlink-tool-btn:first-child');
+        if (planHyperlinkBtn) {
+            planHyperlinkBtn.classList.add('active');
+        }
+
+        console.log('✅ Add Plan Hyperlink mode activated');
+    }
+
+    // Disable Add Plan Hyperlink Mode
+    function disableAddPlanHyperlinkMode() {
+        addPlanHyperlinkMode = false;
+        hyperlinkClickLocation = null;
+
+        const documentArea = document.querySelector('.pdf-document-area');
+        if (documentArea) {
+            documentArea.classList.remove('adding-hyperlink-mode');
+        }
+
+        const planHyperlinkBtn = document.querySelector('.hyperlink-toolbar .hyperlink-tool-btn:first-child');
+        if (planHyperlinkBtn) {
+            planHyperlinkBtn.classList.remove('active');
+        }
+
+        console.log('❌ Add Plan Hyperlink mode deactivated');
+    }
+
+    // Handle click on PDF to place hyperlink
+    function handleAddPlanHyperlinkClick(e) {
+        if (!addPlanHyperlinkMode) return;
+
+        const pdfContent = document.getElementById('pdfDocumentContent');
+        if (!pdfContent) return;
+
+        // Get click coordinates relative to PDF content
+        const rect = pdfContent.getBoundingClientRect();
+        const x = e.clientX - rect.left + pdfContent.scrollLeft;
+        const y = e.clientY - rect.top + pdfContent.scrollTop;
+
+        // Store location
+        hyperlinkClickLocation = { x, y };
+
+        // Reset cursor
+        const documentArea = document.querySelector('.pdf-document-area');
+        if (documentArea) {
+            documentArea.classList.remove('adding-hyperlink-mode');
+        }
+
+        // Open Link to Plan modal
+        openLinkToPlanModal();
+
+        console.log('📍 Hyperlink location set:', x, y);
+    }
+
+    // Open Link to Plan Modal
+    function openLinkToPlanModal() {
+        const modal = document.getElementById('linkToPlanModal');
+        if (!modal) return;
+
+        modal.classList.add('show');
+
+        // Load all available plans
+        loadPlansForLinking();
+
+        // Focus search input
+        setTimeout(() => {
+            const searchInput = document.getElementById('linkToPlanSearch');
+            if (searchInput) searchInput.focus();
+        }, 100);
+    }
+
+    // Close Link to Plan Modal
+    function closeLinkToPlanModal() {
+        const modal = document.getElementById('linkToPlanModal');
+        if (modal) {
+            modal.classList.remove('show');
+        }
+
+        // Clear search
+        const searchInput = document.getElementById('linkToPlanSearch');
+        if (searchInput) searchInput.value = '';
+
+        // Reset state
+        disableAddPlanHyperlinkMode();
+    }
+
+    // Load plans for linking
+    function loadPlansForLinking() {
+        const resultsContainer = document.getElementById('linkToPlanResults');
+        if (!resultsContainer) return;
+
+        if (!plans || plans.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="link-to-plan-empty">
+                    <i class="fas fa-file-pdf" style="font-size: 48px; margin-bottom: 12px; display: block;"></i>
+                    <p>No plans available</p>
+                </div>
+            `;
+            return;
+        }
+
+        renderPlanLinkResults(plans);
+    }
+
+    // Search plans for linking
+    function searchPlansForLink(query) {
+        if (!query || query.trim() === '') {
+            loadPlansForLinking();
+            return;
+        }
+
+        const searchTerm = query.toLowerCase();
+        const filteredPlans = plans.filter(plan => {
+            const planName = (plan.name || plan.sheetNumber || '').toLowerCase();
+            return planName.includes(searchTerm);
+        });
+
+        renderPlanLinkResults(filteredPlans);
+    }
+
+    // Render plan link results
+    function renderPlanLinkResults(planList) {
+        const resultsContainer = document.getElementById('linkToPlanResults');
+        if (!resultsContainer) return;
+
+        if (planList.length === 0) {
+            resultsContainer.innerHTML = `
+                <div class="link-to-plan-empty">
+                    <i class="fas fa-search" style="font-size: 48px; margin-bottom: 12px; display: block;"></i>
+                    <p>No plans found</p>
+                </div>
+            `;
+            return;
+        }
+
+        resultsContainer.innerHTML = planList.map((plan, index) => `
+            <div class="link-to-plan-item" onclick="selectPlanForLink(${plans.indexOf(plan)})">
+                <i class="fas fa-file-pdf"></i>
+                <div class="link-to-plan-item-name">${plan.name || plan.sheetNumber || 'Untitled'}</div>
+            </div>
+        `).join('');
+    }
+
+    // Select plan for linking
+    function selectPlanForLink(planIndex) {
+        const linkedPlan = plans[planIndex];
+        if (!linkedPlan) return;
+
+        if (!hyperlinkClickLocation) {
+            showNotification('Error: No hyperlink location set', 'error');
+            return;
+        }
+
+        // Generate unique hyperlink ID
+        const hyperlinkId = 'hyperlink-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+
+        // Create hyperlink marker on PDF
+        addPlanHyperlinkMarker(
+            hyperlinkClickLocation.x,
+            hyperlinkClickLocation.y,
+            hyperlinkId,
+            linkedPlan
+        );
+
+        // Store hyperlink data
+        planHyperlinks[hyperlinkId] = {
+            id: hyperlinkId,
+            x: hyperlinkClickLocation.x,
+            y: hyperlinkClickLocation.y,
+            linkedPlanId: linkedPlan.id,
+            linkedPlanIndex: planIndex,
+            linkedPlanName: linkedPlan.name || linkedPlan.sheetNumber || 'Untitled',
+            createdAt: new Date()
+        };
+
+        // Close modal
+        closeLinkToPlanModal();
+
+        // Hide hyperlink toolbar
+        const toolbar = document.getElementById('hyperlinkToolbar');
+        if (toolbar) toolbar.classList.remove('show');
+
+        showNotification(`✅ Hyperlink created to "${linkedPlan.name || 'Untitled'}"`, 'success');
+
+        console.log('🔗 Hyperlink created:', planHyperlinks[hyperlinkId]);
+    }
+
+    // Add plan hyperlink marker to PDF
+    function addPlanHyperlinkMarker(x, y, hyperlinkId, linkedPlan) {
+        const pdfContent = document.getElementById('pdfDocumentContent');
+        if (!pdfContent) return;
+
+        const marker = document.createElement('div');
+        marker.className = 'plan-hyperlink-marker';
+        marker.dataset.hyperlinkId = hyperlinkId;
+        marker.style.left = x + 'px';
+        marker.style.top = y + 'px';
+
+        // Professional hyperlink icon
+        marker.innerHTML = `
+            <svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <defs>
+                    <linearGradient id="linkGradient-${hyperlinkId}" x1="0%" y1="0%" x2="100%" y2="100%">
+                        <stop offset="0%" style="stop-color:#2563eb;stop-opacity:1" />
+                        <stop offset="100%" style="stop-color:#3b82f6;stop-opacity:1" />
+                    </linearGradient>
+                </defs>
+
+                <!-- Background circle -->
+                <circle cx="16" cy="16" r="14" fill="url(#linkGradient-${hyperlinkId})" stroke="white" stroke-width="2"/>
+
+                <!-- Link icon -->
+                <path d="M13 19a3 3 0 0 0 4.24.24l2-2a3 3 0 0 0-4.24-4.24l-1 1"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+                <path d="M19 13a3 3 0 0 0-4.24-.24l-2 2a3 3 0 0 0 4.24 4.24l1-1"
+                      stroke="white"
+                      stroke-width="2"
+                      stroke-linecap="round"
+                      stroke-linejoin="round"/>
+            </svg>
+        `;
+
+        // Click to navigate to linked plan
+        marker.addEventListener('click', function(e) {
+            e.stopPropagation();
+
+            const hyperlinkData = planHyperlinks[hyperlinkId];
+            if (hyperlinkData) {
+                // Animate marker
+                marker.style.animation = 'none';
+                setTimeout(() => {
+                    marker.style.animation = 'linkDrop 0.5s cubic-bezier(0.34, 1.56, 0.64, 1)';
+                }, 10);
+
+                // Navigate to linked plan
+                viewPlan(hyperlinkData.linkedPlanIndex);
+                showNotification(`🔗 Opening "${hyperlinkData.linkedPlanName}"`, 'success');
+            }
+        });
+
+        // Right-click to delete hyperlink
+        marker.addEventListener('contextmenu', function(e) {
+            e.preventDefault();
+            if (confirm(`Delete hyperlink to "${linkedPlan.name || 'Untitled'}"?`)) {
+                marker.remove();
+                delete planHyperlinks[hyperlinkId];
+                showNotification('Hyperlink deleted', 'success');
+            }
+        });
+
+        pdfContent.appendChild(marker);
+
+        console.log('✅ Hyperlink marker added to PDF');
+    }
+
+    // Update Link tool button to toggle hyperlink toolbar
+    document.addEventListener('DOMContentLoaded', function() {
+        // Find Link tool button and add click handler
+        const linkToolBtn = document.querySelector('.pdf-tool-btn[data-tool="link"]');
+        if (linkToolBtn) {
+            // Remove existing onclick
+            linkToolBtn.onclick = null;
+
+            // Add new click handler
+            linkToolBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                e.stopPropagation();
+                toggleHyperlinkToolbar();
+            });
+        }
+
+        // Add click listener to PDF area for hyperlink placement
+        const documentArea = document.querySelector('.pdf-document-area');
+        if (documentArea) {
+            documentArea.addEventListener('click', function(e) {
+                // Only handle if in add plan hyperlink mode
+                if (addPlanHyperlinkMode) {
+                    handleAddPlanHyperlinkClick(e);
+                }
+            });
+        }
+    });
+
+    // Close Link to Plan modal when clicking outside
+    document.addEventListener('click', function(e) {
+        const modal = document.getElementById('linkToPlanModal');
+        const modalContent = document.querySelector('.link-to-plan-content');
+
+        if (modal && modalContent && e.target === modal && !modalContent.contains(e.target)) {
+            closeLinkToPlanModal();
+        }
+    });
+
+    // Close modal with ESC key
+    document.addEventListener('keydown', function(e) {
+        if (e.key === 'Escape') {
+            const modal = document.getElementById('linkToPlanModal');
+            if (modal && modal.classList.contains('show')) {
+                closeLinkToPlanModal();
+            }
+        }
+    });
+
+    console.log('✅ Plan Hyperlink System Loaded');
     </script>
 
 </body>
